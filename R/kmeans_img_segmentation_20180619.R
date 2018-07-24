@@ -167,13 +167,15 @@ hist( subset(df, df$label==2)$blue, col=rgb(0,0,1,1/4), breaks=different.values.
 coincidence.green <- Reduce(intersect, list(subset(df, df$label==1)$green,subset(df, df$label==2)$green))
 coincidence.red <- Reduce(intersect, list(subset(df, df$label==1)$red,subset(df, df$label==2)$red))
 coincidence.blue <- Reduce(intersect, list(subset(df, df$label==1)$blue,subset(df, df$label==2)$blue))
-df$label.c <- df$label
+df$label.c.green <- df$label
+df$label.c.red <- df$label
+df$label.c.blue <- df$label
 
 #posiciones de las celdas de concidencia entre los dos grupos para las intensidades de verde
-c.green <- which(df$gree %in% coincidence.green) # 2 3 5
+c.green <- which(df$green %in% coincidence.green) 
 
-#localizadas las posicioe, reetiquetamos las celdas de coincidencia en el canal verde con un 0
-df$label.c[c] <- 0
+#localizadas las posiciones, reetiquetamos las celdas de coincidencia en el canal verde con un 0
+df$label.c.green[c.green] <- 0
 
 #ahora volvemos a rehacer nuestra imagen.
 
