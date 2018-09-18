@@ -1,5 +1,6 @@
 chart.from.tif <- function(tif.path, samp.width = 0.01){
-      file <- Sys.glob(path = paste0(tif.path, "vis/*.tif"))[1]
+      # file <- Sys.glob(path = paste0(tif.path, "vis/*.tif"))[1]
+      file <- list.files(path = "./vis",pattern=".tif$",full.names = T)[1]
       vis.tiff <- tiff::readTIFF(file)
       vis.red <- raster::raster(vis.tiff[, , 1])
       vis.green <- raster::raster(vis.tiff[, , 2])
@@ -26,3 +27,4 @@ chart.from.tif <- function(tif.path, samp.width = 0.01){
       
       return(chart.buff)
 }
+

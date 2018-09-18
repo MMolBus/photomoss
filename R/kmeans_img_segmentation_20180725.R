@@ -223,11 +223,26 @@ K2 <-  kmeans(df[df$label==2,c("red", "green", "blue")],2)
 df[df$label==2, c("label.musgo")] <-  K2$cluster
 
 musgo.segmented1 <- t(matrix(df$label.musgo, nrow = dim(alveolo)[1], ncol = dim(alveolo)[2]))
-
 musgo.segmented1.raster <- raster(musgo.segmented1)
-
-
 plot(musgo.segmented1.raster, main="Segmentación musgo", colNA="black")
+
+##representamos histogramas de la segmantación interna de musgo y guata para los cuatro canales 
+
+hist( subset(df, df$label.guata==2)$green, col=rgb(0,0,1,1/4), breaks=different.values.vector(subset(df, df$label.guata==2)$green), xlim=c(0,0.6), ylim=c(0, 20000), main ="distrib_green musgo y guata", xlab="color intensity")  # first histogram
+hist( subset(df, df$label.guata==1)$green, col=rgb(0,1,0.5,1/4), breaks=different.values.vector(subset(df, df$label.guata==1)$green), xlim=c(0,0.6), ylim=c(0, 20000), add=T)  # second
+hist( subset(df, df$label.musgo==2)$green, col=rgb(0.5,1,0,1/4), breaks=different.values.vector(subset(df, df$label.musgo==2)$green), xlim=c(0,0.6), ylim=c(0, 20000), add=T)  # second
+hist( subset(df, df$label.musgo==1)$green, col=rgb(1,0,0,1/4), breaks=different.values.vector(subset(df, df$label.musgo==1)$green), xlim=c(0,0.6), ylim=c(0, 20000), add=T)  # second
+
+hist( subset(df, df$label.guata==2)$red, col=rgb(0,0,1,1/4), breaks=different.values.vector(subset(df, df$label.guata==2)$red), xlim=c(0,0.6), ylim=c(0, 20000), main ="distrib_red musgo y guata", xlab="color intensity")  # first histogram
+hist( subset(df, df$label.guata==1)$red, col=rgb(0,1,0.5,1/4), breaks=different.values.vector(subset(df, df$label.guata==1)$red), xlim=c(0,0.6), ylim=c(0, 20000), add=T)  # second
+hist( subset(df, df$label.musgo==2)$red, col=rgb(0.5,1,0,1/4), breaks=different.values.vector(subset(df, df$label.musgo==2)$red), xlim=c(0,0.6), ylim=c(0, 20000), add=T)  # second
+hist( subset(df, df$label.musgo==1)$red, col=rgb(1,0,0,1/4), breaks=different.values.vector(subset(df, df$label.musgo==1)$red), xlim=c(0,0.6), ylim=c(0, 20000), add=T)  # second
+
+hist( subset(df, df$label.guata==2)$blue, col=rgb(0,0,1,1/4), breaks=different.values.vector(subset(df, df$label.guata==2)$blue), xlim=c(0,0.6), ylim=c(0, 20000), main ="distrib_blue musgo y guata", xlab="color intensity")  # first histogram
+hist( subset(df, df$label.guata==1)$blue, col=rgb(0,1,0.5,1/4), breaks=different.values.vector(subset(df, df$label.guata==1)$blue), xlim=c(0,0.6), ylim=c(0, 20000), add=T)  # second
+hist( subset(df, df$label.musgo==2)$blue, col=rgb(0.5,1,0,1/4), breaks=different.values.vector(subset(df, df$label.musgo==2)$blue), xlim=c(0,0.6), ylim=c(0, 20000), add=T)  # second
+hist( subset(df, df$label.musgo==1)$blue, col=rgb(1,0,0,1/4), breaks=different.values.vector(subset(df, df$label.musgo==1)$blue), xlim=c(0,0.6), ylim=c(0, 20000), add=T)  # second
+
 
 
 

@@ -1,6 +1,7 @@
 extractPIX.from.Poly <-
 function(tif.path, poly){
-      file <- Sys.glob(path = paste0(tif.path, "vis/*.tif"))[1]
+      # file <- Sys.glob(path = paste0(tif.path, "vis/*.tif"))[1]
+      file <-list.files(path = "./vis",full.names = T)[1]
       vis.tiff <- tiff::readTIFF(file)
       vis.red <- raster::raster(vis.tiff[, , 1])
 
@@ -11,3 +12,4 @@ function(tif.path, poly){
                         raster::xyFromCell(vis.red, cells))
       return(out)
 }
+

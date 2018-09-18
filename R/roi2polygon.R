@@ -26,17 +26,23 @@ roi2polygon <- function(roi.path, tif.path){
       
       # Establecemos la imagen de referencia para hacer los siguietes cálculos
       # tif.path <- "tif/"
-      first.tif.filename <- Sys.glob(paste0(tif.path, "vis/*.tif"))[[1]]
+      # first.tif.filename <- Sys.glob(paste0(tif.path, "vis/*.tif"))[[1]]
+      first.tif.filename <- list.files(path = "./vis",full.names = T)[1]
       # library(raster)
-      RGB_stack_DEM <- raster::stack(first.tif.filename)
+      # RGB_stack_DEM <- raster::stack(first.tif.filename)
       bandred <- raster(first.tif.filename, band=1)
       
+      # # En el vector de coordenadas y de la ventana hcemos la operación 1 y 2
+      # w5_y_corr <- (nrow(raster::as.matrix(bandred)) - (as.data.frame(x_owin5))$y) / nrow(RGB_stack_DEM)
+      # 
+      # # En el vector de coordenadas x de la ventana hacemos solo la operación 2
+      # w5_x <- (as.data.frame(x_owin5))$x / raster::ncol(RGB_stack_DEM)
+      
       # En el vector de coordenadas y de la ventana hcemos la operación 1 y 2
-      w5_y_corr <- (nrow(raster::as.matrix(bandred)) - (as.data.frame(x_owin5))$y) / nrow(RGB_stack_DEM)
+      w5_y_corr <- (nrow(raster::as.matrix(bandred)) - (as.data.frame(x_owin5))$y) / nrow(bandred)
       
       # En el vector de coordenadas x de la ventana hacemos solo la operación 2
-      w5_x <- (as.data.frame(x_owin5))$x / raster::ncol(RGB_stack_DEM)
-      
+      w5_x <- (as.data.frame(x_owin5))$x / raster::ncol(bandred)
       
       #Unimos los vectores
       xym5 <-  cbind(x = w5_x, y = w5_y_corr)
