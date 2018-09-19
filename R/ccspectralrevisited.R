@@ -3,7 +3,7 @@
 ccSpectral.multiareas <- function(tif.path, chart, obs.areas, #sample.names=NULL,
                                   rasters = F, ml = F, ml.cutoff = 0.9, pdf = F
                                   
-                                  # es necesario automatizar los tresholds usar median
+                                  # es necesario automatizar los tresholds usar mean
                                   # ,thresholds = c(0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3)
                                   ){
   
@@ -227,7 +227,7 @@ ccSpectral.multiareas <- function(tif.path, chart, obs.areas, #sample.names=NULL
         cbind.data.frame("colcode" = col.code.index, "indexvalues" = index.values)
       values(r) <- df.colcode.indexvalues$colcode
       atm <-
-        auto_thresh_apply_mask(
+        autothresholdr::auto_thresh_apply_mask(
           values(r),
           method ,
           ignore_white = T,
@@ -289,7 +289,7 @@ ccSpectral.multiareas <- function(tif.path, chart, obs.areas, #sample.names=NULL
     
     ci.t <- autotreshold.value(ci, 2, 0, "mean", rref= vis.red)
     
-    bsci.t <- autotreshold.value(bsci, max(values(bsci), na.rm = T), 0, "otsu", rref= vis.red)
+    bsci.t <- autotreshold.value(bsci, max(values(bsci), na.rm = T), 0, "mean", rref= vis.red)
     
     bi.t <- autotreshold.value(bi, 1, 0, "mean", rref= vis.red)
     # MODIFIED CODE
