@@ -9,10 +9,15 @@ change.labels.order <- function(input.path, input.file) {
     on.exit(setwd(wd))
   }
   
+  # --------------------------------------------------------------------
+  all.names <- read.csv(list.files(md,"names.csv"))
   
+  pots.per.block <- 14
+  # --------------------------------------------------------------------
   all.names <- read.csv(input.file)
   
   pots <- nrow(all.names)
+  
   
   if((pots/14)%%1==0){pots.per.block <- 14}else{
     if((pots/10)%%1==0){pots.per.block <- 10}else{message("Names do not correspond either to blocks of 14 (monosp communities), neither blocks of 10 (mixed communities)")}
@@ -20,10 +25,17 @@ change.labels.order <- function(input.path, input.file) {
   
   blocks <- pots/pots.per.block
   
+  pots.per.pic <- 4
   
-  if(pots.per.block==14){
-    block.order <- c(1, NA, 8, NA, 2, 3, 9, 10, 4, 5, 11, 12, 6, 7, 13, 14)
-  }else{block.order <- c(1, NA, 6, NA, 2, 3, 7, 8, 4, 5, 9, 10)}
+  if(pots.per.block/pots.per.pic > as.numeric(sub( "\\..*","", as.character(pots.per.block/pots.per.pic)))){
+    positions <- c(rbind(1:(pots.per.block/2),((pots.per.block/2)+1):pots.per.block))
+    no.pic <- c(2,4)
+    block.order <- numeric(length(positions)+length(no.pic))
+    block.order[no.pic] <- NA
+    block.order[!is.na(order)] <-positions 
+    rm(positions, no.pic)
+  }else{
+    block.order <- c(rbind(1:(pots.per.block/2),((pots.per.block/2)+1):pots.per.block))}
   
   ordered.pots <- unlist(lapply(seq(0, pots.per.block*(blocks-1), by=pots.per.block), "+", block.order))
   
