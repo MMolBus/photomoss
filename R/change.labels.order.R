@@ -1,7 +1,7 @@
 # TITLE: change.labels.order 
 # Function: to name sample labels acording to its apparition in the sample pictures.
 
-change.labels.order <- function(input.path, input.file) {
+change.labels.order <- function(input.path, input.file, pots.per.block) {
   
   if(any(list.files(getwd())%in%"nir") & any(list.files(getwd())%in%"vis")){}else{
     wd <- getwd()
@@ -9,11 +9,6 @@ change.labels.order <- function(input.path, input.file) {
     on.exit(setwd(wd))
   }
   
-  # --------------------------------------------------------------------
-  all.names <- read.csv(list.files(md,"names.csv"))
-  
-  pots.per.block <- 14
-  # --------------------------------------------------------------------
   all.names <- read.csv(input.file)
   
   pots <- nrow(all.names)
