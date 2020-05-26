@@ -14,9 +14,7 @@ change.labels.order <- function(input.path, input.file, pots.per.block) {
   pots <- nrow(all.names)
   
   
-  if((pots/14)%%1==0){pots.per.block <- 14}else{
-    if((pots/10)%%1==0){pots.per.block <- 10}else{message("Names do not correspond either to blocks of 14 (monosp communities), neither blocks of 10 (mixed communities)")}
-  }
+  if((pots/pots.per.block)%%1!=0){message("Names do not correspond to the specified number of samples per block"}
   
   blocks <- pots/pots.per.block
   
@@ -27,7 +25,7 @@ change.labels.order <- function(input.path, input.file, pots.per.block) {
     no.pic <- c(2,4)
     block.order <- numeric(length(positions)+length(no.pic))
     block.order[no.pic] <- NA
-    block.order[!is.na(order)] <-positions 
+    block.order[!is.na(block.order)] <-positions 
     rm(positions, no.pic)
   }else{
     block.order <- c(rbind(1:(pots.per.block/2),((pots.per.block/2)+1):pots.per.block))}
@@ -36,8 +34,8 @@ change.labels.order <- function(input.path, input.file, pots.per.block) {
   
   names <- all.names[ordered.pots,, drop=F]
   
-  names$names <- as.character(names$names)
-  names[is.na(names$names), "names"] <- "mossless"
+  names[,1]<- as.character(names[,1])
+  names[is.na(names[,1]),] <- "mossless"
   print(names)
   
   write.table(names, "names.csv", row.names=F, quote=F)
