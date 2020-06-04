@@ -3,6 +3,9 @@
 
 chart.from.tif <- function(tif.path, samp.width = 0.01){
   # file <- Sys.glob(path = paste0(tif.path, "vis/*.tif"))[1]
+  if(require(tiff)==F){install.packages(tiff); require(tiff)}
+  if(require(raster)==F){install.packages(raster); require(raster)}
+  
   file <- list.files(path = "./vis",pattern=".tif$",full.names = T)[1]
   vis.tiff <- tiff::readTIFF(file)
   vis.red <- raster::raster(vis.tiff[, , 1])
