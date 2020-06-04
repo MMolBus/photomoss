@@ -14,7 +14,7 @@ change.labels.order <- function(input.path, input.file, pots.per.block) {
   pots <- nrow(all.names)
   
   
-  if((pots/pots.per.block)%%1!=0){message("Names do not correspond to the specified number of samples per block"}
+  if((pots/pots.per.block)%%1!=0){message("Names do not correspond to the specified number of samples per block")}
   
   blocks <- pots/pots.per.block
   
@@ -32,10 +32,9 @@ change.labels.order <- function(input.path, input.file, pots.per.block) {
   
   ordered.pots <- unlist(lapply(seq(0, pots.per.block*(blocks-1), by=pots.per.block), "+", block.order))
   
-  names <- all.names[ordered.pots,, drop=F]
+  names <- as.character(all.names[ordered.pots,])
   
-  names[,1]<- as.character(names[,1])
-  names[is.na(names[,1]),] <- "mossless"
+  names[is.na(names)] <- "mossless"
   print(names)
   
   write.table(names, "names.csv", row.names=F, quote=F)
