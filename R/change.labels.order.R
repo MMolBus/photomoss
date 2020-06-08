@@ -22,7 +22,8 @@ change.labels.order <- function(input.path, input.file, pots.per.block) {
   
   if(pots.per.block/pots.per.pic > as.numeric(sub( "\\..*","", as.character(pots.per.block/pots.per.pic)))){
     positions <- c(rbind(1:(pots.per.block/2),((pots.per.block/2)+1):pots.per.block))
-    no.pic <- c(2,4)
+   
+    no.pic <- c(3,4)
     block.order <- numeric(length(positions)+length(no.pic))
     block.order[no.pic] <- NA
     block.order[!is.na(block.order)] <-positions 
@@ -37,5 +38,5 @@ change.labels.order <- function(input.path, input.file, pots.per.block) {
   names[is.na(names)] <- "mossless"
   print(names)
   
-  write.table(names, "names.csv", row.names=F, quote=F)
+  write.csv(names, "names.csv", row.names=F, quote=F)
 }
