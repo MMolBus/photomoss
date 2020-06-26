@@ -31,6 +31,6 @@ autothreshold.value <- function(raster, max.index, min.index, method) {
   p   <- sort(unique(df_colcode_indexvalues$colcode), decreasing = F)[pt]
   out <- min((df_colcode_indexvalues[df_colcode_indexvalues$colcode == p, ])$indexvalues)
   
-  print(out)
+  print(paste0(method," threshold value = ",out))
   return(out)
 }

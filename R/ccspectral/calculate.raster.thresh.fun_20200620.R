@@ -2,7 +2,7 @@
 # threshold.method = threshold.method
 
 
-calculate.thresh.fun <- function(list.raster.results, 
+calculate.raster.thresh.fun <- function(list.raster.results, 
                                  calculate.thresh, 
                                  threshold.vector,
                                  threshold.method){

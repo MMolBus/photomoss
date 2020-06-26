@@ -41,9 +41,9 @@ ccspectral.df <- function(tif.path,
                                      "HUE", "SAT", "VAL"),
                           threshold.method=c("Huang"),
                           threshold.vector,
-                          # surface. = c("all", "manual.mask.moss", "manual.mask.guata",
-                          #              "auto.thresh.moss", "auto.thresh.guata",
-                          #              "manual.thresh.moss", "manual.thresh.guata"),
+                          # surface. = c( "manual.mask.moss", "manual.mask.backgr",
+                          #              "auto.thresh.moss", "auto.thresh.backgr",
+                          #              "manual.thresh.moss", "manual.thresh.backgr"),
                           descriptors. = 
                             c("median","mean","sd","min",
                               "max","diff.range"# "threshold",
@@ -74,26 +74,30 @@ ccspectral.df <- function(tif.path,
   # Order custom arguments values and test required arguments =============================================
   
   if(calculate.thresh==T){
-    surface. = c("all","auto.thresh.moss", "auto.thresh.guata")  
-    if(any(threshold.method==c("Huang","IJDefault", "IsoData", "Li", 
-                               "Mean", "MinErrorI", "Moments", "Otsu",
-                               "Percentile", "RenyiEntropy","Shanbhag", "Triangle"))==F){
+    surface. = c("auto.thresh.moss", "auto.thresh.backgr")  
+    if(any(threshold.method==c("Huang", "IJDefault", 
+                               "IsoData", "Li", 
+                               "Mean", "MinErrorI", 
+                               "Moments", "Otsu",
+                               "Percentile", "RenyiEntropy",
+                               "Shanbhag", "Triangle"))==F){
     stop("if you want to calculate auto threshold value 
            you need to define a valid threshold.method argument.")}
   }else{
-    surface. = c("all","predefined.thresh.moss", "predefined.thresh.guata")
     if(exists("threshold.vector")==F){
-      stop("if you don't want to calculate auto threshold values you 
+      stop("if you don't want to calculate autothreshold values you 
       need to define a threshold.vector values for the selected index.")
     }else{ 
       if(length(index.)!=length(threshold.vector)){
         stop("thershold.vector must have the same length as the 
             index. argument")}
-      }
+    }
+    surface. = c("predef.thresh.moss", "predef.thresh.backgr")
     }
   
   if(manual.mask.test==T){
-   surface. <- c(surface.,"manual.mask.moss", "manual.mask.guata")
+   surface. <- c(surface.,"manual.mask.moss", "manual.mask.backgr",  "backgr.as.backgr","moss.as.backgr",
+                 "backgr.as.moss", "moss.as.moss")
     }
   
   
@@ -103,9 +107,10 @@ ccspectral.df <- function(tif.path,
   index. <- index.[order(match(index., index_order))]    
     
   
-  surface_order <- c("all", "manual.mask.moss", "manual.mask.guata", 
-                     "auto.thresh.moss", "auto.thresh.guata",
-                     "predefined.thresh.moss", "predefined.thresh.guata")
+  surface_order <- c(
+                     "auto.thresh.moss",   "auto.thresh.backgr",
+                     "predef.thresh.moss", "predef.thresh.backgr",
+                     "manual.mask.moss",   "manual.mask.backgr")
   surface. <- surface.[order(match(surface., surface_order))]
  
   index_order <- c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI",
@@ -115,9 +120,10 @@ ccspectral.df <- function(tif.path,
   index. <- index.[order(match(index., index_order))]
  
   descriptors_order <- c("median", "mean", "sd", "min",
-                         "max", "diff.range",
+                         "max", "diff.range"
                          # "threshold",
-                         "n.cell")
+                         # "n.cell"
+                         )
   descriptors. <- descriptors.[order(match(descriptors., descriptors_order))]
 
   # Create exportation folder =============================================================================
@@ -133,18 +139,27 @@ ccspectral.df <- function(tif.path,
     if(manual.mask.test==F){
       df_names <-
         c("sample", "vis.file", "nir.file",
-          apply(expand.grid(surface.,
-                            index.), 1, paste, collapse="."),
+          do.call(c,
+                  lapply(1:length(index.), function(i)
+                    c(apply(expand.grid(surface.,
+                                        index.[i]), 1, paste, collapse=".")
+                    )
+                  )
+          ),
           apply(expand.grid("threshold.value",
                             index.), 1, paste, collapse="."),
           "threshold.method")  
     }else{
     df_names <-
-      c("sample", "vis.file", "nir.file", "real.moss.cover",
-        apply(expand.grid(c(surface.,
-                            "backgr.as.backgr", "backgr.as.moss",
-                            "moss.as.backgr", "moss.as.moss"),
-                          index.), 1, paste, collapse="."),
+      c("sample", "vis.file", "nir.file", 
+        do.call(c,
+                lapply(1:length(index.), function(i)
+                  c(apply(expand.grid(
+                    surface.,
+                    index.[i]), 1, paste, collapse = ".")
+                  )
+                )
+        ),
         apply(expand.grid("threshold.value",
                           index.), 1, paste, collapse="."),
               "threshold.method")}
@@ -153,18 +168,28 @@ ccspectral.df <- function(tif.path,
     if(manual.mask.test==F){
       df_names <-
         c("sample", "vis.file", "nir.file",
-          apply(expand.grid(surface.,
-                            index.), 1, paste, collapse="."),
+          do.call(c,
+                  lapply(1:length(index.), function(i)
+                    c(apply(expand.grid(
+                      surface.,
+                      index.[i]), 1, paste, collapse=".")
+                    )
+                  )
+          ),
           apply(expand.grid("threshold.value",
                             index.), 1, paste, collapse="."),
           "threshold.method")
       }else{
         df_names <-
-          c("sample", "vis.file", "nir.file", "real.moss.cover",
-            apply(expand.grid(c(surface.,
-                                "backgr.as.backgr", "backgr.as.moss",
-                                "moss.as.backgr", "moss.as.moss"),
-                              index.), 1, paste, collapse="."),
+          c("sample", "vis.file", "nir.file", 
+            do.call(c,
+                    lapply(1:length(index.), function(i)
+                      c(apply(expand.grid(
+                        surface.,
+                        index.[i]), 1, paste, collapse = ".")
+                      )
+                    )
+            ),
             apply(expand.grid("threshold.value",
                               index.), 1, paste, collapse="."),
             "threshold.method")}
@@ -174,26 +199,40 @@ ccspectral.df <- function(tif.path,
       if(manual.mask.test==F){
         df_names <-
           c("sample", "vis.file", "nir.file",
-            apply(expand.grid(surface.,
-                              index.), 1, paste, collapse="."),
-            apply(expand.grid(surface.,
-                              descriptors.,
-                              index.), 1, paste, collapse="."),
+            do.call(c,
+                    do.call(c,
+                            lapply(1:length(index.), function(i)
+                              lapply(1:length(surface.), function(j)
+                                c(apply(expand.grid(surface.[j],
+                                                    index.[i]), 1, paste, collapse="."),
+                                  apply(expand.grid(surface.[j],
+                                                    descriptors.,
+                                                    index.[i]), 1, paste, collapse=".")
+                                )
+                              )
+                            )
+                    )
+            ),
             apply(expand.grid("threshold.value",
                               index.), 1, paste, collapse="."),
             "threshold.method")  
       }else{
         df_names <-
           c("sample", "vis.file", "nir.file", "real.moss.cover",
-            apply(expand.grid(c(surface.,
-                                "backgr.as.backgr", "backgr.as.moss",
-                                "moss.as.backgr", "moss.as.moss"),
-                              index.), 1, paste, collapse="."),
-            apply(expand.grid(c(surface.,
-                                "backgr.as.backgr", "backgr.as.moss",
-                                "moss.as.backgr", "moss.as.moss"),
-                              descriptors.,
-                              index.), 1, paste, collapse="."),
+            do.call(c,
+                    do.call(c,
+                            lapply(1:length(index.), function(i)
+                              lapply(1:length(surface.), function(j)
+                                c(apply(expand.grid(surface.[j],
+                                                    index.[i]), 1, paste, collapse="."),
+                                  apply(expand.grid(surface.[j],
+                                                    descriptors.,
+                                                    index.[i]), 1, paste, collapse=".")
+                                )
+                              )
+                            )
+                    )
+            ),
             apply(expand.grid("threshold.value",
                               index.), 1, paste, collapse="."),
             "threshold.method")}
@@ -202,26 +241,40 @@ ccspectral.df <- function(tif.path,
       if(manual.mask.test==F){
         df_names <-
           c("sample", "vis.file", "nir.file",
-            apply(expand.grid(surface.,
-                              index.), 1, paste, collapse="."),
-            apply(expand.grid(surface.,
-                              descriptors.,
-                              index.), 1, paste, collapse="."),
+            do.call(c,
+                    do.call(c,
+                            lapply(1:length(index.), function(i)
+                              lapply(1:length(surface.), function(j)
+                                c(apply(expand.grid(surface.[j],
+                                                    index.[i]), 1, paste, collapse="."),
+                                  apply(expand.grid(surface.[j],
+                                                    descriptors.,
+                                                    index.[i]), 1, paste, collapse=".")
+                                )
+                              )
+                            )
+                    )
+            ),
             apply(expand.grid("threshold.value",
                               index.), 1, paste, collapse="."),
             "threshold.method")
       }else{
         df_names <-
           c("sample", "vis.file", "nir.file", "real.moss.cover",
-            apply(expand.grid(c(surface.,
-                                "backgr.as.backgr", "backgr.as.moss",
-                                "moss.as.backgr", "moss.as.moss"),
-                              index.), 1, paste, collapse="."),
-            apply(expand.grid(c(surface.,
-                                "backgr.as.backgr", "backgr.as.moss",
-                                "moss.as.backgr", "moss.as.moss"),
-                              descriptors.,
-                              index.), 1, paste, collapse="."),
+            do.call(c,
+                    do.call(c,
+                            lapply(1:length(index.), function(i)
+                              lapply(1:length(surface.), function(j)
+                                c(apply(expand.grid(surface.[j],
+                                                    index.[i]), 1, paste, collapse="."),
+                                  apply(expand.grid(surface.[j],
+                                                    descriptors.,
+                                                    index.[i]), 1, paste, collapse=".")
+                                )
+                              )
+                            )
+                    )
+            ),
             apply(expand.grid("threshold.value",
                               index.), 1, paste, collapse="."),
             "threshold.method")}

@@ -26,7 +26,10 @@ calcs <- function(photo,
                   descriptors., 
                   calculate.thresh, 
                   thereshold.vector,
-                  descrip, threshold.method, pdf) {
+                  descrip,
+                  threshold.method, 
+                  summary.file
+                  pdf) {
   # Prepare data
   obs_area   <- obs.areas[[area]]
   vis_photo  <- vis.files[photo]
@@ -127,84 +130,96 @@ calcs <- function(photo,
   # Calculate thershold results
   
   if(calculate.thresh == TRUE) {
-    source("./ccspectral/calculate.thresh.fun.R")
+    source("./ccspectral/autothreshold.value.func.R")}
     
-    source("./ccspectral/autothreshold.value.func.R")
+    source("./ccspectral/calculate.raster.thresh.fun.R")
+    
     
     list_threshold_results <-
-      calculate.thresh.fun(list.raster.results = list_raster_results,
-                           threshold.method = threshold.method)
-  }
+      calculate.raster.thresh.fun(
+        list.raster.results = list_raster_results,
+        calculate.thresh    = calculate.thresh,
+        threshold.method    = threshold.method,
+        threshold.vector    = threshold.vector
+        )
   
   # Extract mask values -----------------------------------------------------
   #extract mask pixel coordinates
   if(manual.mask.test==T){
-    coor <- coordinates(raster.band[[4]])
-    # Set df list with cell coordinates(x,y) indexvalues(z)  and mask surface values (surface)
-    if(calculate.thresh == TRUE){
-      list_df_results <-
-        lapply(c(1:length(list_raster_results)), 
-               function(i)
-                 cbind(
-                   coor,
-                   getValues(list_raster_results[[i]]),
-                   getValues(list_threshold_results[[1]][[i]]),
-                   getValues(raster.band[[4]]),
+    # Set df list with cell coordinates(x,y) indexvalues(z) 
+    # mask threshold(surface) and mask manual(surface)
+    # Aditionnaly we need to compare manual segmentation and threshold segmentation
+     # we create new surface classes (as new cols in the data frame )
+    # by crossing the two classification as follows:
+    # b_as_b => real (manual) background classified as background (by threshold classification) )
+    # m_as_b => real (manual) background classified as moss (by threshold classification)
+    # b_as_m => real (manual) moss classified as background (by threshold classification)
+    # m_as_m => real (manual) moss classified as moss (by threshold classification)
+    coor <- 
+      coordinates(raster.band[[1]])
+    surface_class <-
+      lapply(1:length(list_raster_results),
+             function(i)
+               paste0(getValues(list_threshold_results[[1]][[i]]),
+                      getValues(raster.band[[4]])
+                      )
+             )
+    if(require(varhandle)!=T){
+    install.packages("varhandle")
+    require(varhandle)}
+    binary_surfaces <- 
+      lapply(1:length(surface_class),
+             function(i)
+               varhandle::to.dummy(surface_class[[i]], "surface")
+             )
+    list_df_results <-
+      lapply(c(1:length(list_raster_results)),
+             function(i)
+               cbind(
+                 coor,
+                 getValues(list_raster_results[[i]]),
+                 getValues(list_threshold_results[[1]][[i]]),
+                 getValues(raster.band[[4]]),
+                 binary_surfaces[[i]][,1],
+                 binary_surfaces[[i]][,2],
+                 binary_surfaces[[i]][,3],
+                 binary_surfaces[[i]][,4]
                  )
-        )
-      
-      # transform in data frame
-      list_df_results <-
-        lapply(c(1:length(list_raster_results)), function(i)
-          as.data.frame(list_df_results[[i]]))
-      # Set colnames
-      colnames <- c("x", "y", "z", "surface_threshold", "surface_manual")
-      list_df_results <- lapply(list_df_results, setNames, colnames)
-    }else{
-      list_df_results <-
-        lapply(c(1:length(list_raster_results)), 
-               function(i)
-                 cbind(
-                   coor,
-                   extract(list_raster_results[[i]],
-                           1:ncell(list_raster_results[[i]])),
-                   extract(raster.band[[4]],
-                           1:ncell(raster.band[[4]]))
-                 )
-        )
-      # transform in data frame
-      list_df_results <-
-        lapply(c(1:length(list_raster_results)), function(i)
-          as.data.frame(list_df_results[[i]]))
-      # Set colnames
-      colnames <- c("x", "y", "z", "surface_manual")
-      list_df_results <- lapply(list_df_results, setNames, colnames)}
+             )
+    # transform in data frame
+    list_df_results <-
+      lapply(c(1:length(list_raster_results)), function(i)
+        as.data.frame(list_df_results[[i]]))
     
-  }else{ 
+    # Set colnames
+    colnames <- c("x", "y", "index_value", "surface_threshold", "surface_manual", 
+                  "b_as_b", "m_as_b", "b_as_m", "m_as_m")
+    
+    list_df_results <- lapply(list_df_results, setNames, colnames)
+    rm(colnames, surface_class, binary_surfaces)
+    }else{ 
     coor <- coordinates(raster.band[[1]])
-    # Set df list with cell coordinates(x,y) indexvalues(z)  and mask surface values (surface)
-    if(calculate.thresh == TRUE){
-      list_df_results <-
-        lapply(c(1:length(list_raster_results)), 
-               function(i)
-                 cbind(
-                   coor,
-                   getValues(list_raster_results[[i]]),
-                   getValues(list_threshold_results[[1]][[i]]
-                   )
+    # Set df list with cell coordinates(x,y) indexvalues(z)  and 
+    # mask threshold values (surface)
+    list_df_results <-
+      lapply(c(1:length(list_raster_results)),
+             function(i)
+               cbind(
+                 coor,
+                 getValues(list_raster_results[[i]]),
+                 getValues(list_threshold_results[[1]][[i]])
                  )
-        )
-      
-      # transform in data frame
-      list_df_results <-
-        lapply(c(1:length(list_raster_results)), function(i)
-          as.data.frame(list_df_results[[i]]))
-      # Set colnames
-      colnames <- c("x", "y", "z", "surface_threshold")
-      list_df_results <- lapply(list_df_results, setNames, colnames)
+             )
+    # transform in data frame
+    list_df_results <-
+      lapply(c(1:length(list_raster_results)), function(i)
+        as.data.frame(list_df_results[[i]]))
+    # Set colnames
+    colnames <- c("x", "y", "index_value", "surface_threshold")
+    list_df_results <- lapply(list_df_results, setNames, colnames)
+    names(list_df_results) <- names(list_raster_results)
+    rm(colnames)
     }
-    
-    names(list_df_results) <- names(list_raster_results)}
   
   if(pdf == FALSE){
     rm(list_raster_results)
@@ -223,160 +238,134 @@ calcs <- function(photo,
   ############################################################################  
   # Descriptors calculation -------------------------------------------------
   ############################################################################
-if(manual.mask.test==F){
-  
-}else{
-  #if manual.mask.tes==T we need to create new surface categories 
-  # resulting on the surface crossing between on the treshold clasification 
-  # and the  manua mask.
-  if(descrip == F){
-    source("./ccspectral/cell.count.sf.class.fun.R")
+  if(descrip==F){
+    if(manual.mask.test==F){
+      int_surf_cover <-
+        do.call(c,
+                lapply(c(1:length(index.)),
+                       function(i)
+                         unname(
+                           c(
+                             table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1]
+                           )
+                         )
+                )
+        )
+  }else{
     int_surf_cover <-
-      lapply(c(1:length(index.)),
-             function(i)
-               cell.count.sf.class(index_results_list[[1]][[i]][, 4],
-                                   index_results_list[[1]][[i]][, 5]))
-    int_surf_cover <- 
-      do.call(c, int_surf_cover)
-    }else{
-      if(calculate.thresh == TRUE){
+      do.call(c,
+              lapply(c(1:length(index.)),
+                     function(i)
+                       unname(
+                         c(
+                           table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
+                           table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
+                           table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
+                           table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
+                           table(list.results[[1]][[i]][,6])[2], table(list.results[[1]][[i]][,6])[1],
+                           table(list.results[[1]][[i]][,7])[2], table(list.results[[1]][[i]][,7])[1],
+                           table(list.results[[1]][[i]][,8])[2], table(list.results[[1]][[i]][,8])[1],
+                           table(list.results[[1]][[i]][,9])[2], table(list.results[[1]][[i]][,9])[1]
+                         )
+                       )
+              )
+      )
+    }
+  }else{#descrip==T
+    # source("./ccspectral/Descriptor.calculation.fun.R")
+    if(manual.mask.test==F){
+      int_surf_cover <-
+        do.call(c,
+                lapply(c(1:length(index.)),
+                       function(i)
+                         do.call(c,
+                                 lapply( 0:1 , function(j)
+                                   descriptor.fun(
+                                     list.results[[1]][[i]][,3][list.results[[1]][[i]][,4] == j],
+                                     descriptors.)
+                                   )
+                                 )
+                       )
+                )
+      }else{#manual.mask.test==T
         
-        source("./ccspectral/20190628(2)_Descriptor.calculation.fun.R")
+        int_surf_cover <-
         
-        surface_manual <- 
-          c("1|0", "1", "0")
-        descriptor_value_manual <- 
-          lapply(c(1:length(surface_manual)), 
-                 function(j)
-                   lapply(c(1:length(index.)), 
-                          function(i)
-                            descriptor.fun(
-                              index_results_list[[1]][[i]][, 3]
-                              [grep(surface_manual[j],
-                                    index_results_list[[1]][[i]][, 4])],
-                              des = descriptors.)))
-        descriptor_value_manual <-
-          lapply(c(1:length(surface_manual)),
-                 function(j)
-                   do.call(c, descriptor_value_manual[[j]]))
-        
-        descriptor_value_manual <-
-          do.call(c, descriptor_value_manual)
-        
-        surface_thresh <- c("1", "0")
-        
-        descriptor_value_thresh <-
-          lapply(c(1:length(surface_thresh)),
-                 function(j)
-                   lapply(c(1:length(index.)),
-                          function(i)
-                            descriptor.fun(
-                              index_results_list[[1]][[i]][, 3]
-                              [grep(surface_thresh[j],
-                                    index_results_list[[1]][[i]][, 5])],
-                              des = descriptors.)))
-        
-        descriptor_value_thresh <- 
-          lapply(c(1:length(surface_thresh)), function(j)
-            do.call(c, descriptor_value_thresh[[j]]))
-        descriptor_value_thresh <- 
-          do.call(c, descriptor_value_thresh)
-        descriptor_value <- 
-          c(descriptor_value_manual, descriptor_value_thresh)
-        
-        rm(descriptor_value_manual, descriptor_value_thresh)
-    
-        source("./ccspectral/cell.count.sf.class.fun.R")
-        
-        int_surf_cover <- 
+                  lapply(c(1:length(index.)),
+                         function(i)
+                           do.call(c,
+                                   lapply(4:5 , function(j)
+                                     do.call(c,
+                                             lapply(0:1, function(k)
+                                               descriptor.fun(
+                                                 list.results[[1]][[i]][,3][list.results[[1]][[i]][,j] == k],
+                                                 descriptors.)
+                                               )
+                                             )
+                                     )
+                                   )
+                         )
+        test_mask_surfaces <-   
           lapply(c(1:length(index.)),
                  function(i)
-                   cell.count.sf.class(index_results_list[[1]][[i]][, 4],
-                                       index_results_list[[1]][[i]][, 5]))
-        int_surf_cover <- 
-          do.call(c, int_surf_cover)
-    
-  }else{
-    surface_manual <- c("1|0", "1", "0")  
-    
-    descriptor_value_manual <- 
-      lapply(c(1:length(surface_manual)), function(j)
-        lapply(c(1:length(index.)), function(i)
-          descriptor.fun(
-            index_results_list[[1]][[i]][, 3]
-            [grep(surface_manual[j], index_results_list[[1]][[i]][, 4])],
-                       des = descriptors.)))
-    
-    descriptor_value_manual <- lapply(c(1:length(surface_manual)), function(j)
-      do.call(c, descriptor_value_manual[[j]]))
-    
-    descriptor_value <- do.call(c, descriptor_value_manual)
-  }
-}
-  }
-    
-  
+                   do.call(c,
+                           lapply(6:9 , function(j)
+                             descriptor.fun(
+                               list.results[[1]][[i]][,3][list.results[[1]][[i]][,j] == 1],
+                               descriptors.)
+                             )
+                           )
+                 )
+        int_surf_cover <-
+          do.call(c,
+                  lapply(c(1:length(index.)),
+                         function(i)
+                           c(int_surf_cover[[i]], test_mask_surfaces[[i]]
+                             )
+                         )
+                  )
+        rm(test_mask_surfaces)      
+                         
+      }
+    }
+   
+
   # START dataframe for index index vaulues presentation --------------------
   
-  dat <- read.csv(summary.file)
+  dat <- read.csv(summary_file)
   
   # names(descriptor_value) <- colnames(dat)[-c(1:7)]
   # 
-  if(descrip==F){new_dat <- 
-    as.data.frame(
-      c(
-        list(
-          sample_name,
-          vis_photo,
-          nir_photo,
-          real_cover_moss
-        ),
-        as.list(int_surf_cover),
-        threshold.method
-      )
-    )
-  }else{
-    if(calculate.thresh == F){
-    new_dat <- 
+  if(calculate.thresh==T){
+    new_dat <-
       as.data.frame(
-        c(
-          list(
+        as.list(
+          c(
             sample_name,
             vis_photo,
             nir_photo,
-            red_rsq,
-            green_rsq,
-            blue_rsq,
-            nir_rsq, 
-            real_cover_moss
-          ),
-          as.list(descriptor_value)
+            unname(int_surf_cover),
+            unname(do.call(c,list_threshold_results[[2]])),
+            threshold.method
+            )
+          )
         )
-      )
   }else{
     new_dat <-
       as.data.frame(
-        c(
-          list(
+        as.list(
+          c(
             sample_name,
             vis_photo,
             nir_photo,
-            red_rsq,
-            green_rsq,
-            blue_rsq,
-            nir_rsq,
-            real_cover_moss
-          ),
-          as.list(descriptor_value),
-          as.list(int_surf_cover),
-          threshold.method
+            unname(int_surf_cover),
+            threshold.vector,
+            "Predefined"
+          )
         )
       )
-  }
     }
-    
-  
-  
+
   colnames(new_dat) <- colnames(dat)
   dat_bind <- rbind(dat, new_dat)
   write.csv(dat_bind, summary.file, row.names = F)
