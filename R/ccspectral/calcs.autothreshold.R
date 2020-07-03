@@ -16,7 +16,7 @@ calcs <- function(photo,
                   area, 
                   obs.areas, 
                   vis.files,
-                  nir.files, 
+                  nir.files,
                   manual.mask.test,
                   mask.files, 
                   summary.file,
@@ -67,7 +67,7 @@ calcs <- function(photo,
   }
   # Cell extraction and color calibration -----------------------------------------------------
   # Read and create raster from tiff =====================================
-  source("./ccspectral/raster.tif.ccspectral.R")
+  # source("./ccspectral/raster.tif.ccspectral.R")
   
   if(manual.mask.test==T){
     all_bands <-  raster.tiff.ccspectral(vis.photo = vis_photo, nir.photo = nir_photo, 
@@ -82,7 +82,7 @@ calcs <- function(photo,
   
    
   # ######IF ML
-    source("./ccspectral/cell.extract.color.cal.fun.R")
+    # source("./ccspectral/cell.extract.color.cal.fun.R")
   
   calibration_results <-
     cell.extract.color.cal.fun(
@@ -93,27 +93,27 @@ calcs <- function(photo,
       pdf = pdf
     )
   
- if(descrip==T){
-  red_rsq <- calibration_results[3]
-  green_rsq <- calibration_results[4]
-  blue_rsq <- calibration_results[5]
-  nir_rsq <- calibration_results[6]
-  if(manual.mask.test==T){
-    real_cover_moss <- sum(getValues(calibration_results[[2]][[4]]))
-  }
-  }else{
-    if(manual.mask.test==T){
-      real_cover_moss <- sum(getValues(calibration_results[[2]][[4]]))
-      }
-    }
-  if(pdf==TRUE){
+ # if(descrip==T){
+ #  red_rsq <- calibration_results[3]
+ #  green_rsq <- calibration_results[4]
+ #  blue_rsq <- calibration_results[5]
+ #  nir_rsq <- calibration_results[6]
+ #  if(manual.mask.test==T){
+ #  real_cover_moss <- sum(getValues(calibration_results[[2]][[4]]))
+ #  }
+ #  }else{
+    # if(manual.mask.test==T){
+    #   real_cover_moss <- sum(getValues(calibration_results[[2]][[4]]))
+    #   }
+    # }
+  if(pdf==T && manual.mask.test==T){
     moss_poly <- calibration_results[7]
     }
   ###########################################################################  
   # Calculate index values, as raster and as dataframe ----------------------
   ############################################################################  
 
-    source("./ccspectral/20190628(2)_indexcalculation.fun.R")
+    # source("./ccspectral/indexcalculation.fun.R")
   
   list_raster_results <- index.calc.fun(raster.mat  = calibration_results[[1]], 
                                        raster.band = calibration_results[[2]] , 
@@ -128,10 +128,10 @@ calcs <- function(photo,
   
   # Calculate thershold results
   
-  if(calculate.thresh == TRUE) {
-    source("./ccspectral/autothreshold.value.func.R")}
+  # if(calculate.thresh == TRUE) {
+    # source("./ccspectral/autothreshold.value.func.R")}
     
-    source("./ccspectral/calculate.raster.thresh.fun.R")
+    # source("./ccspectral/calculate.raster.thresh.fun.R")
     
     
     list_threshold_results <-
@@ -155,12 +155,12 @@ calcs <- function(photo,
     # b_as_m => real (manual) moss classified as background (by threshold classification)
     # m_as_m => real (manual) moss classified as moss (by threshold classification)
     coor <- 
-      coordinates(raster.band[[1]])
+      coordinates(calibration_results[[1]])
     surface_class <-
       lapply(1:length(list_raster_results),
              function(i)
                paste0(getValues(list_threshold_results[[1]][[i]]),
-                      getValues(raster.band[[4]])
+                      getValues(calibration_results[[2]][[4]])
                       )
              )
     if(require(varhandle)!=T){
@@ -178,7 +178,7 @@ calcs <- function(photo,
                  coor,
                  getValues(list_raster_results[[i]]),
                  getValues(list_threshold_results[[1]][[i]]),
-                 getValues(raster.band[[4]]),
+                 getValues(calibration_results[[2]][[4]]),
                  binary_surfaces[[i]][,1],
                  binary_surfaces[[i]][,2],
                  binary_surfaces[[i]][,3],
@@ -197,7 +197,7 @@ calcs <- function(photo,
     list_df_results <- lapply(list_df_results, setNames, colnames)
     rm(colnames, surface_class, binary_surfaces)
     }else{ 
-    coor <- coordinates(raster.band[[1]])
+    coor <- coordinates(calibration_results[[1]])
     # Set df list with cell coordinates(x,y) indexvalues(z)  and 
     # mask threshold values (surface)
     list_df_results <-
@@ -230,7 +230,7 @@ calcs <- function(photo,
     names(list.results) <- c("data.frames", "rasters")}
   # Return
   
-  return(list.results)
+  # return(list.results)
   
   
   rm(calibration_results)
@@ -331,7 +331,7 @@ calcs <- function(photo,
 
   # START dataframe for index index vaulues presentation --------------------
   
-  dat <- read.csv(summary_file)
+  dat <- read.csv(summary.file)
   
   # names(descriptor_value) <- colnames(dat)[-c(1:7)]
   # 
@@ -384,9 +384,9 @@ calcs <- function(photo,
       # hist:raster dataframe with x y coordinates index value (z) and binary mask value (surface)
       # ind: index raster
       
-      pdfprint <-   function(hist, ind, man, over, names, asp){
+      pdfprint <-   function(hist, ind, man, over, name, asp){
         # set surface binary image as factor ------------------------------------
-        hist <- list_df_results[[i]]
+      
         surface.f <- factor(hist[,4], levels= c(1,0),
                             labels = c("no_moss","moss"))
         # surface.overlap <- factor(hist[,5], levels= c(1,2,3),
@@ -396,7 +396,7 @@ calcs <- function(photo,
         if(require(sm)!=T){
           install.packages("sm")
         }
-        sm::sm.density.compare(hist[,3], surface.f, xlab= names)
+        sm::sm.density.compare(hist[,3], surface.f, xlab= name)
         
         title(main = paste(names), "values by surface")
         # add legend
@@ -405,14 +405,14 @@ calcs <- function(photo,
         
         # PLOT index values and real moss contour --------------------------------
         plot(ind,
-             main =  paste(toupper(names)),"values",
+             # main =  paste(toupper(names)),"values",
              axes = FALSE, box = FALSE,
              asp  = asp)
         plot(moss_poly, add=T, border="red")
         
         # PLOT index values from real moss area and real moss contour  ------------
         plot(man,
-             main =  paste(toupper(names)),"moss values over whole scene",
+             main =  paste(toupper(name)),"moss values over whole scene",
              axes = FALSE, box = FALSE,
              asp  = asp)
         plot(moss_poly, add=T, border="red")
@@ -427,7 +427,7 @@ calcs <- function(photo,
       }
       # run pdf.print over our list of indexes ----------------------------------
       lapply(c(1:length(lind)), function(i)
-        pdfprint(hist  = lhist[[i]],
+        pdfprint(hist  = list_df_results[[i]][,3],
                  ind   = lind[[i]],
                  man   = lman[[i]],
                  over  = lover[[i]],
