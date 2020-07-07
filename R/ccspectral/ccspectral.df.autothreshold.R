@@ -379,11 +379,10 @@ ccspectral.df <- function(tif.path,
   all <- dplyr::arrange(all, Var1)
   print(all)
   
+  start_time <- Sys.time()
   message("Starting calculations...")
   apply(all, 1, function(pair) {
     calcs(
-      # pair[1],
-      # pair[2],
       pair[1],
       pair[1],
       obs.areas = obs.areas,

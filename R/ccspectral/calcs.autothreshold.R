@@ -9,8 +9,8 @@
 # descriptors.= descriptors.
 # calculate.thresh = calculate.thresh
 # threshold.method = threshold.method
-# area <- 1
-# photo <- 1
+# area <- 3
+# photo <- 3
 
 calcs <- function(photo,
                   area, 
@@ -141,7 +141,6 @@ calcs <- function(photo,
         threshold.method    = threshold.method,
         threshold.vector    = threshold.vector
         )
-  
   # Extract mask values -----------------------------------------------------
   #extract mask pixel coordinates
   if(manual.mask.test==T){
@@ -447,8 +446,12 @@ calcs <- function(photo,
             pdf.name = paste0(sample_name, ".pdf"))
   }
   
+  loop_end_time <- Sys.time()
+  loop_time <- difftime(loop_end_time, start_time, units = "secs" )
   
   message(paste0(sample_name, " processed... (",
-                 100* round((done_samples+1)/total.samples, 2), " %)"))
+                 100* round((done_samples+1)/total.samples, 2), " %). Expected end time:",
+                 start_time+as.numeric(total.samples*loop_time/(done_samples+1))))
+  
   # print = paste(sample_name, "processed")
 }     
