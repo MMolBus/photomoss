@@ -54,7 +54,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
-    raster_index_cut[[2]]  <- as.matrix(ri >= t_values[[2]]
+    raster_index_cut[[2]]  <- ri >= t_values[[2]]
   }else{
     t_values[[2]]<- NULL
     raster_index_cut[[2]] <- NULL
@@ -72,7 +72,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
-    raster_index_cut[[3]]  <- as.matrix(ri >= t_values[[3]]
+    raster_index_cut[[3]]  <- ri >= t_values[[3]]
   }else{
     t_values[[3]] <- NULL
     raster_index_cut[[3]] <- NULL
@@ -90,7 +90,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
-    raster_index_cut[[4]]  <- as.matrix(ri >= t_values[[4]]
+    raster_index_cut[[4]]  <- ri >= t_values[[4]]
   }else{
     t_values[[4]] <- NULL
     raster_index_cut[[4]]  <- NULL
