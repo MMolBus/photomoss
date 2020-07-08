@@ -59,7 +59,8 @@ cell.extract.color.cal.fun <-
                                                    train_df))^2)/(length(train_df$red.chart) * var(train_df$red.chart))
   red_mat <- temp_mat
   values(red_mat)[obs.area$cells] <- red_preds
-  red_mat <- raster::raster(as.matrix(crop(red_mat, extent(obs_ext))))
+  red_mat <- crop(red_mat, extent(obs_ext))
+  extent(red_mat) <- extent(c(0, 1, 0, 1))
   green_nls <- nls(green.chart ~ (a * exp(b * vis.green)), 
                    trace = F, data = train_df, start = c(a = 0.1, b = 0.1))
   green_preds <- predict(green_nls, bands_df)
@@ -67,7 +68,8 @@ cell.extract.color.cal.fun <-
                                                        train_df))^2)/(length(train_df$green.chart) * var(train_df$green.chart))
   green_mat <- temp_mat
   values(green_mat)[obs.area$cells] <- green_preds
-  green_mat <- raster::raster(as.matrix(crop(green_mat, extent(obs_ext))))
+  green_mat <- crop(green_mat, extent(obs_ext))
+  extent(green_mat) <- extent(c(0, 1, 0, 1))
   blue_nls <- nls(blue.chart ~ (a * exp(b * vis.blue)), trace = F, 
                   data = train_df, start = c(a = 0.1, b = 0.1))
   blue_preds <- predict(blue_nls, bands_df)
@@ -75,7 +77,8 @@ cell.extract.color.cal.fun <-
                                                      train_df))^2)/(length(train_df$blue.chart) * var(train_df$blue.chart))
   blue_mat <- temp_mat
   values(blue_mat)[obs.area$cells] <- blue_preds
-  blue_mat <- raster::raster(as.matrix(crop(blue_mat, extent(obs_ext))))
+  blue_mat <-crop(blue_mat, extent(obs_ext))
+  extent(blue_mat) <- extent(c(0, 1, 0, 1))
   nir_nls <- nls(nir.chart ~ (a * exp(b * nir.blue)), trace = F, 
                  data = train_df, start = c(a = 0.1, b = 0.1))
   nir_preds <- predict(nir_nls, bands_df)
@@ -83,7 +86,8 @@ cell.extract.color.cal.fun <-
                                                    train_df))^2)/(length(train_df$nir.chart) * var(train_df$nir.chart))
   nir_mat <- temp_mat
   values(nir_mat)[obs.area$cells] <- nir_preds
-  nir_mat <- raster::raster(as.matrix(crop(nir_mat, extent(obs_ext))))
+  nir_mat <- crop(nir_mat, extent(obs_ext))
+  extent(nir_mat) <- extent(c(0, 1, 0, 1))
   raster_mat <- brick(red_mat, green_mat, blue_mat, nir_mat)
   if (manual.mask.test == T) {
     out <- list(raster_mat, raster_band, red_rsq, green_rsq, 
