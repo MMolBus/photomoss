@@ -24,24 +24,23 @@ colnames(bands_df) <-
 # Set color values by chart values =====================================
 # Crop obs area from all_bands
 red_band   <- 
-  raster::raster(as.matrix(
-    crop(all.bands[[1]], extent(obs_ext))))
+    crop(all.bands[[1]], extent(obs_ext))
+extent(red_band) <- extent(c(0, 1, 0, 1))  
 
-
-green_band <- 
-  raster::raster(as.matrix(
-    crop(all.bands[[2]], extent(obs_ext))))
-
+green_band <-
+    crop(all.bands[[2]], extent(obs_ext))
+extent(green_band) <- extent(c(0, 1, 0, 1))
 
 blue_band <- 
-  raster::raster(as.matrix(
-    crop(all.bands[[3]], extent(obs_ext))))
+    crop(all.bands[[3]], extent(obs_ext))
+extent(blue_band) <- extent(c(0, 1, 0, 1))
 
 
 if(manual.mask.test==T){
-  mask_band  <-  
-    raster::raster(as.matrix(
-      crop(all.bands[[5]], extent(obs_ext))))
+  mask_band  <-
+      crop(all.bands[[5]], extent(obs_ext))
+  extent(mask_band) <- extent(c(0, 1, 0, 1))
+  
   moss_poly <-
     rasterToPolygons(
       mask_band,
