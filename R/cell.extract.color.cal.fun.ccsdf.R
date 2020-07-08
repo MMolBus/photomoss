@@ -1,6 +1,7 @@
 # cell extraction and color calibration function
 
 
+
 cell.extract.color.cal.fun <- function(obs.area, all.bands, chart, manual.mask.test, pdf){
 
 obs_ext  <-
