@@ -446,12 +446,16 @@ calcs <- function(photo,
             pdf.name = paste0(sample_name, ".pdf"))
   }
   
-  loop_end_time <- Sys.time()
-  loop_time <- difftime(loop_end_time, start_time, units = "secs" )
+ 
+  loop_time <-
+    strsplit(as.character((as.numeric(Sys.time())- as.numeric(start_time))/60),"\\.")[[1]]
   
-  message(paste0(sample_name, " processed... (",
-                 100* round((done_samples+1)/total.samples, 2), " %). Expected end time:",
-                 start_time+as.numeric(total.samples*loop_time/(done_samples+1))))
+ loop_time[2] <-  round(60*as.numeric(paste0("0.",as.character(loop_time[2]))))
+  
+ 
+  message(paste0(sample_name, " processed. Made ", done_samples+1, " samples of ", total.samples, 
+                 " in ", loop_time[1], " mins ", loop_time, " secs."))
+                 
   
   # print = paste(sample_name, "processed")
 }     
