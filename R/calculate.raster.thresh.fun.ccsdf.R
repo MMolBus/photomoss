@@ -220,7 +220,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # ExG autothreshold -----------------------------------------------
   if (any(unique(grepl(index_order[12], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[12], index.)]
+    ri <- list.raster.results[grepl(paste0(index_order[12],"$"), index.)]
     if(calculate.thresh==T){
       t_values[[12]] <- 
         autothreshold.value(
