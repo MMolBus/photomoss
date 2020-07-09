@@ -1,4 +1,4 @@
-# # # CALCS function, for ccspectral
+# # CALCS function, for ccspectral
 # vis.files = vis_files
 # nir.files = nir_files
 # manual.mask.test = manual.mask.test
@@ -9,8 +9,8 @@
 # descriptors.= descriptors.
 # calculate.thresh = calculate.thresh
 # threshold.method = threshold.method
-# area <- 3
-# photo <- 3
+# area <- 1
+# photo <- 1
 
 calcs <- function(photo,
                   area, 
@@ -28,7 +28,8 @@ calcs <- function(photo,
                   thereshold.vector,
                   descrip,
                   threshold.method,
-                  pdf) {
+                  pdf,
+                  start.time){
   # Prepare data
   obs_area   <- obs.areas[[area]]
   vis_photo  <- vis.files[photo]
@@ -448,7 +449,7 @@ calcs <- function(photo,
   
 
   loop_time <-
-    strsplit(as.character((as.numeric(Sys.time())- as.numeric(start_time))/60),"\\.")[[1]]
+    strsplit(as.character((as.numeric(Sys.time())- as.numeric(start.time))/60),"\\.")[[1]]
   loop_time[2] <-  
     round(60*as.numeric(paste0("0.",as.character(loop_time[2]))))
   
