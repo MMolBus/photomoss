@@ -392,8 +392,8 @@ ccspectral.df <- function(tif.path,
       calculate.thresh = calculate.thresh,
       descrip = descrip,
       threshold.method = threshold.method,
-      pdf = pdf,
-      start.time=start_time
+      pdf = pdf
+      # start.time=start_time
       )
   })
 # for(i in nrow(all)){

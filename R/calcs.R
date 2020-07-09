@@ -28,8 +28,9 @@ calcs <- function(photo,
                   thereshold.vector,
                   descrip,
                   threshold.method,
-                  pdf,
-                  start.time){
+                  pdf
+                  # start.time
+                  ){
   # Prepare data
   obs_area   <- obs.areas[[area]]
   vis_photo  <- vis.files[photo]
@@ -449,11 +450,11 @@ calcs <- function(photo,
   
 
   loop_time <-
-    strsplit(as.character((as.numeric(Sys.time())- as.numeric(start.time))/60),"\\.")[[1]]
+    strsplit(as.character((as.numeric(Sys.time())- as.numeric(start_time))/60),"\\.")[[1]]
   loop_time[2] <-  
     round(60*as.numeric(paste0("0.",as.character(loop_time[2]))))
   
   message(paste0(sample_name, " processed."))
   message("Made ", done_samples+1, " of ", total.samples, " total samples", 
-                 " in ", loop_time[1], " mins ", loop_time, " secs.")
+                 " in ", loop_time[1], " mins ", loop_time[2], " secs.")
 }     
