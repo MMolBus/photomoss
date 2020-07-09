@@ -350,12 +350,6 @@ ccspectral.df <- function(tif.path,
     data.frame(photo=do.call(c,lapply(1:length(vis_files),
                                       function(i) rep(vis_files[i], each=samples.per.pic[i]))),
                alveolo=names(obs.areas))
-  # weig <- as.character(read.table("C:/Users/manue/Documents/taller_R/Analisis_Muestras_UAM/muestras_uam_con_peso.csv", header=T,sep = ";")[,1])
-  # df3 <- data.frame(s=sample_names, id=c(1:length(sample_names)))
-  # df3$weigted <- 
-  #   sample_names%in%weig
-  # 
-  # sample_names <- as.character(df3[df3$weigted==T,1])
       if (file.exists("names.csv")) {
     sample_names <- c(as.character(read.csv("names.csv")[, 1]))
     if (length(sample_names) != total_samples) {
