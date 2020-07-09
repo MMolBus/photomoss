@@ -1,7 +1,8 @@
 # Autothreshold.value function 
 
 autothreshold.value <- function(raster, max.index, min.index, method) {
-  
+  index <- names(raster)
+  raster <- raster[[1]]
   col.0.255.bin.range <- function (raster, max.index, min.index) {
     a   <- max.index - min.index
     bin <- .bincode(#as.vector(raster),
@@ -31,6 +32,6 @@ autothreshold.value <- function(raster, max.index, min.index, method) {
   p   <- sort(unique(df_colcode_indexvalues$colcode), decreasing = F)[pt]
   out <- min((df_colcode_indexvalues[df_colcode_indexvalues$colcode == p, ])$indexvalues)
   
-  print(paste0(method," threshold value = ",out))
+  print(paste0(index," ",method," threshold value = ",out))
   return(out)
 }
