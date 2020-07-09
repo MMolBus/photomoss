@@ -98,7 +98,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   
   # CI autothreshold -------------------------------------------------------
   if (any(unique(grepl(index_order[5], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[5], index.)]
+    ri <- list.raster.results[grepl(paste0("^",index_order[5],"$"), index.)]
     
     if(calculate.thresh==T){
       t_values[[5]] <- 
