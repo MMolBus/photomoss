@@ -1,17 +1,38 @@
 # cell extraction and color calibration function
-
-
+# obs.area <- obs_area
+# all.bands <- all_bands
+# chart
+# manual.mask.test
+# pdf
 
 cell.extract.color.cal.fun <- 
-  function(obs.area, all.bands, chart, manual.mask.test, pdf){obs_ext <- extent(min(obs.area$x), max(obs.area$x), min(obs.area$y), 
-                                                                                max(obs.area$y))
-  temp_mat <- raster(matrix(data = NA, nrow = nrow(all.bands), 
+  function(obs.area, all.bands, chart, manual.mask.test, pdf){
+    obs_ext <- 
+      extent(
+        min(obs.area$x), 
+        max(obs.area$x), 
+        min(obs.area$y),
+        max(obs.area$y))
+  temp_mat <- 
+    raster(matrix(data = NA, nrow = nrow(all.bands), 
                             ncol = ncol(all.bands), byrow = T))
-  bands_df <- data.frame(extract(all.bands, obs.area$cells))
-  colnames(bands_df) <- c("vis.red", "vis.green", 
-                          "vis.blue", "nir.blue")
-  red_band <- crop(all.bands[[1]], extent(obs_ext))
-  extent(red_band) <- extent(c(0, 1, 0, 1))
+  bands_df <- 
+    data.frame(extract(all.bands, obs.area$cells))
+  if(manual.mask.test==T){
+    colnames(bands_df) <- 
+    c("vis.red", "vis.green",
+      "vis.blue", "nir.blue")
+  }else{
+    colnames(bands_df) <- 
+      c("vis.red", "vis.green",
+        "vis.blue", "nir.blue",
+        "mask")
+    }
+  
+  red_band <- 
+    crop(all.bands[[1]], extent(obs_ext))
+  extent(red_band) <- 
+    extent(c(0, 1, 0, 1))
   green_band <- crop(all.bands[[2]], extent(obs_ext))
   extent(green_band) <- extent(c(0, 1, 0, 1))
   blue_band <- crop(all.bands[[3]], extent(obs_ext))
@@ -20,7 +41,7 @@ cell.extract.color.cal.fun <-
     mask_band <- crop(all.bands[[5]], extent(obs_ext))
     extent(mask_band) <- extent(c(0, 1, 0, 1))
     moss_poly <- rasterToPolygons(mask_band, fun = function(x) {
-      x == 0
+      x == 1
     }, dissolve = T)
     raster_band <- brick(red_band, green_band, blue_band, 
                          mask_band)
