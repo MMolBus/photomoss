@@ -17,7 +17,7 @@ raster.tiff.ccspectral <- function(vis.photo, nir.photo, manual.mask.test, mask.
     mask_tiff  <-
       suppressWarnings(tiff::readTIFF(paste("./mask/", mask.photo, sep = "")))
     # transform 0 to 1 from binary tif obtained from image J
-    binar_mask   <- raster(1*as.matrix(raster(mask_tiff)==0))
+    binar_mask   <- raster(mask_tiff)==0
   }
   
   asp <- nrow(vis_red) / ncol(vis_red)
