@@ -35,8 +35,12 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
-    raster_index_cut[[1]]  <- ri[[1]] >= t_values[[1]]
-    
+    if (is.na(t_values[[1]])==T){
+      raster_index_cut[[1]] <- NA
+    }else{
+   
+      raster_index_cut[[1]]  <- ri[[1]] >= t_values[[1]]
+      }
   }else{
     t_values[[1]] <- NULL
     raster_index_cut[[1]] <- NULL
@@ -54,7 +58,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[2]])==T){
+      raster_index_cut[[2]] <- NA
+    }else{
     raster_index_cut[[2]]  <- ri[[1]] >= t_values[[2]]
+    }
   }else{
     t_values[[2]]<- NULL
     raster_index_cut[[2]] <- NULL
@@ -72,7 +80,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[3]])==T){
+      raster_index_cut[[3]] <- NA
+    }else{
     raster_index_cut[[3]]  <- ri[[1]] >= t_values[[3]]
+    }
   }else{
     t_values[[3]] <- NULL
     raster_index_cut[[3]] <- NULL
@@ -90,7 +102,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[4]])==T){
+      raster_index_cut[[4]] <- NA
+    }else{
     raster_index_cut[[4]]  <- ri[[1]] >= t_values[[4]]
+    }
   }else{
     t_values[[4]] <- NULL
     raster_index_cut[[4]]  <- NULL
@@ -109,7 +125,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[5]])==T){
+      raster_index_cut[[5]] <- NA
+    }else{
     raster_index_cut[[5]]  <- ri[[1]] <= t_values[[5]]
+    }
   }else{
     t_values[[5]]<- NULL
     raster_index_cut[[5]] <- NULL
@@ -126,7 +146,10 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
-    raster_index_cut[[6]]  <- ri[[1]] >= t_values[[6]]
+    if (is.na(t_values[[6]])==T){
+      raster_index_cut[[6]] <- NA
+    }else{
+    raster_index_cut[[6]]  <- ri[[1]] >= t_values[[6]]}
   }else{
     t_values[[6]]<- NULL
     raster_index_cut[[6]]  <- NULL
@@ -143,7 +166,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[7]])==T){
+      raster_index_cut[[7]] <- NA
+    }else{
     raster_index_cut[[7]]  <- ri[[1]] <= t_values[[7]]
+    }
   }else{
     t_values[[7]]<- NULL
     raster_index_cut[[7]] <- NULL
@@ -160,7 +187,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[8]])==T){
+      raster_index_cut[[8]] <- NA
+    }else{
     raster_index_cut[[8]]  <- ri[[1]] >= t_values[[8]]
+    }
   }else{
     t_values[[8]]<- NULL
     raster_index_cut[[8]] <- NULL
@@ -178,7 +209,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[9]])==T){
+      raster_index_cut[[9]] <- NA
+    }else{
     raster_index_cut[[9]]  <- ri[[1]] <= t_values[[9]]
+    }
   }else{
     t_values[[9]] <- NULL
     raster_index_cut[[9]] <- NULL
@@ -196,7 +231,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[10]])==T){
+      raster_index_cut[[10]] <- NA
+    }else{
     raster_index_cut[[10]] <- ri[[1]] <= t_values[[10]]
+    }
   }else{
     t_values[[10]]<- NULL
     raster_index_cut[[10]] <- NULL
@@ -213,7 +252,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[11]])==T){
+      raster_index_cut[[11]] <- NA
+    }else{
     raster_index_cut[[11]] <- ri[[1]] >= t_values[[11]]
+    }
   }else{
     t_values[[11]] <- NULL
     raster_index_cut[[11]] <- NULL
@@ -230,8 +273,12 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[12]])==T){
+      raster_index_cut[[12]] <- NA
+    }else{
     raster_index_cut[[12]] <- ri[[1]] <= t_values[[12]]
-  } else{
+    }
+  }else{
     t_values[[12]]<- NULL
     raster_index_cut[[12]] <- NULL
   }
@@ -247,7 +294,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[13]])==T){
+      raster_index_cut[[13]] <- NA
+    }else{
     raster_index_cut[[13]] <- ri[[1]] <= t_values[[13]]
+    }
   } else{
     t_values[[13]]<- NULL
     raster_index_cut[[13]] <- NULL
@@ -264,7 +315,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[14]])==T){
+      raster_index_cut[[14]] <- NA
+    }else{
     raster_index_cut[[14]] <- ri[[1]] <= t_values[[14]]
+    }
   } else{
     t_values[[14]] <- NULL
     raster_index_cut[[14]] <- NULL
@@ -281,7 +336,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[15]])==T){
+      raster_index_cut[[15]] <- NA
+    }else{
     raster_index_cut[[15]] <- ri[[1]] >= t_values[[15]]
+    }
   }else{
     t_values[[15]] <- NULL
     raster_index_cut[[15]] <- NULL
@@ -298,7 +357,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[16]])==T){
+      raster_index_cut[[16]] <- NA
+    }else{
     raster_index_cut[[16]] <- ri[[1]] <= t_values[[16]]
+    }
   } else{
     t_values[[16]] <- NULL
     raster_index_cut[[16]] <- NULL
@@ -315,7 +378,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[17]])==T){
+      raster_index_cut[[17]] <- NA
+    }else{
     raster_index_cut[[17]] <- ri[[1]] <= t_values[[17]]
+    }
   }else{
     t_values[[17]] <- NULL
     raster_index_cut[[17]] <- NULL
@@ -332,7 +399,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[18]])==T){
+      raster_index_cut[[18]] <- NA
+    }else{
     raster_index_cut[[18]] <- ri[[1]] >= t_values[[18]]
+    }
   }else{
     t_values[[18]] <- NULL
     raster_index_cut[[18]] <- NULL
@@ -349,7 +420,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
           method    = threshold.method
         )
     }
+    if (is.na(t_values[[19]])==T){
+      raster_index_cut[[19]] <- NA
+    }else{
     raster_index_cut[[19]] <- ri[[1]] <= t_values[[19]]
+    }
   }else{
     t_values[[19]] <- NULL
     raster_index_cut[[19]] <- NULL
