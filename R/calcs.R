@@ -9,8 +9,8 @@
 # descriptors.= descriptors.
 # calculate.thresh = calculate.thresh
 # threshold.method = threshold.method
-# area <- 1
-# photo <- 1
+# area <- 3
+# photo <- 3
 
 calcs <- function(photo,
                   area, 
@@ -143,7 +143,7 @@ calcs <- function(photo,
         threshold.method    = threshold.method,
         threshold.vector    = threshold.vector
         )
-    is.na(list_threshold_results[[1]])
+    
   # Extract mask values -----------------------------------------------------
   #extract mask pixel coordinates
   if(manual.mask.test==T){
@@ -186,6 +186,7 @@ calcs <- function(photo,
                )
       names(binary_surfaces) <- 
         succesfull_threshold_names
+      
       failed_binary_surfaces <-
         matrix(as.numeric(rep(NA,4*ncell(list_raster_results[[1]]))),
                nrow =ncell(list_raster_results[[1]]),
@@ -194,11 +195,29 @@ calcs <- function(photo,
         lapply(1:length(failed_threshold_names), function(i) failed_binary_surfaces)
       names(failed_binary_surfaces) <- 
         failed_threshold_names
+      
       binary_surfaces <-
         c(binary_surfaces, failed_binary_surfaces)
+      
       binary_surfaces <- binary_surfaces[match(index., names(binary_surfaces))]
-      # summary(binary_surfaces[match(index., names(binary_surfaces))])
-      # summary(binary_surfaces)    
+     # Correct if are less than 4 classes of when we cross manual mask and atothreshold mask
+       for(i in 1:length(binary_surfaces)){
+        if(ncol(binary_surfaces[[i]])!=4){
+          cols <- c("surface.00", "surface.01", "surface.10", "surface.11")
+          missing_colnames <- cols[is.element(cols, colnames(binary_surfaces[[i]]))!=T]
+          missing_cols <-
+            matrix(NA, ncell(list_threshold_results[[1]][[1]]),
+                   ncol = length(missing_colnames))
+          colnames(missing_cols) <- missing_colnames 
+          binary_surfaces[[i]] <- 
+            cbind(binary_surfaces[[i]],missing_cols)
+          binary_surfaces[[i]] <- 
+            binary_surfaces[[i]][,match(cols, colnames(binary_surfaces[[i]]))]
+        }else{
+          binary_surfaces[[i]] <- binary_surfaces[[i]]
+        }
+      }
+      
       list_df_results <-
         lapply(
           # grep(paste(succesfull_threshold_names, collapse = "|"), index.),
