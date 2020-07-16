@@ -374,7 +374,7 @@ ccspectral.df <- function(tif.path,
   print(all)
   
   start_time <- Sys.time()
-  message("Starting calculations...")
+  message(paste("Starting calculations at", start_time))
   apply(all, 1, function(pair) {
     calcs(
       pair[1],
