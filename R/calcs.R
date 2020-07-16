@@ -143,6 +143,7 @@ calcs <- function(photo,
         threshold.method    = threshold.method,
         threshold.vector    = threshold.vector
         )
+    is.na(list_threshold_results[[1]])
   # Extract mask values -----------------------------------------------------
   #extract mask pixel coordinates
   if(manual.mask.test==T){
@@ -157,34 +158,62 @@ calcs <- function(photo,
     # m_as_m => real (manual) moss classified as moss (by threshold classification)
     coor <- 
       coordinates(calibration_results[[1]])
-    surface_class <-
-      lapply(1:length(list_raster_results),
-             function(i)
-               paste0(getValues(list_threshold_results[[1]][[i]]),
-                      getValues(calibration_results[[2]][[4]])
-                      )
-             )
-    if(require(varhandle)!=T){
-    install.packages("varhandle")
-    require(varhandle)}
-    binary_surfaces <- 
-      lapply(1:length(surface_class),
-             function(i)
-               varhandle::to.dummy(surface_class[[i]], "surface")
-             )
-    list_df_results <-
-      lapply(c(1:length(list_raster_results)),
-             function(i)
-               cbind(
-                 coor,
-                 getValues(list_raster_results[[i]]),
-                 getValues(list_threshold_results[[1]][[i]]),
-                 getValues(calibration_results[[2]][[4]]),
-                 binary_surfaces[[i]][,1],
-                 binary_surfaces[[i]][,2],
-                 binary_surfaces[[i]][,3],
-                 binary_surfaces[[i]][,4]
-                 )
+      failed_thresholds <-  
+        lapply(1:2, function(i)
+          list_threshold_results[[i]][is.na(list_threshold_results[[2]])==T])
+      failed_threshold_names <- 
+        gsub("_thresh_mask","",names(failed_thresholds[[1]]))
+      succesfull_thresholds <-
+        lapply(1:2, function(i)
+          list_threshold_results[[1]][is.na(list_threshold_results[[2]])!=T])
+      succesfull_threshold_names <- 
+        gsub("_thresh_mask","",names(succesfull_thresholds[[1]]))
+      
+      surface_class <-
+        lapply(grep(paste(succesfull_threshold_names, collapse = "|"), index.),
+               function(i)
+                 paste0(as.integer(values(list_threshold_results[[1]][[i]])),
+                        getValues(calibration_results[[2]][[4]])
+                        )
+               )
+      if(require(varhandle)!=T){
+        install.packages("varhandle")
+        require(varhandle)}
+      binary_surfaces <-
+        lapply(1:length(surface_class),
+               function(i)
+                 varhandle::to.dummy(surface_class[[i]], "surface")
+               )
+      names(binary_surfaces) <- 
+        succesfull_threshold_names
+      failed_binary_surfaces <-
+        matrix(as.numeric(rep(NA,4*ncell(list_raster_results[[1]]))),
+               nrow =ncell(list_raster_results[[1]]),
+               ncol = 4)
+      failed_binary_surfaces <-
+        lapply(1:length(failed_threshold_names), function(i) failed_binary_surfaces)
+      names(failed_binary_surfaces) <- 
+        failed_threshold_names
+      binary_surfaces <-
+        c(binary_surfaces, failed_binary_surfaces)
+      binary_surfaces <- binary_surfaces[match(index., names(binary_surfaces))]
+      # summary(binary_surfaces[match(index., names(binary_surfaces))])
+      # summary(binary_surfaces)    
+      list_df_results <-
+        lapply(
+          # grep(paste(succesfull_threshold_names, collapse = "|"), index.),
+          1:length(binary_surfaces),
+          function(i)
+            cbind(
+              coor,
+              getValues(list_raster_results[[i]]),
+              as.integer(values(list_threshold_results[[1]][[i]])),
+              getValues(calibration_results[[2]][[4]]),
+              binary_surfaces[[i]][,1],
+              binary_surfaces[[i]][,2],
+              binary_surfaces[[i]][,3],
+              binary_surfaces[[i]][,4]
+              )
              )
     # transform in data frame
     list_df_results <-

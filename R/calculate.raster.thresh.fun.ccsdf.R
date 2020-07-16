@@ -25,7 +25,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   
   # NDVI autothres ------------------------------------------------------------
   if (any(unique(grepl(index_order[1], index.))) == TRUE) { 
-    ri <- list.raster.results[grepl(index_order[1], index.)]
+    ri <- list.raster.results[[1]]
     if(calculate.thresh==T){
       t_values[[1]] <-  
         autothreshold.value(
@@ -36,10 +36,12 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[1]])==T){
-      raster_index_cut[[1]] <- NA
-    }else{
-   
-      raster_index_cut[[1]]  <- ri[[1]] >= t_values[[1]]
+      # raster_index_cut[[1]] <- NA
+      raster_index_cut[[1]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[1]], "authothreshold by", threshold.method, "method." ))
+    
+      }else{
+      raster_index_cut[[1]]  <- ri >= t_values[[1]]
       }
   }else{
     t_values[[1]] <- NULL
@@ -48,20 +50,22 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   
   # SR autothres -----------------------------------------------------------
   if (any(unique(grepl(index_order[2], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[2], index.)]
+    ri <- list.raster.results[[2]]
     if(calculate.thresh==T){
       t_values[[2]] <- 
         autothreshold.value(
           raster    = ri,
-          max.index = max(getValues(ri[[1]]), na.rm = T),
+          max.index = max(getValues(ri), na.rm = T),
           min.index = 0,
           method    = threshold.method
         )
     }
     if (is.na(t_values[[2]])==T){
-      raster_index_cut[[2]] <- NA
+      # raster_index_cut[[2]] <- NA 
+      raster_index_cut[[2]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[2]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[2]]  <- ri[[1]] >= t_values[[2]]
+    raster_index_cut[[2]]  <- ri >= t_values[[2]]
     }
   }else{
     t_values[[2]]<- NULL
@@ -70,7 +74,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   
   # MSAVI autothreshold -----------------------------------------------------
   if (any(unique(grepl(index_order[3], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[3], index.)]
+    ri <- list.raster.results[[3]]
     if(calculate.thresh==T){
       t_values[[3]]  <- 
         autothreshold.value(
@@ -81,9 +85,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[3]])==T){
-      raster_index_cut[[3]] <- NA
+      # raster_index_cut[[3]] <- NA
+      raster_index_cut[[3]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[3]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[3]]  <- ri[[1]] >= t_values[[3]]
+    raster_index_cut[[3]]  <- ri >= t_values[[3]]
     }
   }else{
     t_values[[3]] <- NULL
@@ -92,7 +98,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   
   # EVI autothreshold -------------------------------------------------------
   if (any(unique(grepl(index_order[4], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[4], index.)]
+    ri <- list.raster.results[[4]]
     if(calculate.thresh==T){
       t_values[[4]] <- 
         autothreshold.value(
@@ -103,9 +109,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[4]])==T){
-      raster_index_cut[[4]] <- NA
+      # raster_index_cut[[4]] <- NA
+      raster_index_cut[[4]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[4]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[4]]  <- ri[[1]] >= t_values[[4]]
+    raster_index_cut[[4]]  <- ri >= t_values[[4]]
     }
   }else{
     t_values[[4]] <- NULL
@@ -114,7 +122,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   
   # CI autothreshold -------------------------------------------------------
   if (any(unique(grepl(index_order[5], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(paste0("^",index_order[5],"$"), index.)]
+    ri <- list.raster.results[[5]]
     
     if(calculate.thresh==T){
       t_values[[5]] <- 
@@ -126,9 +134,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[5]])==T){
-      raster_index_cut[[5]] <- NA
+      # raster_index_cut[[5]] <- NA
+      raster_index_cut[[5]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[5]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[5]]  <- ri[[1]] <= t_values[[5]]
+    raster_index_cut[[5]]  <- ri <= t_values[[5]]
     }
   }else{
     t_values[[5]]<- NULL
@@ -136,27 +146,29 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # BSCI autothreshold ----------------------------------------------------
   if (any(unique(grepl(index_order[6], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[6], index.)]
+    ri <- list.raster.results[[6]]
     if(calculate.thresh==T){
       t_values[[6]] <- 
         autothreshold.value(
           raster  = ri,
-          max.index = max(getValues(ri[[1]]), na.rm = T),
+          max.index = max(getValues(ri), na.rm = T),
           min.index = 0,
           method    = threshold.method
         )
     }
     if (is.na(t_values[[6]])==T){
-      raster_index_cut[[6]] <- NA
+      # raster_index_cut[[6]] <- NA
+      raster_index_cut[[6]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[6]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[6]]  <- ri[[1]] >= t_values[[6]]}
+    raster_index_cut[[6]]  <- ri >= t_values[[6]]}
   }else{
     t_values[[6]]<- NULL
     raster_index_cut[[6]]  <- NULL
   }
   # BI autothreshold ---------------------------------------------------
   if (any(unique(grepl(index_order[7], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[7], index.)]
+    ri <- list.raster.results[[7]]
     if(calculate.thresh==T){
       t_values[[7]] <- 
         autothreshold.value(
@@ -167,9 +179,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[7]])==T){
-      raster_index_cut[[7]] <- NA
+      # raster_index_cut[[7]] <- NA
+      raster_index_cut[[7]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[7]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[7]]  <- ri[[1]] <= t_values[[7]]
+    raster_index_cut[[7]]  <- ri <= t_values[[7]]
     }
   }else{
     t_values[[7]]<- NULL
@@ -177,7 +191,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # NorR autothreshold -------------------------------------------------
   if (any(unique(grepl(index_order[8], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[8], index.)]
+    ri <- list.raster.results[[8]]
     if(calculate.thresh==T){
       t_values[[8]] <- 
         autothreshold.value(
@@ -188,9 +202,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[8]])==T){
-      raster_index_cut[[8]] <- NA
+      # raster_index_cut[[8]] <- NA
+      raster_index_cut[[8]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[8]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[8]]  <- ri[[1]] >= t_values[[8]]
+    raster_index_cut[[8]]  <- ri >= t_values[[8]]
     }
   }else{
     t_values[[8]]<- NULL
@@ -198,7 +214,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # NorG autothreshold ------------------------------------------------
   if (any(unique(grepl(index_order[9], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[9], index.)]
+    ri <- list.raster.results[[9]]
     
     if(calculate.thresh==T){
       t_values[[9]] <- 
@@ -210,9 +226,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[9]])==T){
-      raster_index_cut[[9]] <- NA
+      # raster_index_cut[[9]] <- NA
+      raster_index_cut[[9]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[9]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[9]]  <- ri[[1]] <= t_values[[9]]
+    raster_index_cut[[9]]  <- ri <= t_values[[9]]
     }
   }else{
     t_values[[9]] <- NULL
@@ -220,7 +238,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # NorB autothreshold -----------------------------------------------
   if (any(unique(grepl(index_order[10], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[10], index.)]
+    ri <- list.raster.results[[10]]
     
     if(calculate.thresh==T){
       t_values[[10]] <- 
@@ -232,9 +250,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[10]])==T){
-      raster_index_cut[[10]] <- NA
+      # raster_index_cut[[10]] <- NA
+      raster_index_cut[[10]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[10]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[10]] <- ri[[1]] <= t_values[[10]]
+    raster_index_cut[[10]] <- ri <= t_values[[10]]
     }
   }else{
     t_values[[10]]<- NULL
@@ -242,7 +262,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # ExR autothreshold ------------------------------------------------
   if (any(unique(grepl(index_order[11], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[11], index.)]
+    ri <- list.raster.results[[11]]
     if(calculate.thresh==T){
       t_values[[11]] <- 
         autothreshold.value(
@@ -253,9 +273,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[11]])==T){
-      raster_index_cut[[11]] <- NA
+      # raster_index_cut[[11]] <- NA
+      raster_index_cut[[11]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[11]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[11]] <- ri[[1]] >= t_values[[11]]
+    raster_index_cut[[11]] <- ri >= t_values[[11]]
     }
   }else{
     t_values[[11]] <- NULL
@@ -263,7 +285,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # ExG autothreshold -----------------------------------------------
   if (any(unique(grepl(index_order[12], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(paste0(index_order[12],"$"), index.)]
+    ri <- list.raster.results[[12]]
     if(calculate.thresh==T){
       t_values[[12]] <- 
         autothreshold.value(
@@ -274,9 +296,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[12]])==T){
-      raster_index_cut[[12]] <- NA
+      # raster_index_cut[[12]] <- NA
+      raster_index_cut[[12]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[12]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[12]] <- ri[[1]] <= t_values[[12]]
+    raster_index_cut[[12]] <- ri <= t_values[[12]]
     }
   }else{
     t_values[[12]]<- NULL
@@ -284,7 +308,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # ExB autothreshold -----------------------------------------------
   if (any(unique(grepl(index_order[13], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[13], index.)]
+    ri <- list.raster.results[[13]]
     if(calculate.thresh==T){
       t_values[[13]] <- 
         autothreshold.value(
@@ -295,9 +319,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[13]])==T){
-      raster_index_cut[[13]] <- NA
+      # raster_index_cut[[13]] <- NA
+      raster_index_cut[[13]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[13]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[13]] <- ri[[1]] <= t_values[[13]]
+    raster_index_cut[[13]] <- ri <= t_values[[13]]
     }
   } else{
     t_values[[13]]<- NULL
@@ -305,7 +331,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # ExGR autothreshold ----------------------------------------------
   if (any(unique(grepl(index_order[14], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[14], index.)]
+    ri <- list.raster.results[[14]]
     if(calculate.thresh==T){
       t_values[[14]] <- 
         autothreshold.value(
@@ -316,9 +342,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[14]])==T){
-      raster_index_cut[[14]] <- NA
+      # raster_index_cut[[14]] <- NA
+      raster_index_cut[[14]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[14]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[14]] <- ri[[1]] <= t_values[[14]]
+    raster_index_cut[[14]] <- ri <= t_values[[14]]
     }
   } else{
     t_values[[14]] <- NULL
@@ -326,7 +354,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # CIVE autothreshold ----------------------------------------------
   if (any(unique(grepl(index_order[15], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[15], index.)]
+    ri <- list.raster.results[[15]]
     if(calculate.thresh==T){
       t_values[[15]] <- 
         autothreshold.value(
@@ -337,9 +365,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[15]])==T){
-      raster_index_cut[[15]] <- NA
+      # raster_index_cut[[15]] <- NA
+      raster_index_cut[[15]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[15]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[15]] <- ri[[1]] >= t_values[[15]]
+    raster_index_cut[[15]] <- ri >= t_values[[15]]
     }
   }else{
     t_values[[15]] <- NULL
@@ -347,20 +377,22 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # VEG autothreshold -----------------------------------------------
   if (any(unique(grepl(index_order[16], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[16], index.)]
+    ri <- list.raster.results[[16]]
     if(calculate.thresh==T){
       t_values[[16]] <- 
         autothreshold.value(
           raster    = ri,
-          max.index = max(values(ri[[1]]), na.rm = T),
+          max.index = max(values(ri), na.rm = T),
           min.index = 0,
           method    = threshold.method
         )
     }
     if (is.na(t_values[[16]])==T){
-      raster_index_cut[[16]] <- NA
+      # raster_index_cut[[16]] <- NA
+      raster_index_cut[[16]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[16]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[16]] <- ri[[1]] <= t_values[[16]]
+    raster_index_cut[[16]] <- ri <= t_values[[16]]
     }
   } else{
     t_values[[16]] <- NULL
@@ -368,7 +400,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # HUE autothreshold -------------------------------------------------
   if (any(unique(grepl(index_order[17], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[17], index.)]
+    ri <- list.raster.results[[17]]
     if(calculate.thresh==T){
       t_values[[17]] <- 
         autothreshold.value(
@@ -379,9 +411,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[17]])==T){
-      raster_index_cut[[17]] <- NA
+      # raster_index_cut[[17]] <- NA
+      raster_index_cut[[17]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[17]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[17]] <- ri[[1]] <= t_values[[17]]
+    raster_index_cut[[17]] <- ri <= t_values[[17]]
     }
   }else{
     t_values[[17]] <- NULL
@@ -389,7 +423,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # SAT autothreshold -------------------------------------------------
   if(any(unique(grepl(index_order[18], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[18], index.)]
+    ri <- list.raster.results[[18]]
     if(calculate.thresh==T){
       t_values[[18]] <- 
         autothreshold.value(
@@ -400,9 +434,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[18]])==T){
-      raster_index_cut[[18]] <- NA
+      # raster_index_cut[[18]] <- NA
+      raster_index_cut[[18]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[18]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[18]] <- ri[[1]] >= t_values[[18]]
+    raster_index_cut[[18]] <- ri >= t_values[[18]]
     }
   }else{
     t_values[[18]] <- NULL
@@ -410,7 +446,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # VAL autothreshold -------------------------------------------------
   if(any(unique(grepl(index_order[19], index.))) == TRUE) {
-    ri <- list.raster.results[grepl(index_order[19], index.)]
+    ri <- list.raster.results[[19]]
     if(calculate.thresh==T){
       t_values[[19]] <- 
         autothreshold.value(
@@ -421,9 +457,11 @@ calculate.raster.thresh.fun <- function(list.raster.results,
         )
     }
     if (is.na(t_values[[19]])==T){
-      raster_index_cut[[19]] <- NA
+      # raster_index_cut[[19]] <- NA
+      raster_index_cut[[19]] <- setValues(ri, NA)
+      message(paste("Can't calculate",index.[[19]], "authothreshold by", threshold.method, "method." ))
     }else{
-    raster_index_cut[[19]] <- ri[[1]] <= t_values[[19]]
+    raster_index_cut[[19]] <- ri <= t_values[[19]]
     }
   }else{
     t_values[[19]] <- NULL
@@ -434,7 +472,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   # t_values <- as.list(t_values[is.null(t_values)==FALSE])
   # t_values <- plyr::compact(t_values)
   # t_values <- do.call(c,t_values)
-  
+
   names(t_values) <- paste0(index.,"_thresh_value")
   
   # Filter rasters that are not NULL
