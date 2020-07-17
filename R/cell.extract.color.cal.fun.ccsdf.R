@@ -20,13 +20,14 @@ cell.extract.color.cal.fun <-
     data.frame(extract(all.bands, obs.area$cells))
   if(manual.mask.test==T){
     colnames(bands_df) <- 
-    c("vis.red", "vis.green",
-      "vis.blue", "nir.blue")
-  }else{
-    colnames(bands_df) <- 
       c("vis.red", "vis.green",
         "vis.blue", "nir.blue",
         "mask")
+  }else{
+    colnames(bands_df) <- 
+      c("vis.red", "vis.green",
+        "vis.blue", "nir.blue")
+    
     }
   
   red_band <- 
@@ -124,3 +125,4 @@ cell.extract.color.cal.fun <-
                     "nir_rsq")
   }
   return(out)}
+
