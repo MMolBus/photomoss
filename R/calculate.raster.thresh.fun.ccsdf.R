@@ -25,7 +25,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   
   # NDVI autothres ------------------------------------------------------------
   if (any(unique(grepl(index_order[1], index.))) == TRUE) { 
-    ri <- list.raster.results[[1]]
+    ri <- list.raster.results[1]
     if(calculate.thresh==T){
       t_values[[1]] <-  
         autothreshold.value(
@@ -50,7 +50,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   
   # SR autothres -----------------------------------------------------------
   if (any(unique(grepl(index_order[2], index.))) == TRUE) {
-    ri <- list.raster.results[[2]]
+    ri <- list.raster.results[2]
     if(calculate.thresh==T){
       t_values[[2]] <- 
         autothreshold.value(
@@ -74,7 +74,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   
   # MSAVI autothreshold -----------------------------------------------------
   if (any(unique(grepl(index_order[3], index.))) == TRUE) {
-    ri <- list.raster.results[[3]]
+    ri <- list.raster.results[3]
     if(calculate.thresh==T){
       t_values[[3]]  <- 
         autothreshold.value(
@@ -98,7 +98,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   
   # EVI autothreshold -------------------------------------------------------
   if (any(unique(grepl(index_order[4], index.))) == TRUE) {
-    ri <- list.raster.results[[4]]
+    ri <- list.raster.results[4]
     if(calculate.thresh==T){
       t_values[[4]] <- 
         autothreshold.value(
@@ -122,7 +122,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   
   # CI autothreshold -------------------------------------------------------
   if (any(unique(grepl(index_order[5], index.))) == TRUE) {
-    ri <- list.raster.results[[5]]
+    ri <- list.raster.results[5]
     
     if(calculate.thresh==T){
       t_values[[5]] <- 
@@ -146,7 +146,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # BSCI autothreshold ----------------------------------------------------
   if (any(unique(grepl(index_order[6], index.))) == TRUE) {
-    ri <- list.raster.results[[6]]
+    ri <- list.raster.results[6]
     if(calculate.thresh==T){
       t_values[[6]] <- 
         autothreshold.value(
@@ -168,7 +168,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # BI autothreshold ---------------------------------------------------
   if (any(unique(grepl(index_order[7], index.))) == TRUE) {
-    ri <- list.raster.results[[7]]
+    ri <- list.raster.results[7]
     if(calculate.thresh==T){
       t_values[[7]] <- 
         autothreshold.value(
@@ -191,7 +191,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # NorR autothreshold -------------------------------------------------
   if (any(unique(grepl(index_order[8], index.))) == TRUE) {
-    ri <- list.raster.results[[8]]
+    ri <- list.raster.results[8]
     if(calculate.thresh==T){
       t_values[[8]] <- 
         autothreshold.value(
@@ -214,7 +214,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # NorG autothreshold ------------------------------------------------
   if (any(unique(grepl(index_order[9], index.))) == TRUE) {
-    ri <- list.raster.results[[9]]
+    ri <- list.raster.results[9]
     
     if(calculate.thresh==T){
       t_values[[9]] <- 
@@ -238,7 +238,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # NorB autothreshold -----------------------------------------------
   if (any(unique(grepl(index_order[10], index.))) == TRUE) {
-    ri <- list.raster.results[[10]]
+    ri <- list.raster.results[10]
     
     if(calculate.thresh==T){
       t_values[[10]] <- 
@@ -262,7 +262,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # ExR autothreshold ------------------------------------------------
   if (any(unique(grepl(index_order[11], index.))) == TRUE) {
-    ri <- list.raster.results[[11]]
+    ri <- list.raster.results[11]
     if(calculate.thresh==T){
       t_values[[11]] <- 
         autothreshold.value(
@@ -285,7 +285,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # ExG autothreshold -----------------------------------------------
   if (any(unique(grepl(index_order[12], index.))) == TRUE) {
-    ri <- list.raster.results[[12]]
+    ri <- list.raster.results[12]
     if(calculate.thresh==T){
       t_values[[12]] <- 
         autothreshold.value(
@@ -308,7 +308,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # ExB autothreshold -----------------------------------------------
   if (any(unique(grepl(index_order[13], index.))) == TRUE) {
-    ri <- list.raster.results[[13]]
+    ri <- list.raster.results[13]
     if(calculate.thresh==T){
       t_values[[13]] <- 
         autothreshold.value(
@@ -331,7 +331,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # ExGR autothreshold ----------------------------------------------
   if (any(unique(grepl(index_order[14], index.))) == TRUE) {
-    ri <- list.raster.results[[14]]
+    ri <- list.raster.results[14]
     if(calculate.thresh==T){
       t_values[[14]] <- 
         autothreshold.value(
@@ -354,7 +354,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # CIVE autothreshold ----------------------------------------------
   if (any(unique(grepl(index_order[15], index.))) == TRUE) {
-    ri <- list.raster.results[[15]]
+    ri <- list.raster.results[15]
     if(calculate.thresh==T){
       t_values[[15]] <- 
         autothreshold.value(
@@ -377,7 +377,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # VEG autothreshold -----------------------------------------------
   if (any(unique(grepl(index_order[16], index.))) == TRUE) {
-    ri <- list.raster.results[[16]]
+    ri <- list.raster.results[16]
     if(calculate.thresh==T){
       t_values[[16]] <- 
         autothreshold.value(
@@ -400,7 +400,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # HUE autothreshold -------------------------------------------------
   if (any(unique(grepl(index_order[17], index.))) == TRUE) {
-    ri <- list.raster.results[[17]]
+    ri <- list.raster.results[17]
     if(calculate.thresh==T){
       t_values[[17]] <- 
         autothreshold.value(
@@ -423,7 +423,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # SAT autothreshold -------------------------------------------------
   if(any(unique(grepl(index_order[18], index.))) == TRUE) {
-    ri <- list.raster.results[[18]]
+    ri <- list.raster.results[18]
     if(calculate.thresh==T){
       t_values[[18]] <- 
         autothreshold.value(
@@ -446,7 +446,7 @@ calculate.raster.thresh.fun <- function(list.raster.results,
   }
   # VAL autothreshold -------------------------------------------------
   if(any(unique(grepl(index_order[19], index.))) == TRUE) {
-    ri <- list.raster.results[[19]]
+    ri <- list.raster.results[19]
     if(calculate.thresh==T){
       t_values[[19]] <- 
         autothreshold.value(
