@@ -1,4 +1,4 @@
-# # CALCS function, for ccspectral
+# CALCS function, for ccspectral
 # vis.files = vis_files
 # nir.files = nir_files
 # manual.mask.test = manual.mask.test

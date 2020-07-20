@@ -18,7 +18,7 @@ calculate.raster.thresh.fun <-
     }else{
       t_values <-  rep(NA, length(index_order))
       t_values[grepl(paste(c(index.,"00"), collapse ="|"), index_order)] <- threshold.vector
-      t_values <- as.list(t_values)
+      t_values <- as.list(t_values[is.na(t_values)!=T])
       }
     raster_index_cut <- list()
     # NDVI autothres ------------------------------------------------------------
