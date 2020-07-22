@@ -2,10 +2,11 @@
 \alias{chart.from.tif}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Selects each color of the calibration card
+Selection of the calibration card color cells in an image.
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+  Manual selection of the calibration card color cells in a .tif image that shows a moss sample and a color card. 
+
 }
 \usage{
 chart.from.tif(tif.path, samp.width = 0.01)
@@ -13,17 +14,19 @@ chart.from.tif(tif.path, samp.width = 0.01)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{tif.path}{
-%%     ~~Describe \code{tif.path} here~~
+    Describe \code{tif.path} directory path where the images are stored.	
 }
   \item{samp.width}{
-%%     ~~Describe \code{samp.width} here~~
+    Describe \code{samp.width} definition of resulting polygons size.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+    To do it the function use the first image inside a the _tifpath_ argument, and demands to click in the center of the color card cells following a specific sequence. 
+  As result the function creates a set of polygons with its centers around the click points. Polygons size are defined by the _samp.width_ 
+
 }
 \value{
-%%  ~Describe the value returned
+A list of 24 polygons that corespond with each one the cells of the color card
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
