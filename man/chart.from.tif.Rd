@@ -21,8 +21,8 @@ chart.from.tif(tif.path, samp.width = 0.01)
 }
 }
 \details{
-    To do it the function use the first image inside a the <b>tif.path</b> argument, and demands to click in the center of the color card cells following a specific sequence. 
-  As result the function creates a set of polygons with its centers around the click points. Polygons size are defined by the <b>samp.width</b>
+    To do it the function use the first image inside a the tif.path argument, and demands to click in the center of the color card cells following a specific sequence. 
+  As result the function creates a set of polygons with its centers around the click points. Polygons size are defined by the samp.width.
 
 }
 \value{
