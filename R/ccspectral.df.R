@@ -26,12 +26,7 @@
 ccspectral.df <- function(tif.path,
                           chart,
                           obs.areas,
-                          # # sample.names = NULL,
-                          # rasters          = FALSE,
-                          # ml               = FALSE,
-                          # ml.cutoff        = 0.9,
                           pdf = F,
-                          # autothreshold = F,
                           calculate.thresh = T,
                           descrip = F,
                           manual.mask.test=F,
@@ -41,13 +36,9 @@ ccspectral.df <- function(tif.path,
                                      "HUE", "SAT", "VAL"),
                           threshold.method=c("Huang"),
                           threshold.vector,
-                          # surface. = c( "manual.mask.moss", "manual.mask.backgr",
-                          #              "auto.thresh.moss", "auto.thresh.backgr",
-                          #              "manual.thresh.moss", "manual.thresh.backgr"),
                           descriptors. = 
                             c("median","mean","sd","min",
-                              "max","diff.range"# "threshold",
-                              )
+                              "max","diff.range")
                           )
 {  
 
@@ -417,6 +408,6 @@ ccspectral.df <- function(tif.path,
 #       pdf = pdf
 #     )
 #   }
-  
+  showwarnings
   message("Processed files may be found at: ", paste0(tif.path, out_dir))
 }
