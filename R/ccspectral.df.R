@@ -14,8 +14,8 @@
 #  i <- 1
 #   obs.areas <- obs_areas
 # # # # # # authothreshold.method <- method[1]
-#   photo <- 1
-#   area <- 1
+  # photo <- 1
+  # area <- 1
 # # # # # pkg[!(pkg %in% installed.packages()[, "Package"])]
 # # # # #
 # # # # # if (!require("sm")) install.packages("sm")
@@ -91,23 +91,14 @@ ccspectral.df <- function(tif.path,
                    "backgr.as.moss", "moss.as.moss")
       }
     
-    
-    index_order <- c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI",
-                       "NORR", "NORG", "NORB", "EXR", "EXG", "EXB", "EXGR", 
-                       "CIVE", "VEG", "HUE", "SAT", "VAL") 
-    index. <- index.[order(match(index., index_order))]    
-      
-    
-    surface_order <- c(
-                       "auto.thresh.moss",   "auto.thresh.backgr",
+    surface_order <- c("auto.thresh.moss",   "auto.thresh.backgr",
                        "predef.thresh.moss", "predef.thresh.backgr",
                        "manual.mask.moss",   "manual.mask.backgr")
     surface. <- surface.[order(match(surface., surface_order))]
    
     index_order <- c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI",
-                     "NORR", "NORG", "NORB", "EXR", "EXG",
-                     "EXB", "EXGR", "CIVE", "VEG", "HUE",
-                     "SAT", "VAL") 
+                     "NORR", "NORG", "NORB", "EXR", "EXG", "EXB", "EXGR", 
+                     "CIVE", "VEG", "HUE", "SAT", "VAL") 
     index. <- index.[order(match(index., index_order))]
    
     descriptors_order <- c("median", "mean", "sd", "min",
@@ -209,7 +200,7 @@ ccspectral.df <- function(tif.path,
               "threshold.method")  
         }else{
           df_names <-
-            c("sample", "vis.file", "nir.file", "real.moss.cover",
+            c("sample", "vis.file", "nir.file",
               do.call(c,
                       do.call(c,
                               lapply(1:length(index.), function(i)
