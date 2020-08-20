@@ -379,26 +379,5 @@ ccspectral.df <- function(tif.path,
       start.time=start_time
       )
   })
-# for(i in nrow(all)){
-#     calcs(
-#       photo = i,
-#       area = i,
-#       obs.areas = obs.areas,
-#       vis.files = all_named[,1],
-#       nir.files = all_named[,1],
-#       chart=chart,
-#       mask.files = mask_files, 
-#       manual.mask.test = manual.mask.test,
-#       summary.file = summary_file,
-#       total.samples = total_samples,
-#       index.= index.,
-#       descriptors.= descriptors.,
-#       calculate.thresh = calculate.thresh,
-#       descrip = descrip,
-#       threshold.method = threshold.method,
-#       pdf = pdf
-#     )
-#   }
-  showwarnings
   message("Processed files may be found at: ", paste0(tif.path, out_dir))
 }
