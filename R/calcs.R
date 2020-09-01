@@ -1,4 +1,4 @@
-# CALCS function, for ccspectral
+# # CALCS function, for ccspectral
 # vis.files = vis_files
 # nir.files = nir_files
 # manual.mask.test = manual.mask.test
@@ -9,8 +9,8 @@
 # descriptors.= descriptors.
 # calculate.thresh = calculate.thresh
 # threshold.method = threshold.method
-# area <- 3
-# photo <- 3
+# area <- 1
+# photo <- 1
 
 calcs <- function(photo,
                   area, 
@@ -158,24 +158,24 @@ calcs <- function(photo,
     # m_as_m => real (manual) moss classified as moss (by threshold classification)
     coor <- 
       coordinates(calibration_results[[1]])
-      failed_thresholds <-  
-        lapply(1:2, function(i)
-          list_threshold_results[[i]][is.na(list_threshold_results[[2]])==T])
-      failed_threshold_names <- 
-        gsub("_thresh_mask","",names(failed_thresholds[[1]]))
-      succesfull_thresholds <-
-        lapply(1:2, function(i)
-          list_threshold_results[[1]][is.na(list_threshold_results[[2]])!=T])
-      succesfull_threshold_names <- 
-        gsub("_thresh_mask","",names(succesfull_thresholds[[1]]))
-      
-      surface_class <-
-        lapply(grep(paste(succesfull_threshold_names, collapse = "|"), index.),
-               function(i)
-                 paste0(as.integer(values(list_threshold_results[[1]][[i]])),
-                        getValues(calibration_results[[2]][[4]])
-                        )
-               )
+    failed_thresholds <-
+      lapply(1:2, function(i)
+        list_threshold_results[[i]][is.na(list_threshold_results[[2]])==T])
+    failed_threshold_names <-
+      gsub("_thresh_mask","",names(failed_thresholds[[1]]))
+    succesfull_thresholds <-
+      lapply(1:2, function(i)
+        list_threshold_results[[1]][is.na(list_threshold_results[[2]])!=T])
+    succesfull_threshold_names <-
+      gsub("_thresh_mask","",names(succesfull_thresholds[[1]]))
+    
+    surface_class <-
+      lapply(grep(paste(succesfull_threshold_names, collapse = "|"), index.),
+             function(i)
+               paste0(as.integer(values(list_threshold_results[[1]][[i]])),
+                      getValues(calibration_results[[2]][[4]])
+                      )
+             )
       if(require(varhandle)!=T){
         install.packages("varhandle")
         require(varhandle)}
@@ -200,7 +200,7 @@ calcs <- function(photo,
         c(binary_surfaces, failed_binary_surfaces)
       
       binary_surfaces <- binary_surfaces[match(index., names(binary_surfaces))]
-     # Correct if are less than 4 classes of when we cross manual mask and atothreshold mask
+     # Correct if are less than 4 classes when we cross manual mask and autothreshold mask
        for(i in 1:length(binary_surfaces)){
         if(ncol(binary_surfaces[[i]])!=4){
           cols <- c("surface.00", "surface.01", "surface.10", "surface.11")
@@ -308,12 +308,16 @@ calcs <- function(photo,
                          c(
                            table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
                            table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
-                           table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
-                           table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
-                           table(list.results[[1]][[i]][,6])[2], table(list.results[[1]][[i]][,6])[1],
-                           table(list.results[[1]][[i]][,7])[2], table(list.results[[1]][[i]][,7])[1],
-                           table(list.results[[1]][[i]][,8])[2], table(list.results[[1]][[i]][,8])[1],
-                           table(list.results[[1]][[i]][,9])[2], table(list.results[[1]][[i]][,9])[1]
+                           # table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
+                           # table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
+                           table(list.results[[1]][[i]][,6])[2],
+                           # table(list.results[[1]][[i]][,6])[1],
+                           table(list.results[[1]][[i]][,7])[2], 
+                           # table(list.results[[1]][[i]][,7])[1],
+                           table(list.results[[1]][[i]][,8])[2],
+                           # table(list.results[[1]][[i]][,8])[1],
+                           table(list.results[[1]][[i]][,9])[2]
+                           # table(list.results[[1]][[i]][,9])[1]
                          )
                        )
               )
@@ -336,9 +340,7 @@ calcs <- function(photo,
                        )
                 )
       }else{#manual.mask.test==T
-        
         int_surf_cover <-
-        
                   lapply(c(1:length(index.)),
                          function(i)
                            do.call(c,
