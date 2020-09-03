@@ -124,7 +124,7 @@ index.calc.fun <-
     }
     
     # Crust Index (CI) -----------------------------------------------------------
-    if (any(unique(grepl("CI", index.))) == TRUE) {
+    if (any(unique(grepl("^CI$", index.))) == TRUE) {
       CI <- 1 - ((raster.mat[[1]] - raster.mat[[3]]) /
                    (raster.mat[[1]] + raster.mat[[3]]))
     } else{
@@ -132,7 +132,7 @@ index.calc.fun <-
     }
     
     # Biological Soil Crust Index (BSCI) -----------------------------------------
-    if (any(unique(grepl("BSCI", index.))) == TRUE) {
+    if (any(unique(grepl("^BSCI$", index.))) == TRUE) {
       BSCI <- (1 - 2 * abs(raster.mat[[1]] - raster.mat[[2]])) /
         raster::mean(stack(raster.mat[[2]], raster.mat[[1]], raster.mat[[4]]))
     } else{
@@ -178,7 +178,7 @@ index.calc.fun <-
     }
     
     # Excess green (ExG) ---------------------------------------------------------
-    if (any(unique(grepl("EXG", index.))) == TRUE) {
+    if (any(unique(grepl("^EXG$", index.))) == TRUE) {
       EXG <- setValues(rst,
                        2 * getValues(rgb_norm[[2]]) -
                          getValues(rgb_norm[[1]]) -
@@ -197,7 +197,7 @@ index.calc.fun <-
     }
     
     # Excess green minus excess red (EXGR) ---------------------------------------
-    if (any(unique(grepl("EXGR", index.))) == TRUE) {
+    if (any(unique(grepl("^EXGR$", index.))) == TRUE) {
       if (is.null(EXG) == TRUE) {
         EXG <- setValues(rst,
                          2 * getValues(rgb_norm[[2]]) -
@@ -215,7 +215,7 @@ index.calc.fun <-
     }
     
     # Color index of VEGetation (CIVE) -------------------------------------------
-    if (any(unique(grepl("CIVE", index.))) == TRUE) {
+    if (any(unique(grepl("^CIVE$", index.))) == TRUE) {
       CIVE   <- setValues(
         rst,
         0.441 * getValues(rgb_norm[[1]]) -
