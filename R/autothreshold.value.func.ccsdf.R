@@ -25,7 +25,7 @@ autothreshold.value <- function(raster, max.index, min.index, method) {
     values(raster),
     method,
     ignore_white = T,
-    ignore_black = F,
+    ignore_black = T,
     ignore_na = TRUE
   )
   pt  <- attr(atm, "thresh")[1]
