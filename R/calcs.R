@@ -9,8 +9,8 @@
 # descriptors.= descriptors.
 # calculate.thresh = calculate.thresh
 # threshold.method = threshold.method
-# area <- 1
-# photo <- 1
+# area <- 2
+# photo <- 2
 
 calcs <- function(photo,
                   area, 
@@ -165,7 +165,7 @@ calcs <- function(photo,
       gsub("_thresh_mask","",names(failed_thresholds[[1]]))
     succesfull_thresholds <-
       lapply(1:2, function(i)
-        list_threshold_results[[1]][is.na(list_threshold_results[[2]])!=T])
+        list_threshold_results[[i]][is.na(list_threshold_results[[2]])!=T])
     succesfull_threshold_names <-
       gsub("_thresh_mask","",names(succesfull_thresholds[[1]]))
     
@@ -191,8 +191,8 @@ calcs <- function(photo,
         matrix(as.numeric(rep(NA,4*ncell(list_raster_results[[1]]))),
                nrow =ncell(list_raster_results[[1]]),
                ncol = 4)
-      failed_binary_surfaces <-
-        lapply(1:length(failed_threshold_names), function(i) failed_binary_surfaces)
+      # failed_binary_surfaces <-
+      #   lapply(1:length(failed_threshold_names), function(i) failed_binary_surfaces)
       names(failed_binary_surfaces) <- 
         failed_threshold_names
       
@@ -206,7 +206,7 @@ calcs <- function(photo,
           cols <- c("surface.00", "surface.01", "surface.10", "surface.11")
           missing_colnames <- cols[is.element(cols, colnames(binary_surfaces[[i]]))!=T]
           missing_cols <-
-            matrix(NA, ncell(list_threshold_results[[1]][[1]]),
+            matrix(0, ncell(list_threshold_results[[1]][[1]]),
                    ncol = length(missing_colnames))
           colnames(missing_cols) <- missing_colnames 
           binary_surfaces[[i]] <- 
@@ -282,7 +282,7 @@ calcs <- function(photo,
   # return(list.results)
   
   
-  rm(calibration_results)
+  # rm(calibration_results)
   ############################################################################  
   # Descriptors calculation -------------------------------------------------
   ############################################################################
@@ -379,7 +379,7 @@ calcs <- function(photo,
       }
     }
    
-
+int_surf_cover[is.na(int_surf_cover)] <- 0
   # START dataframe for index index vaulues presentation --------------------
   
   dat <- read.csv(summary.file)
