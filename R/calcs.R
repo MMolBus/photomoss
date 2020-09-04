@@ -191,8 +191,8 @@ calcs <- function(photo,
         matrix(as.numeric(rep(NA,4*ncell(list_raster_results[[1]]))),
                nrow =ncell(list_raster_results[[1]]),
                ncol = 4)
-      # failed_binary_surfaces <-
-      #   lapply(1:length(failed_threshold_names), function(i) failed_binary_surfaces)
+      failed_binary_surfaces <-
+        lapply(1:length(failed_threshold_names), function(i) failed_binary_surfaces)
       names(failed_binary_surfaces) <- 
         failed_threshold_names
       
@@ -201,7 +201,8 @@ calcs <- function(photo,
       
       binary_surfaces <- binary_surfaces[match(index., names(binary_surfaces))]
      # Correct if are less than 4 classes when we cross manual mask and autothreshold mask
-       for(i in 1:length(binary_surfaces)){
+       index. %in% succesfull_threshold_names
+       for(i in c(1:length(binary_surfaces))[index. %in% succesfull_threshold_names]){
         if(ncol(binary_surfaces[[i]])!=4){
           cols <- c("surface.00", "surface.01", "surface.10", "surface.11")
           missing_colnames <- cols[is.element(cols, colnames(binary_surfaces[[i]]))!=T]
