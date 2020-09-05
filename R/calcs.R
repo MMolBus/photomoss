@@ -9,8 +9,8 @@
 # descriptors.= descriptors.
 # calculate.thresh = calculate.thresh
 # threshold.method = threshold.method
-# area <- 2
-# photo <- 2
+# area <- 1
+# photo <- 1
 
 calcs <- function(photo,
                   area, 
@@ -176,6 +176,8 @@ calcs <- function(photo,
                       getValues(calibration_results[[2]][[4]])
                       )
              )
+    
+    class_label <- c( "00",     "01",     "10",     "11" )
       if(require(varhandle)!=T){
         install.packages("varhandle")
         require(varhandle)}
@@ -201,7 +203,7 @@ calcs <- function(photo,
       
       binary_surfaces <- binary_surfaces[match(index., names(binary_surfaces))]
      # Correct if are less than 4 classes when we cross manual mask and autothreshold mask
-       index. %in% succesfull_threshold_names
+       
        for(i in c(1:length(binary_surfaces))[index. %in% succesfull_threshold_names]){
         if(ncol(binary_surfaces[[i]])!=4){
           cols <- c("surface.00", "surface.01", "surface.10", "surface.11")
@@ -289,8 +291,9 @@ calcs <- function(photo,
   ############################################################################
   if(descrip==F){
     if(manual.mask.test==F){
+      if(length(index.)>1){
       int_surf_cover <-
-        do.call(c,
+        unname(do.call(c,
                 lapply(c(1:length(index.)),
                        function(i)
                          unname(
@@ -299,10 +302,25 @@ calcs <- function(photo,
                            )
                          )
                 )
-        )
+        ))
+      }else{
+        int_surf_cover <-
+          unlist(
+                  lapply(c(1:length(index.)),
+                         function(i)
+                           unname(
+                             c(
+                               table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1]
+                             )
+                           )
+                  )
+          )    
+      }
+    
   }else{
+    if(length(index.)>1){
     int_surf_cover <-
-      do.call(c,
+     unname(do.call(c,
               lapply(c(1:length(index.)),
                      function(i)
                        unname(
@@ -322,31 +340,75 @@ calcs <- function(photo,
                          )
                        )
               )
-      )
+      ))
+    }else{
+      int_surf_cover <-
+        unlist(
+                lapply(c(1:length(index.)),
+                       function(i)
+                         unname(
+                           c(
+                             table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
+                             table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
+                             # table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
+                             # table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
+                             table(list.results[[1]][[i]][,6])[2],
+                             # table(list.results[[1]][[i]][,6])[1],
+                             table(list.results[[1]][[i]][,7])[2], 
+                             # table(list.results[[1]][[i]][,7])[1],
+                             table(list.results[[1]][[i]][,8])[2],
+                             # table(list.results[[1]][[i]][,8])[1],
+                             table(list.results[[1]][[i]][,9])[2]
+                             # table(list.results[[1]][[i]][,9])[1]
+                           )
+                         )
+                )
+        )
     }
+   
+      }
+    
   }else{#descrip==T
     # source("./ccspectral/Descriptor.calculation.fun.R")
     if(manual.mask.test==F){
-      int_surf_cover <-
-        do.call(c,
-                lapply(c(1:length(index.)),
-                       function(i)
-                         do.call(c,
-                                 lapply( 0:1 , function(j)
-                                   descriptor.fun(
-                                     list.results[[1]][[i]][,3][list.results[[1]][[i]][,4] == j],
-                                     descriptors.)
-                                   )
-                                 )
-                       )
-                )
-      }else{#manual.mask.test==T
+      if(length(index.)>1){
         int_surf_cover <-
+          unname(do.call(c,
                   lapply(c(1:length(index.)),
                          function(i)
                            do.call(c,
+                                   lapply( 0:1 , function(j)
+                                     descriptor.fun(
+                                       list.results[[1]][[i]][,3][list.results[[1]][[i]][,4] == j],
+                                       descriptors.)
+                                   )
+                           )
+                  )
+          ))
+      }else{
+        int_surf_cover <-
+         unlist(
+                  lapply(c(1:length(index.)),
+                         function(i)
+                           do.call(c,
+                                   lapply( 0:1 , function(j)
+                                     descriptor.fun(
+                                       list.results[[1]][[i]][,3][list.results[[1]][[i]][,4] == j],
+                                       descriptors.)
+                                   )
+                           )
+                  )
+          )
+      }
+      
+      }else{#manual.mask.test==T
+        
+        int_surf_cover <-
+                  lapply(c(1:length(index.)),
+                         function(i)
+                           unlist(
                                    lapply(4:5 , function(j)
-                                     do.call(c,
+                                     unlist(
                                              lapply(0:1, function(k)
                                                descriptor.fun(
                                                  list.results[[1]][[i]][,3][list.results[[1]][[i]][,j] == k],
@@ -359,7 +421,7 @@ calcs <- function(photo,
         test_mask_surfaces <-   
           lapply(c(1:length(index.)),
                  function(i)
-                   do.call(c,
+                   unlist(
                            lapply(6:9 , function(j)
                              descriptor.fun(
                                list.results[[1]][[i]][,3][list.results[[1]][[i]][,j] == 1],
@@ -368,7 +430,7 @@ calcs <- function(photo,
                            )
                  )
         int_surf_cover <-
-          do.call(c,
+          unlist(
                   lapply(c(1:length(index.)),
                          function(i)
                            c(int_surf_cover[[i]], test_mask_surfaces[[i]]
@@ -388,6 +450,12 @@ int_surf_cover[is.na(int_surf_cover)] <- 0
   # names(descriptor_value) <- colnames(dat)[-c(1:7)]
   # 
   if(calculate.thresh==T){
+    if(length(index.)>1){
+      theresholds.results <-  unname(do.call(c,list_threshold_results[[2]]))
+    }else{
+      theresholds.results <-  unlist(list_threshold_results[[2]])
+    }
+    
     new_dat <-
       as.data.frame(
         as.list(
@@ -395,8 +463,8 @@ int_surf_cover[is.na(int_surf_cover)] <- 0
             sample_name,
             vis_photo,
             nir_photo,
-            unname(int_surf_cover),
-            unname(do.call(c,list_threshold_results[[2]])),
+            int_surf_cover,
+            theresholds.results,
             threshold.method
             )
           )
@@ -409,7 +477,7 @@ int_surf_cover[is.na(int_surf_cover)] <- 0
             sample_name,
             vis_photo,
             nir_photo,
-            unname(int_surf_cover),
+            int_surf_cover,
             threshold.vector,
             "Predefined"
           )
@@ -421,6 +489,7 @@ int_surf_cover[is.na(int_surf_cover)] <- 0
   dat_bind <- rbind(dat, new_dat)
   write.csv(dat_bind, summary.file, row.names = F)
   
+
   # Create pdf to plot results ---------------------------------------------
   if(pdf == T){
     # Set plotpdf function to plot results (operated by lists) ---------------------------------

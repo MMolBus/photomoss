@@ -118,151 +118,213 @@ ccspectral.df <- function(tif.path,
   # Create empty data.frame -----------------------------
     if(descrip==F){
       if(calculate.thresh==T){#if you want to calculate autothresholds
-      if(manual.mask.test==F){
-        df_names <-
-          c("sample", "vis.file", "nir.file",
-            do.call(c,
-                    lapply(1:length(index.), function(i)
-                      c(apply(expand.grid(surface.,
-                                          index.[i]), 1, paste, collapse=".")
+        if(manual.mask.test==F){
+          if(length(index.)>1){
+            df_names <-
+              c("sample", "vis.file", "nir.file",
+                do.call(c,
+                        lapply(1:length(index.), function(i)
+                          c(apply(expand.grid(surface.,
+                                              index.[i]), 1, paste, collapse=".")
+                            )
+                          )
+                        ),
+                apply(expand.grid("threshold.value",
+                                  index.), 1, paste, collapse="."),
+                "threshold.method")
+          }else{
+            df_names <-
+              c("sample", "vis.file", "nir.file",
+                unlist(
+                  lapply(1:length(index.), function(i)
+                    c(apply(expand.grid(surface.,
+                                        index.[i]), 1, paste, collapse=".")
                       )
                     )
-            ),
-            apply(expand.grid("threshold.value",
-                              index.), 1, paste, collapse="."),
-            "threshold.method")  
-      }else{
-      df_names <-
-        c("sample", "vis.file", "nir.file", 
-          do.call(c,
-                  lapply(1:length(index.), function(i)
-                    c(apply(expand.grid(
-                      surface.,
-                      index.[i]), 1, paste, collapse = ".")
-                    )
-                  )
-          ),
-          apply(expand.grid("threshold.value",
+                  ),
+                apply(expand.grid("threshold.value",
+                                  index.), 1, paste, collapse="."),
+                "threshold.method")
+            
+          }
+          }else{
+            if(length(index.)>1){
+              df_names <-
+                c("sample", "vis.file", "nir.file", 
+                  do.call(c,
+                          lapply(1:length(index.), function(i)
+                            c(apply(expand.grid(
+                              surface.,
+                              index.[i]), 1, paste, collapse = ".")
+                              )
+                            )
+                          ),
+                  apply(expand.grid("threshold.value",
                             index.), 1, paste, collapse="."),
-                "threshold.method")}
-      
-    }else{#if you don't want to calculate autothresholds, use a threshold vector value,
-      if(manual.mask.test==F){
-        df_names <-
-          c("sample", "vis.file", "nir.file",
-            do.call(c,
-                    lapply(1:length(index.), function(i)
+                  "threshold.method")
+              }else{
+                df_names <-
+                  c("sample", "vis.file", "nir.file",
+                    unlist(lapply(1:length(index.), function(i)
                       c(apply(expand.grid(
                         surface.,
-                        index.[i]), 1, paste, collapse=".")
-                      )
-                    )
-            ),
-            apply(expand.grid("threshold.value",
-                              index.), 1, paste, collapse="."),
-            "threshold.method")
-        }else{
-          df_names <-
-            c("sample", "vis.file", "nir.file", 
-              do.call(c,
-                      lapply(1:length(index.), function(i)
-                        c(apply(expand.grid(
-                          surface.,
-                          index.[i]), 1, paste, collapse = ".")
+                        index.[i]), 1, paste, collapse = ".")
                         )
                       )
-              ),
-              apply(expand.grid("threshold.value",
-                                index.), 1, paste, collapse="."),
-              "threshold.method")}
-    }
-    }else{
-      if(calculate.thresh==T){#if you want to calculate autothresholds
-        if(manual.mask.test==F){
-          df_names <-
-            c("sample", "vis.file", "nir.file",
-              do.call(c,
+                      ),
+                    apply(expand.grid("threshold.value",
+                            index.), 1, paste, collapse="."),
+                    "threshold.method")
+              }
+            }
+            }else{#if you don't want to calculate autothresholds, use a threshold vector value,
+              if(manual.mask.test==F){
+                if(length(index.)>1){
+                  df_names <-
+                    c("sample", "vis.file", "nir.file",
                       do.call(c,
                               lapply(1:length(index.), function(i)
-                                lapply(1:length(surface.), function(j)
-                                  c(apply(expand.grid(surface.[j],
-                                                      index.[i]), 1, paste, collapse="."),
-                                    apply(expand.grid(surface.[j],
-                                                      descriptors.,
-                                                      index.[i]), 1, paste, collapse=".")
+                                c(apply(expand.grid(
+                                  surface.,
+                                  index.[i]), 1, paste, collapse=".")
                                   )
                                 )
+                              ),
+                      apply(expand.grid("threshold.value",
+                                        index.), 1, paste, collapse="."),
+                      "threshold.method")
+                  }else{
+                    df_names <-
+                      c("sample", "vis.file", "nir.file",
+                        unlist(lapply(1:length(index.), function(i)
+                          c(apply(expand.grid(
+                            surface.,
+                            index.[i]), 1, paste, collapse = ".")
+                            )
+                          )
+                          ),
+                        apply(expand.grid("threshold.value",
+                                          index.), 1, paste, collapse="."),
+                        "threshold.method")
+                    }
+                }else{
+                  if(length(index.)>1){
+                    df_names <-
+                      c("sample", "vis.file", "nir.file",
+                        do.call(c,
+                                lapply(1:length(index.), function(i)
+                                  c(apply(expand.grid(
+                                    surface.,
+                                    index.[i]), 1, paste, collapse = ".")
+                                    )
+                                  )
+                                ),
+                        apply(expand.grid("threshold.value",
+                                          index.), 1, paste, collapse="."),
+                        "threshold.method")
+                    }else{
+                      df_names <-
+                        c("sample", "vis.file", "nir.file",
+                          unlist(lapply(1:length(index.), function(i)
+                            c(apply(expand.grid(
+                              surface.,
+                              index.[i]), 1, paste, collapse = ".")
                               )
-                      )
-              ),
-              apply(expand.grid("threshold.value",
-                                index.), 1, paste, collapse="."),
-              "threshold.method")  
+                            )
+                            ),
+                          apply(expand.grid("threshold.value",
+                                            index.), 1, paste, collapse="."),
+                          "threshold.method")
+                    }
+                }
+              }
         }else{
-          df_names <-
-            c("sample", "vis.file", "nir.file",
-              do.call(c,
-                      do.call(c,
-                              lapply(1:length(index.), function(i)
-                                lapply(1:length(surface.), function(j)
-                                  c(apply(expand.grid(surface.[j],
-                                                      index.[i]), 1, paste, collapse="."),
-                                    apply(expand.grid(surface.[j],
-                                                      descriptors.,
-                                                      index.[i]), 1, paste, collapse=".")
-                                  )
-                                )
-                              )
-                      )
-              ),
-              apply(expand.grid("threshold.value",
-                                index.), 1, paste, collapse="."),
-              "threshold.method")}
-        
-      }else{#if you don't want to calculate autothresholds, use a threshold vector value,
-        if(manual.mask.test==F){
-          df_names <-
-            c("sample", "vis.file", "nir.file",
-              do.call(c,
-                      do.call(c,
-                              lapply(1:length(index.), function(i)
-                                lapply(1:length(surface.), function(j)
-                                  c(apply(expand.grid(surface.[j],
-                                                      index.[i]), 1, paste, collapse="."),
-                                    apply(expand.grid(surface.[j],
-                                                      descriptors.,
-                                                      index.[i]), 1, paste, collapse=".")
-                                  )
-                                )
-                              )
-                      )
-              ),
-              apply(expand.grid("threshold.value",
-                                index.), 1, paste, collapse="."),
-              "threshold.method")
-        }else{
-          df_names <-
-            c("sample", "vis.file", "nir.file", "real.moss.cover",
-              do.call(c,
-                      do.call(c,
-                              lapply(1:length(index.), function(i)
-                                lapply(1:length(surface.), function(j)
-                                  c(apply(expand.grid(surface.[j],
-                                                      index.[i]), 1, paste, collapse="."),
-                                    apply(expand.grid(surface.[j],
-                                                      descriptors.,
-                                                      index.[i]), 1, paste, collapse=".")
-                                  )
-                                )
-                              )
-                      )
-              ),
-              apply(expand.grid("threshold.value",
-                                index.), 1, paste, collapse="."),
-              "threshold.method")}
-      }
-    }
-  
+          if(calculate.thresh==T){#if you want to calculate autothresholds
+            if(manual.mask.test==F){
+                df_names <-
+                  c("sample", "vis.file", "nir.file",
+                    unlist(
+                      unlist(
+                                    lapply(1:length(index.), function(i)
+                                      lapply(1:length(surface.), function(j)
+                                        c(apply(expand.grid(surface.[j],
+                                                            index.[i]), 1, paste, collapse="."),
+                                          apply(expand.grid(surface.[j],
+                                                            descriptors.,
+                                                            index.[i]), 1, paste, collapse=".")
+                                          )
+                                        )
+                                      )
+                                    )
+                            ),
+                    apply(expand.grid("threshold.value",
+                                      index.), 1, paste, collapse="."),
+                    "threshold.method")
+              
+              }else{
+                df_names <-
+                  c("sample", "vis.file", "nir.file",
+                    unlist(
+                      unlist(
+                                    lapply(1:length(index.), function(i)
+                                      lapply(1:length(surface.), function(j)
+                                        c(apply(expand.grid(surface.[j],
+                                                            index.[i]), 1, paste, collapse="."),
+                                          apply(expand.grid(surface.[j],
+                                                            descriptors.,
+                                                            index.[i]), 1, paste, collapse=".")
+                                          )
+                                        )
+                                      )
+                                    )
+                            ),
+                    apply(expand.grid("threshold.value",
+                                      index.), 1, paste, collapse="."),
+                    "threshold.method")}
+            }else{#if you don't want to calculate autothresholds, use a threshold vector value,
+              if(manual.mask.test==F){
+                df_names <-
+                  c("sample", "vis.file", "nir.file",
+                   unlist(
+                            unlist(
+                                    lapply(1:length(index.), function(i)
+                                      lapply(1:length(surface.), function(j)
+                                        c(apply(expand.grid(surface.[j],
+                                                            index.[i]), 1, paste, collapse="."),
+                                          apply(expand.grid(surface.[j],
+                                                            descriptors.,
+                                                            index.[i]), 1, paste, collapse=".")
+                                          )
+                                        )
+                                      )
+                                    )
+                            ),
+                    apply(expand.grid("threshold.value",
+                                      index.), 1, paste, collapse="."),
+                    "threshold.method")
+                }else{
+                  df_names <-
+                    c("sample", "vis.file", "nir.file", "real.moss.cover",
+                      unlist(
+                        unlist(
+                                      lapply(1:length(index.), function(i)
+                                        lapply(1:length(surface.), function(j)
+                                          c(apply(expand.grid(surface.[j],
+                                                              index.[i]), 1, paste, collapse="."),
+                                            apply(expand.grid(surface.[j],
+                                                              descriptors.,
+                                                              index.[i]), 1, paste, collapse=".")
+                                            )
+                                          )
+                                        )
+                                      )
+                              ),
+                      apply(expand.grid("threshold.value",
+                                        index.), 1, paste, collapse="."),
+                      "threshold.method")}
+            }
+        }
+    
       df <- data.frame(matrix(ncol = length(df_names), nrow = 0))
       colnames(df) <- df_names
       
@@ -325,11 +387,11 @@ ccspectral.df <- function(tif.path,
     # new code
    # we have the .roi files in picture named folders in the "rois" directory
     samples.per.pic <- 
-      do.call(c,
-              lapply(1:(length(list.dirs("rois"))-1), 
+      unlist(              
+        lapply(1:(length(list.dirs("rois"))-1), 
                      function(i) length(list.files(list.dirs("rois")[i+1]))))
     all_named       <- 
-      data.frame(photo=do.call(c,lapply(1:length(vis_files),
+      data.frame(photo=unlist(lapply(1:length(vis_files),
                                         function(i) rep(vis_files[i], each=samples.per.pic[i]))),
                  alveolo=names(obs.areas))
         if (file.exists("names.csv")) {
