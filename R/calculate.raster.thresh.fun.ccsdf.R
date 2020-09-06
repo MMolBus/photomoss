@@ -1,5 +1,5 @@
-list.raster.results = list_raster_results
-threshold.method = threshold.method
+# list.raster.results = list_raster_results
+# threshold.method = threshold.method
 
 
 calculate.raster.thresh.fun <- 
