@@ -351,7 +351,8 @@ ccspectral.df <- function(tif.path,
     vis_files <- list.files(path = "./vis")
     nir_files <- list.files(path = "./nir")
     if(manual.mask.test==T){
-    mask_files <- list.files((path = "./mask"))}
+    # mask_files <- list.files(path = "./mask", pattern = ".roi$")}
+      mask_files <- list.files(path = "./mask", pattern = ".tif$")}
     
   
   # Check if a matching error exists between lists --------------------------
