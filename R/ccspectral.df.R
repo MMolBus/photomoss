@@ -14,8 +14,8 @@
 #  i <- 1
 #   obs.areas <- obs_areas
 # # # # # # authothreshold.method <- method[1]
-  # photo <- 1
-  # area <- 1
+# photo <- 1
+# area <- 1
 # # # # # pkg[!(pkg %in% installed.packages()[, "Package"])]
 # # # # #
 # # # # # if (!require("sm")) install.packages("sm")
@@ -65,7 +65,7 @@ ccspectral.df <- function(tif.path,
     # Order custom arguments values and test required arguments =============================================
     
     if(calculate.thresh==T){
-      surface. = c("auto.thresh.moss", "auto.thresh.backgr")  
+      surface. = c("moss", "backgr")  
       if(any(threshold.method==c("Huang", "IJDefault", 
                                  "IsoData", "Li", 
                                  "Mean", "MinErrorI", 
@@ -83,7 +83,7 @@ ccspectral.df <- function(tif.path,
           stop("thershold.vector must have the same length as the 
               index. argument")}
       }
-      surface. = c("predef.thresh.moss", "predef.thresh.backgr")
+      surface. = c("moss", "backgr")
       }
     
     if(manual.mask.test==T){
@@ -91,9 +91,7 @@ ccspectral.df <- function(tif.path,
                    "backgr.as.moss", "moss.as.moss")
       }
     
-    surface_order <- c("auto.thresh.moss",   "auto.thresh.backgr",
-                       "predef.thresh.moss", "predef.thresh.backgr",
-                       "manual.mask.moss",   "manual.mask.backgr")
+    surface_order <- c("moss",   "backgr", "manual.mask.moss", "manual.mask.backgr")
     surface. <- surface.[order(match(surface., surface_order))]
    
     index_order <- c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI",
