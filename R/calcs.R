@@ -172,12 +172,12 @@ calcs <- function(photo,
     surface_class <-
       lapply(grep(paste(succesfull_threshold_names, collapse = "|"), index.),
              function(i)
-               paste0(as.integer(values(list_threshold_results[[1]][[i]])),
-                      getValues(calibration_results[[2]][[4]])
+               paste0(as.integer(values(calibration_results[[2]][[4]])==0),
+                      as.integer(values(list_threshold_results[[1]][[i]]))
                       )
              )
     
-    class_label <- c( "00",     "01",     "10",     "11" )
+    class_label <- c( "00",     "10",     "01",     "11" )
       if(require(varhandle)!=T){
         install.packages("varhandle")
         require(varhandle)}
@@ -326,7 +326,9 @@ calcs <- function(photo,
                        unname(
                          c(
                            table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
-                           table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
+                           # table(list.results[[1]][[i]][,5])[1], table(list.results[[1]][[i]][,5])[2],
+                           length(c(list.results[[1]][[i]][,5])[c(list.results[[1]][[i]][,5])==0]),
+                           length(c(list.results[[1]][[i]][,5])[c(list.results[[1]][[i]][,5])==1]),
                            # table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
                            # table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
                            table(list.results[[1]][[i]][,6])[2],
@@ -349,7 +351,9 @@ calcs <- function(photo,
                          unname(
                            c(
                              table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
-                             table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
+                             # table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
+                             length(c(list.results[[1]][[i]][,5])[c(list.results[[1]][[i]][,5])==0]),
+                             length(c(list.results[[1]][[i]][,5])[c(list.results[[1]][[i]][,5])==1]),
                              # table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
                              # table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
                              table(list.results[[1]][[i]][,6])[2],
