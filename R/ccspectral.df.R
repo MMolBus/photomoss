@@ -87,8 +87,8 @@ ccspectral.df <- function(tif.path,
       }
     
     if(manual.mask.test==T){
-     surface. <- c(surface.,"manual.mask.moss", "manual.mask.backgr",  "backgr.as.backgr","moss.as.backgr",
-                   "backgr.as.moss", "moss.as.moss")
+     surface. <- c(surface.,"manual.mask.moss", "manual.mask.backgr",  "backgr.as.backgr","backgr.as.moss", "moss.as.backgr",
+                    "moss.as.moss")
       }
     
     surface_order <- c("moss",   "backgr", "manual.mask.moss", "manual.mask.backgr")

@@ -1,6 +1,6 @@
 # # CALCS function, for ccspectral
-# vis.files = vis_files
-# nir.files = nir_files
+# vis.files = all_named[,1]
+# nir.files = all_named[,1]
 # manual.mask.test = manual.mask.test
 # mask.files = mask_files
 # summary.file = summary_file
@@ -206,7 +206,7 @@ calcs <- function(photo,
        
        for(i in c(1:length(binary_surfaces))[index. %in% succesfull_threshold_names]){
         if(ncol(binary_surfaces[[i]])!=4){
-          cols <- c("surface.00", "surface.01", "surface.10", "surface.11")
+          cols <- c("surface.00", "surface.10", "surface.01", "surface.11")
           missing_colnames <- cols[is.element(cols, colnames(binary_surfaces[[i]]))!=T]
           missing_cols <-
             matrix(0, ncell(list_threshold_results[[1]][[1]]),
@@ -244,7 +244,7 @@ calcs <- function(photo,
     
     # Set colnames
     colnames <- c("x", "y", "index_value", "surface_threshold", "surface_manual", 
-                  "b_as_b", "m_as_b", "b_as_m", "m_as_m")
+                  "b_as_b", "b_as_m","m_as_b", "m_as_m")
     
     list_df_results <- lapply(list_df_results, setNames, colnames)
     rm(colnames, surface_class, binary_surfaces)
