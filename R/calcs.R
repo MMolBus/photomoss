@@ -144,6 +144,16 @@ calcs <- function(photo,
         threshold.vector    = threshold.vector
         )
     
+    
+ # save list threshold results
+    print("saving threshold rasters")
+    lapply(seq_along(list_threshold_results[[1]]), function(i)
+      writeRaster(list_threshold_results[[1]][[i]], 
+                  paste(index.[i],threshold.method, 
+                        paste0(sample_name,".tif"), 
+                        sep="_"), 
+                        overwrite=T))
+    
   # Extract mask values -----------------------------------------------------
   #extract mask pixel coordinates
   if(manual.mask.test==T){

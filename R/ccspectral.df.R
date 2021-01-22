@@ -83,11 +83,11 @@ ccspectral.df <- function(tif.path,
           stop("thershold.vector must have the same length as the 
               index. argument")}
       }
-      surface. = c("moss", "backgr")
+      surface. = c("predicted.moss", "predicted.backgr")
       }
     
     if(manual.mask.test==T){
-     surface. <- c(surface.,"manual.mask.moss", "manual.mask.backgr",  "backgr.as.backgr","backgr.as.moss", "moss.as.backgr",
+     surface. <- c(surface.,"real.moss", "real.backgr", "backgr.as.backgr","backgr.as.moss", "moss.as.backgr",
                     "moss.as.moss")
       }
     
