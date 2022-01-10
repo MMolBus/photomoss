@@ -1,6 +1,6 @@
 # x = numeric vector object 
 # descriptores.= character vector with descriptors that you whant to calculate over vector x
-# "median", "mean", "min", "max", "diff.range", "cover"
+# "median", "mean", "sd", "min", "max", "diff.range"
 
 descriptor.fun <- function(x, des) {
   
