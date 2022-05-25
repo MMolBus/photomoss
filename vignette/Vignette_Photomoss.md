@@ -2,8 +2,8 @@ Photomoss workflow
 ================
 
 ---
-Author: Manuel Molina-Bustamante
-Date: 24/7/2020
+-Author: Manuel Molina-Bustamante
+-Date: 24/7/2020
 ---
 ## What is *photomoss*?
 
