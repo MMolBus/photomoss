@@ -1,11 +1,8 @@
-Vignette Photomoss
-================
-
 ---
-Author:
-- Manuel Molina-Bustamante
-date: 24/7/2020
+Author: Manuel Molina-Bustamante
+Date: 24/7/2020
 title: Photomoss workflow
+output: github_document
 ---
 
 ## What is *photomoss*?
