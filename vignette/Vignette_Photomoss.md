@@ -62,9 +62,6 @@ Our working directory have to include the following folders and files:
     Mandatory if in the function *ccspectral.df* the argument
     *manual.mask.test = T*.
 
-```{=html}
-<!-- -->
-```
 -   ***rois*** folder: this folder includes the *regions of interest*
     (***rois***)for each pair of nir and vis images (or for each triad
     of nir, vis, mask if it is the case). A *roi* is the region of the
