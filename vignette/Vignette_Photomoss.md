@@ -1,10 +1,11 @@
 Photomoss workflow
 ================
 
+Author: Manuel Molina-Bustamante
 ---
--Author: Manuel Molina-Bustamante
--Date: 24/7/2020
+Date: 24/7/2020
 ---
+
 ## What is *photomoss*?
 
 ***Photomoss*** is a developement from **mosscoder/crustcover** package
