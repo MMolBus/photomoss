@@ -2,15 +2,13 @@ Vignette Photomoss
 ================
 
 ---
-author:
+Author:
 - Manuel Molina-Bustamante
 date: 24/7/2020
 title: Photomoss workflow
 ---
 
-::: {#what-is-photomoss}
 ## What is *photomoss*?
-:::
 
 ***Photomoss*** is a developement from **mosscoder/crustcover** package
 (https://github.com/mosscoder/crustCover). As with *crustcover*, with
@@ -31,9 +29,8 @@ accuracy test functionality, to test the segmentation accuracy comparing
 the calculated surfaces with a the true moss area from a binary mask
 image done with ImageJ.
 
-::: {#installing-photomoss}
+
 ## Installing photomoss
-:::
 
 we need to install *devtools* package:
 
@@ -44,15 +41,15 @@ we need to install *devtools* package:
 
 Then we install *photomoss* from my GitHub branch:
 
-    install_github("scolymushisp/photomoss")
+    install_github("mossmusgo/photomoss")
     library(photomoss)
 
 Maybe you need to install some other packages, so be aware of warnings
 and install them.
 
-::: {#set-working-directory-structure}
+
 ## Set working directory structure
-:::
+
 
 This is an important step, because the function searches the images in a
 directory structure that has to be always the same.
@@ -87,21 +84,21 @@ Our working directory have to include the following folders and files:
         ordered in the same way as the *names.csv* file (we will talk
         about it later.)
 
-::: {#set-working-directory}
+
 ## Set working directory
-:::
+
 
     wd #your working directory
     setwd (wd)
     tif.path <- getwd()
 
-::: {#start-with-the-functions}
-## Start with the functions
-:::
 
-::: {#chart.from.tif}
+## Start with the functions
+
+
+
 ### *chart.from.tif*
-:::
+
 
 We create the chart object (a list of polygons) with the
 *chart.from.tif* function. To do this we click over the color cells
@@ -114,9 +111,9 @@ figure.
 
 Figure 1
 
-::: {#roi2polygon.2-and-extractpix.from.poly.}
+
 ## *roi2polygon.2* and *extractPIX.from.Poly*.
-:::
+
 
 Now we use the *roi2polygon.2* function to create a readable polygon
 files (*polys* object) from the ImageJ .roi files. Then we crop the
@@ -127,9 +124,9 @@ data.frame (*obs.areas* object)
 
     polys <- lapply(roi.paths, roi2polygon.2, tif.path)
 
-::: {#ccspectral.df}
+
 ## *ccspectral.df*
-:::
+
 
 This is the core function of photomoss.
 
