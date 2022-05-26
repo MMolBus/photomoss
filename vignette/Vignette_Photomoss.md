@@ -158,7 +158,9 @@ areas.
     default, all options: *index.* = c("NDVI", "SR", "MSAVI", "EVI",
     "CI", "BSCI", "BI","NORR", "NORG", "NORB", "EXR", "EXG","EXB",
     "EXGR", "CIVE", "VEG", "HUE", "SAT", "VAL")\
-    The options represent the folowing indexes:
+   
+   
+   The options represent the folowing indexes:
 
     1.  *NDVI*: **Normalized Differential Vegetation Index.** Is the
         normalize difference beween Near Infrared (NIR) values and
