@@ -265,9 +265,9 @@ Example:
                   )
 
 Where:
--*tif.path* = your working directory
--*chart*= object **chart** obtained wuith teh function *chart.from.tif*
--*obs.areas*= Polygon files obtained with *roi2polygon.2* function
+* *tif.path* = your working directory
+* *chart*= object **chart** obtained wuith teh function *chart.from.tif*
+* *obs.areas*= Polygon files obtained with *roi2polygon.2* function
 
 The resulting data.frame is saved in a new folder in your working
 directory.
