@@ -111,17 +111,16 @@ Figure 1
 
 
 Now we use the *roi2polygon.2* function to create a readable polygon
-files (*polys* object) from the ImageJ .roi files. Then we crop the
-pixels that fell inside the polygons and obtain a list og ploygon
+files from the ImageJ .roi files. Then we crop the
+pixels that fell inside the polygons and obtain a list ploygon
 data.frame (*obs.areas* object)
 
     roi.paths<- list.files(path = "./rois",pattern=".roi$",full.names = T, recursive = T)
 
-    polys <- lapply(roi.paths, roi2polygon.2, tif.path)
+    obs.areas <- lapply(roi.paths, roi2polygon.2, tif.path)
 
 
 ## *ccspectral.df*
-
 
 This is the core function of photomoss.
 
@@ -187,7 +186,7 @@ areas.
 
     5.  *CI*: **Crust Index.** Is based on the standarized difference
         between RED and BLUE bands. It's an index develloped to detect
-        Biological Solil Crust with cyaniobacteria. (KARNIELLI1997)
+        Biological Solil Crust with cyaniobacteria. (Karnielli, 1997)
         $$CI = 1 - \frac{RED - BLUE}{RED + BLUE}$$
 
     6.  *BSCI*: **Biological Soil Crust Index.** Is based on GREEN, RED
@@ -251,7 +250,7 @@ areas.
 Example:
 
     ccspectral.df(tif.path,
-                  chart=chart,
+                  chart,
                   obs.areas,
                   pdf = F,
                   calculate.thresh = T,
@@ -264,6 +263,11 @@ Example:
                     c("median","mean","sd","min",
                       "max","diff.range" )
                   )
+
+Where:
+-*tif.path* = your working directory
+-*chart*= object **chart** obtained wuith teh function *chart.from.tif*
+-*obs.areas*= Polygon files obtained with *roi2polygon.2* function
 
 The resulting data.frame is saved in a new folder in your working
 directory.
