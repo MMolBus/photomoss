@@ -30,7 +30,7 @@ image done with ImageJ.
 
 ## Installing photomoss
 
-we need to install *devtools* package:
+We need to install *devtools* package:
 
     if(require(devtools)!=T){
       install.packages('devtools')
@@ -107,7 +107,7 @@ figure.
 Figure 1
 
 
-## *roi2polygon.2* and *extractPIX.from.Poly*.
+### *roi2polygon.2* and *extractPIX.from.Poly*.
 
 
 Now we use the *roi2polygon.2* function to create a readable polygon
@@ -120,7 +120,7 @@ data.frame (*obs.areas* object)
     obs.areas <- lapply(roi.paths, roi2polygon.2, tif.path)
 
 
-## *ccspectral.df*
+### *ccspectral.df*
 
 This is the core function of photomoss.
 
@@ -129,7 +129,7 @@ number of pixels** of background and moss area for each sample. If
 argument *descrip = T* the descriptive statistics of the different
 areas.
 
-# Arguments in *ccspectral.df*:
+#### Arguments in *ccspectral.df*:
 
 -   **tif.path**: the path of the working directory where are the
     ***vis***, ***nir***, ***mask***, ***rois*** folders and
@@ -173,9 +173,9 @@ areas.
     descriptors of index values in the classified areas. Default:
     *descriptors.* = c("median","mean","sd","min", "max","diff.range")
 
-**index** argument options are:
+##### **index** argument options are:
 
-1.*NDVI*: **Normalized Differential Vegetation Index.** Is the
+1. *NDVI*: **Normalized Differential Vegetation Index.** Is the
         normalize difference beween Near Infrared (NIR) values and
         visible RED values. NDVI is used in teledetection aplications to
         measure physiological active vegetation, because clorophyl
@@ -183,27 +183,27 @@ areas.
         being 1 the value of an active green leaf.
         $$NDVI = \frac{(NIR - RED)}{(NIR + RED)}$$
 
-2.*SR* **Simple Ratio**. Te difference between NIR value and Red
+2. *SR* **Simple Ratio**. Te difference between NIR value and Red
         value, without standarisation. It's an uscaled index
         $$SR = NIR - RED$$
 
-3.*MSAVI*: **Second Modified Soil Adjusted Vegetation Index.** Use
+3. *MSAVI*: **Second Modified Soil Adjusted Vegetation Index.** Use
         a self-adjusting soil factor to reduce background soil
         influence. MSAVI scales between -1 and 1 (Qi1994).
         $$MSAVI = \frac{2\times NIR + 1 - \sqrt{(2 x NIR + 1)2 - 8 \times (NIR -RED)}}{2}$$
 
-4.*EVI*: **Enhanced Vegetation Index.** Is an enhanced NDVI that
+4. *EVI*: **Enhanced Vegetation Index.** Is an enhanced NDVI that
         includes a soil adjustment factor and uses the blue band to
         correct the red band atmospheric aerosol distortion.(Liu1995),
         (Huete1999)
         $$EVI = \frac{2.5 x ((NIR - RED) }{(NIR + 6 \times RED - 7.5 \times BLUE + 1))}$$
 
-5.*CI*: **Crust Index.** Is based on the standarized difference
+5. *CI*: **Crust Index.** Is based on the standarized difference
         between RED and BLUE bands. It's an index develloped to detect
         Biological Solil Crust with cyaniobacteria. (Karnielli, 1997)
         $$CI = 1 - \frac{RED - BLUE}{RED + BLUE}$$
 
-6.*BSCI*: **Biological Soil Crust Index.** Is based on GREEN, RED
+6. *BSCI*: **Biological Soil Crust Index.** Is based on GREEN, RED
         and NIR bands. This index was designed to exacerbate the
         spectral differences between Biological Soil Crusts and bares
         sand, dry plants and green plants. Include an adjustment factor
@@ -211,40 +211,40 @@ areas.
         GREEN bands (Chen2005)
         $$BSCI = \frac{(1 - 2 \times |RED - GREEN|)}{mean(GREEN, RED, NIR)}$$
 
-7.*BI*: Brightness Index. (Escadafal and Bacha 1996)
+7. *BI*: Brightness Index. (Escadafal and Bacha 1996)
         $$BI = \sqrt{GREEN^m2 + RED^2 + NIR^2}$$
 
-8.*NORR*: Normalized Red.
+8. *NORR*: Normalized Red.
         $$NORR = \frac{\frac{RED}{RED_max}}{\frac{RED}{RED_max}+\frac{GREEN}{GREEN_max}+
                   \frac{BLUE}{BLUE_max}}$$
 
-9.*NORG*: Normalized Green.
+9. *NORG*: Normalized Green.
         $$\frac{\frac{GREEN}{GREEN_max}}{\frac{RED}{RED_max}+\frac{GREEN}{GREEN_max}+
                   \frac{BLUE}{BLUE_max}}$$
 
-10.*NORB*: Normalized Blue.
+10. *NORB*: Normalized Blue.
         $$\frac{\frac{BLUE}{BLUE_max}}{\frac{RED}{RED_max}+\frac{GREEN}{GREEN_max}+
                   \frac{BLUE}{BLUE_max}}$$
 
-11.*EXR*: Excess Red. $$EXR = 1.4 \times NORR - NORG$$
+11. *EXR*: Excess Red. $$EXR = 1.4 \times NORR - NORG$$
 
-12.*EXG*: Excess Green. $$EXG = 2 \times NORG - NORR - NORB$$
+12. *EXG*: Excess Green. $$EXG = 2 \times NORG - NORR - NORB$$
 
-13.*EXB*: Excess Blue. $$EXB = 1.4 \times NORB - NORG$$
+13. *EXB*: Excess Blue. $$EXB = 1.4 \times NORB - NORG$$
 
-14.*EXGR*: Excess Green minus Excess Red. $$EXGR = EXG - EXR$$
+14. *EXGR*: Excess Green minus Excess Red. $$EXGR = EXG - EXR$$
 
-15.*CIVE*: Color index of vegetation extraction.
+15. *CIVE*: Color index of vegetation extraction.
         $$CIVE = 0.441 \times NORR - 0.81 l \times NORG + 0.385 \times NORB + 18.78745$$
 
-16.*VEG*: Vegetative. a = 0.667 (Hage et al 2006)
+16. *VEG*: Vegetative. a = 0.667 (Hage et al 2006)
         $$VEG = \frac{NORG}{NORR^a \times NORB^{1-a}}$$
 
-17.*HUE*: Dominant colour wavelength level. Based on a HSV colour space HUE, or tint, refers is the analogue of dominant wavelength (Hall, 1989; Philipp & Rath, 2002). 
+17. *HUE*: Dominant colour wavelength level. Based on a HSV colour space HUE, or tint, refers is the analogue of dominant wavelength (Hall, 1989; Philipp & Rath, 2002). 
 
-18.*SAT*: Saturation level in the HSV colour space, define how “pure” the colour is (Hall, 1989; Philipp & Rath, 2002)
+18. *SAT*: Saturation level in the HSV colour space, define how “pure” the colour is (Hall, 1989; Philipp & Rath, 2002)
 
-19.*VAL*: Value , or brightness, level in the HSV colour space (Hall, 1989; Philipp & Rath, 2002). 
+19. *VAL*: Value , or brightness, level in the HSV colour space (Hall, 1989; Philipp & Rath, 2002). 
 
 
 
