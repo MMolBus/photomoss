@@ -131,45 +131,44 @@ areas.
 
 #### Arguments in *ccspectral.df*:
 
--   **tif.path**: the path of the working directory where are the
-    ***vis***, ***nir***, ***mask***, ***rois*** folders and
-    ***names.csv*** file.
+-   _**tif.path**: the path of the working directory where are the
+    _vis_, _nir_, _mask_, _rois_ folders and _names.csv_ file.
 
--   **chart**: polygon list obtained with *chart.from.tif* function.
+-   _**chart**_: polygon list obtained with *chart.from.tif* function.
 
--   **obs.areas**: list of polygons data.frame obtained with
+-   _**obs.areas**_: list of polygons data.frame obtained with
     *extractPIX.from.Poly* function.
 
--   **pdf**: logical, to present the results in image and histogram of
+-   _**pdf**_: logical, to present the results in image and histogram of
     moss areas. Default = F.
 
--   **calculate.thresh**: logical, to Calculate autothreshold. Default =
+-   _**calculate.thresh**_: logical, to Calculate autothreshold. Default =
     T.
 
--   **descrip**: logical, to calculate statistical descriptors of index
+-   _**descrip**_: logical, to calculate statistical descriptors of index
     value in the moss area, backround area,... Default = F.
 
--   **manual.mask.test**: logical, if you want to test the accuracy of
+-   _**manual.mask.test**_: logical, if you want to test the accuracy of
     image segmentation comparing with handmade drawn moss area. Default
     = F.
 
--   **index.**: character with what index you want to calculate. By
+-   _**index.**_: character with what index you want to calculate. By
     default, all options: *index.* = c("NDVI", "SR", "MSAVI", "EVI",
     "CI", "BSCI", "BI","NORR", "NORG", "NORB", "EXR", "EXG","EXB",
     "EXGR", "CIVE", "VEG", "HUE", "SAT", "VAL") Index are more detailed bellow.
 
--   **threshold.method**: character, if *calculate.thresh= T.* The
+-   _**threshold.method**_: character, if *calculate.thresh= T.* The
     autosegmentation method to separate moss from background. The
     argument can have one of the following values: "Huang", "IJDefault",
     "IsoData", "Li", "Mean", "MinErrorI", "Moments", "Otsu",
     "Percentile", "RenyiEntropy", "Shanbhag", "Triangle". Autothereshold methods are more detailed bellow.
 
--   **threshold.vector**: numeric, if *calculate.thresh= F* the index
+-   _**threshold.vector**_: numeric, if *calculate.thresh= F* the index
     value to segment the image to separate moss from background. Must
     have the same length than *index.* argument, and must respect
     *index.* argument default order.
 
--   **descriptors.**: character, if *descrip= T* the statistic
+-   _**descriptors.**_: character, if *descrip= T* the statistic
     descriptors of index values in the classified areas. Default:
     *descriptors.* = c("median","mean","sd","min", "max","diff.range")
 
