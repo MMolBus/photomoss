@@ -173,9 +173,9 @@ areas.
     descriptors of index values in the classified areas. Default:
     *descriptors.* = c("median","mean","sd","min", "max","diff.range")
 
-##### **index** argument options are:
+##### _*index*_ argument options are:
 
-  1. *NDVI*: **Normalized Differential Vegetation Index.** Is the
+  1. *NDVI*: Normalized Differential Vegetation Index. Is the
         normalize difference beween Near Infrared (NIR) values and
         visible RED values. NDVI is used in teledetection aplications to
         measure physiological active vegetation, because clorophyl
@@ -183,27 +183,27 @@ areas.
         being 1 the value of an active green leaf.
         $$NDVI = \frac{(NIR - RED)}{(NIR + RED)}$$
 
-  2. *SR* **Simple Ratio**. Te difference between NIR value and Red
+  2. *SR* Simple Ratio. Te difference between NIR value and Red
         value, without standarisation. It's an uscaled index
         $$SR = NIR - RED$$
 
-  3. *MSAVI*: **Second Modified Soil Adjusted Vegetation Index.** Use
+  3. *MSAVI*: Second Modified Soil Adjusted Vegetation Index. Use
         a self-adjusting soil factor to reduce background soil
         influence. MSAVI scales between -1 and 1 (Qi1994).
         $$MSAVI = \frac{2\times NIR + 1 - \sqrt{(2 x NIR + 1)2 - 8 \times (NIR -RED)}}{2}$$
 
-  4. *EVI*: **Enhanced Vegetation Index.** Is an enhanced NDVI that
+  4. *EVI*: Enhanced Vegetation Index. Is an enhanced NDVI that
         includes a soil adjustment factor and uses the blue band to
         correct the red band atmospheric aerosol distortion.(Liu1995),
         (Huete1999)
         $$EVI = \frac{2.5 x ((NIR - RED) }{(NIR + 6 \times RED - 7.5 \times BLUE + 1))}$$
 
-  5. *CI*: **Crust Index.** Is based on the standarized difference
+  5. *CI*: Crust Index. Is based on the standarized difference
         between RED and BLUE bands. It's an index develloped to detect
         Biological Solil Crust with cyaniobacteria. (Karnielli, 1997)
         $$CI = 1 - \frac{RED - BLUE}{RED + BLUE}$$
 
-  6. *BSCI*: **Biological Soil Crust Index.** Is based on GREEN, RED
+  6. *BSCI*: Biological Soil Crust Index. Is based on GREEN, RED
         and NIR bands. This index was designed to exacerbate the
         spectral differences between Biological Soil Crusts and bares
         sand, dry plants and green plants. Include an adjustment factor
@@ -211,7 +211,7 @@ areas.
         GREEN bands (Chen2005)
         $$BSCI = \frac{(1 - 2 \times |RED - GREEN|)}{mean(GREEN, RED, NIR)}$$
 
-  7. *BI*: Brightness Index. (Escadafal and Bacha 1996)
+  7. *BI*: Brightness Index**. (Escadafal and Bacha 1996)
         $$BI = \sqrt{GREEN^m2 + RED^2 + NIR^2}$$
 
   8. *NORR*: Normalized Red.
@@ -247,27 +247,22 @@ areas.
   19. *VAL*: Value , or brightness, level in the HSV colour space (Hall, 1989; Philipp & Rath, 2002). 
 
 
-##### **threshold.method** argument options are:
-  1.	**Huang**: a fuzzy set-based method that segmentize the image in meaningful regions by minimizing the grey level entropy (Huang & Wuang 1995).
-  2.	**IsoData**: An iterative method to automatically find a threshold. The iterations provide a cleaner extraction of the object region in each round (Ridler & Calvard, 1978).
-  3.	**IJDefault**: ImageJ default option is an adaptation of the same IsoData method but ignores maximum and minimum values. (ref: https://imagej.net/Auto_Threshold).
-  4.	**Li**: Iterative Minimum Cross Entropy Thresholding, selects a threshold that minimizes the cross entropy of the image and its segmented version. It assumes that the two segmented parts of the image have normal distributions (Li & Tam, 1998)
-  5.	**Mean**: This method uses the mean value of the image to set the threshold (Glasbey, 1993).
-  6.	**MinErrorI**: uses an iterative algorithm to find a good segmentation threshold by a repeated application of the Bayes minimum error rule over the grey levels of the resulting image regions (Kittler & Illingworth, 1986).
-  7.	**Moments**: Moment-Preserving Thresholding, by the assignation of a representative pixel value for the two image regions, but without changing the first three moments between the original image and the segmented one (Tsai, 1985).
-  8.	**Otsu**: select a threshold automatically in a gray level histogram from a discriminant analysis viewpoint. The optimal is selected by a discriminant criterion that maximizes the separability the resultant gray level classes. (Otsu, 1979).
-  9.	**Percentile**: Assumes that the background pixels are the 50% of all pixels (Doyle, 1962).
-  10.	**RenyiEntropy**: Use image entropy to choose a threshold from the gray-level histogram of a picture. The algorithm chooses a threshold that maximize the information between the object and the background. (Kapur, Sahoo, PK & Wong, 1985).
-  11.	**Shanbhag**: development of the **RenyiEntropy** method, uses information based on the uncertainty of a pixel to be assigned to an object area o to the background, using the proximity to the extreme grey levels and the frequency of grey level in each group corresponding to be in (Shanbhag, 1994).
-  12.	**Triangle**: Use homogeneous grey color contours to divide the image in grey levels and set a hierarchical relationship between them as in (Zack, Rogers, Latt, 1977).
+##### _*threshold.method*_ argument options are:
+  1. *Huang*: a fuzzy set-based method that segmentize the image in meaningful regions by minimizing the grey level entropy (Huang & Wuang 1995).
+  2. *IsoData*: An iterative method to automatically find a threshold. The iterations provide a cleaner extraction of the object region in each round (Ridler & Calvard, 1978).
+  3. *IJDefault*: ImageJ default option is an adaptation of the same IsoData method but ignores maximum and minimum values. (ref: https://imagej.net/Auto_Threshold).
+  4. *Li*: Iterative Minimum Cross Entropy Thresholding, selects a threshold that minimizes the cross entropy of the image and its segmented version. It assumes that the two segmented parts of the image have normal distributions (Li & Tam, 1998)
+  5. *Mean*: This method uses the mean value of the image to set the threshold (Glasbey, 1993).
+  6. *MinErrorI*: uses an iterative algorithm to find a good segmentation threshold by a repeated application of the Bayes minimum error rule over the grey levels of the resulting image regions (Kittler & Illingworth, 1986).
+  7. *Moments*: Moment-Preserving Thresholding, by the assignation of a representative pixel value for the two image regions, but without changing the first three moments between the original image and the segmented one (Tsai, 1985).
+  8. *Otsu*: select a threshold automatically in a gray level histogram from a discriminant analysis viewpoint. The optimal is selected by a discriminant criterion that maximizes the separability the resultant gray level classes. (Otsu, 1979).
+  9. *Percentile*: Assumes that the background pixels are the 50% of all pixels (Doyle, 1962).
+  10. *RenyiEntropy*: Use image entropy to choose a threshold from the gray-level histogram of a picture. The algorithm chooses a threshold that maximize the information between the object and the background. (Kapur, Sahoo, PK & Wong, 1985).
+  11. *Shanbhag*: development of the *RenyiEntropy* method, uses information based on the uncertainty of a pixel to be assigned to an object area o to the background, using the proximity to the extreme grey levels and the frequency of grey level in each group corresponding to be in (Shanbhag, 1994).
+  12. *Triangle*: Use homogeneous grey color contours to divide the image in grey levels and set a hierarchical relationship between them as in (Zack, Rogers, Latt, 1977).
 
 
-
-
-
-
-
-Example:
+#### Example:
 
     ccspectral.df(tif.path,
                   chart,
