@@ -9,4 +9,4 @@ Whole process is supported by a combination of cheap modified drone cameras and 
 
 1. Image retrieving: 
 2. Image pre-processing: 
-3. _Photomoss_ data proccessing: 
+3. _Photomoss_ data proccessing workflow: 
