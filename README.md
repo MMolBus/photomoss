@@ -1,4 +1,5 @@
 # Photomoss
+
 Set of R functions to calculate biological cover in Bilogical Soil Crusts by imaging, based on mosscoder/crustCover.
 This package is the data processing backbone of a whole data retrieving and analysis protocol. It offers a research tool to work with Biological Soil Crusts.
 
