@@ -4,7 +4,7 @@ We use ImageJ macro scripts to align each pair of NIR-VIS images and to
 homogenize color histograms. You could download ImageJ in
 <https://imagej.nih.gov/ij/download.html> We use ImageJ because it is
 open-source, very accessible and familiar in biological sciences,
-fitting with our main goal of develop an accessible protocol.
+fitting with our main goal to develop an accessible protocol.
 
 ## Alignment:
 
