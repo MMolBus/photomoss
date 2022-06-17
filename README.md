@@ -8,5 +8,5 @@ Finally, the user can conduct quality test of obtained results, comparing calcul
 Whole process is supported by a combination of cheap modified drone cameras and built-for-purpose, ImageJ macros and the R package, _Photomoss_.
 
 1. Image retrieving: 
-2. Image pre-processing: 
+2. Image pre-processing wit ImageJ: 
 3. _Photomoss_ data proccessing workflow: 
