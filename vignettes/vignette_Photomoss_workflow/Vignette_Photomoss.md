@@ -6,26 +6,22 @@ Author: Manuel Molina-Bustamante
 Date: 24/7/2020
 ---
 
-## What is *photomoss*?
-
+## What is *photomoss*? 
 ***Photomoss*** is a developement from **mosscoder/crustcover** package
-(https://github.com/mosscoder/crustCover). As with *crustcover*, with
-***photomoss*** we will meassure the size of moss occupied areas in
-field or lab experiments. As *crustcover* achieve this duty, we use the
-same principles as (Fischer2012)that take advantage of Near InfraRed
-(NIR) and RGB images. With the color channels of this images, we can
-achieve several spectral indexes that will allow to measure moss surface
-or physiological condition. In contrast with *crustcover* that measures
+(https://github.com/mosscoder/crustCover). ***photomoss*** enables size meassure of Biological Soil Crust areas in
+field or lab experiments. To achieve this duty, it uses the
+same principles as (Fischer2012) that take advantage of Near InfraRed
+(NIR) and visible RGB images. With the color channels of this images, we can
+calculate several spectral indexes. In contrast with *crustcover* that measures
 seven index, *photomoss* can use a great set of 19 spectral indexes. As
 *crust cover*, *photomoss* core function can calculate moss area using a
 given spectral index and implementigg a custom threshold value, but in
 addition, it can apply an authomatic segmentation following a set of 12
 different segmentation methods if needed. Other additional
 functionalities of *photomoss* in comparison with *crustcover* are the
-semiautomatisation of annalysis area over the image, and a segmentation
+semiautomatisation of annalysis over the images, and a segmentation
 accuracy test functionality, to test the segmentation accuracy comparing
-the calculated surfaces with a the true moss area from a binary mask
-image done with ImageJ.
+the calculated surfaces with a the baseline prvidedby a binary mask done with ImageJ.
 
 
 ## Installing photomoss
