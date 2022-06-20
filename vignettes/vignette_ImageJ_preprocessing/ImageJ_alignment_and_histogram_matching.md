@@ -9,7 +9,7 @@ fitting with our main goal to develop an accessible protocol.
 ## Alignment:
 
 Allow NIR-VIS pictures perfectly match for *Photomoss* index calculation
-and homogenization reduces exposure differences between images. You could download imj macro file [**here**](https://github.com/mossmusgo/photomoss/blob/master/vignettes/vignette_ImageJ_preprocessing/Alignment_Process_Folder_v2.ijm).
+and homogenization reduces exposure differences between images. You could download imj macro file [**Alignment_Process_Folder_v1.ijm**](https://github.com/mossmusgo/photomoss/blob/master/vignettes/vignette_ImageJ_preprocessing/Alignment_Process_Folder_v1.ijm).
 
 
 ## Histogram homogenization:
