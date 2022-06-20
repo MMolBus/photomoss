@@ -6,6 +6,7 @@
 // Date: 2018-02
 // Contact: nagore.garcia@uam.es
 // -------------------------------------------------------------------
+/ v1.0: -Allow histogram homogenization between images within a series, using one specified image of the series as histogram reference. 
 
 //Set directory settings an select reference image
 
