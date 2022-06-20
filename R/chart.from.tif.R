@@ -1,5 +1,5 @@
 # Title: chart.from.tif
-# Function:manual selection of the image regions wher we can find the color checker tiles
+# Function:manual selection of the image regions where we can find the color checker tiles
 
 chart.from.tif <- function(tif.path, 
                            samp.width = 0.01){
