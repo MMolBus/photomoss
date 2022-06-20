@@ -16,5 +16,6 @@ and homogenization reduces exposure differences between images. You could downlo
 ## Histogram homogenization:
 
 We select one image from each NIR/VIS series to use it as histogram
-reference to match the rest of histograms from its series. You could download imj macro file [**here**](https://github.com/mossmusgo/photomoss/blob/master/vignettes/vignette_ImageJ_preprocessing/Histomatch_Process_Folder.ijm).
+reference to match the rest of histograms from its series. You could download imj macro file:
+* [**Histomatch_Process_Folder.ijm**](https://github.com/mossmusgo/photomoss/blob/master/vignettes/vignette_ImageJ_preprocessing/Histomatch_Process_Folder.ijm).
 
