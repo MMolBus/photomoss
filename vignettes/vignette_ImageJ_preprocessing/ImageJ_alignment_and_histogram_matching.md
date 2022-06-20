@@ -14,7 +14,6 @@ Allow NIR-VIS pictures perfectly match for spectral index calculation.
 ---
 ### Histogram homogenization:
 
-We select one image from each NIR/VIS series to use it as histogram
-reference to match the rest of histograms from its series. 
+Homogenization reduces exposure differences between images. We select one image from each NIR/VIS series to use it as histogram reference to match the rest of histograms within picture series. 
 * [**Histomatch_Process_Folder.ijm**](https://github.com/mossmusgo/photomoss/blob/master/vignettes/vignette_ImageJ_preprocessing/Histomatch_Process_Folder.ijm).
 
