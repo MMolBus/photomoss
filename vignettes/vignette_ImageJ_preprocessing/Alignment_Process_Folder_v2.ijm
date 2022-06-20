@@ -1,14 +1,23 @@
 /*
  * Macro template to process and align multiple images in a folder
  */
+ // -------------------------------------------------------------------
+// Written by: Nagore García Medina
+// Date: 2018-02
+// Contact: nagore.garcia@uam.es
+// -------------------------------------------------------------------
 
+// v1.0: -Allow perfectly match between Near Infrared (NIR) and visible RGB images (VIS) for spectral image calculation.
 
 //select near infrared image imput folder
 inputNIR = getDirectory("./input_NIR_folder");
+
 //select visible image imput folder
 inputVIS = getDirectory("./input_VIS_folder");
+
 //select near infrared image output folder
 outputNIR = getDirectory("./aligned_NIR_folder");
+
 //select visible image outut folder
 outputVIS = getDirectory("./aligned_VIS_folder");
 
@@ -56,10 +65,7 @@ saveAs("Tiff", outputNIR + filename + "_AL");
 selectWindow("Aligned-0002");
 saveAs("Tiff", outputVIS + filename + "_AL");
 run("Close All");
-
 }
-// this is garbage
-//run("Close All");
 
 
 
