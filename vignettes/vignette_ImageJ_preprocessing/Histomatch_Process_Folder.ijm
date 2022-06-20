@@ -1,11 +1,20 @@
 /*
  * Macro template to process multiple images in a folder for histogram matching
  */
+ // -------------------------------------------------------------------
+// Written by: Nagore García Medina
+// Date: 2018-02
+// Contact: nagore.garcia@uam.es
+// -------------------------------------------------------------------
+
 //Set directory settings an select reference image
+
 //select image imput folder
 input = getDirectory("./input_folder");
+
 //select image output folder
 output = getDirectory("./output_folder");
+
 //select reference image from input folder
 ref="./input_folder/reference_image.tif";
 
