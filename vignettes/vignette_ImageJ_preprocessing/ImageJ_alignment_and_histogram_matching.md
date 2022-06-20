@@ -3,7 +3,7 @@
 A **ImageJ** macro repository providing tools to paired images alignment and histogram matching within a picture series. 
 We use ImageJ because it is open-source, very accessible and familiar in biological sciences, fitting with our main goal to develop an free and accessible protocol.
 
-Note: You can download ImageJ in <https://imagej.nih.gov/ij/download.html> 
+**Note**: You can download ImageJ in <https://imagej.nih.gov/ij/download.html> 
 
 ---
 ### Alignment:
