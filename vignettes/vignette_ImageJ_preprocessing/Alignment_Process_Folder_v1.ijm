@@ -1,7 +1,7 @@
 /*
  * Macro template to process and align multiple images in a folder
  */
- // -------------------------------------------------------------------
+// -------------------------------------------------------------------
 // Written by: Nagore García Medina
 // Date: 2018-02
 // Contact: nagore.garcia@uam.es
