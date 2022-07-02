@@ -9,7 +9,7 @@ We use ImageJ because it is open-source, very accessible and familiar in biologi
 ### Alignment:
 
 Allow NIR-VIS pictures perfectly match for spectral index calculation. 
-* [**Alignment_Process_Folder_v1.ijm**](https://github.com/mossmusgo/photomoss/blob/master/vignettes/vignette_ImageJ_preprocessing/Alignment_Process_Folder_v1.ijm).
+* [**Alignment_Process_Folder_v1.ijm**](https://github.com/MMolBus/photomoss/blob/master/vignettes/vignette_ImageJ_preprocessing/Alignment_Process_Folder_v1.ijm).
 
 **Note**: NIR and VIS paired images must be in the same order in its respective directories.
 
@@ -17,5 +17,5 @@ Allow NIR-VIS pictures perfectly match for spectral index calculation.
 ### Histogram homogenization:
 
 Homogenization reduces exposure differences between images. We select one image from each NIR/VIS series to use it as histogram reference to match the rest of histograms within picture series. 
-* [**Histomatch_Process_Folder.ijm**](https://github.com/mossmusgo/photomoss/blob/master/vignettes/vignette_ImageJ_preprocessing/Histomatch_Process_Folder.ijm).
+* [**Histomatch_Process_Folder.ijm**](https://github.com/MMolBus/photomoss/blob/master/vignettes/vignette_ImageJ_preprocessing/Histomatch_Process_Folder_v1.ijm).
 
