@@ -383,6 +383,11 @@ ccspectral.df <- function(tif.path,
     
     # Set sample names #############################################################################
     
+    
+    # extract cell names
+    cell_names <- 
+          gsub(".*/", "",
+               list.files(path = "./rois",pattern=".roi$",full.names = F, recursive = T))
     # new code
    # we have the .roi files in picture named folders in the "rois" directory
     samples.per.pic <- 
@@ -390,9 +395,9 @@ ccspectral.df <- function(tif.path,
         lapply(1:(length(list.dirs("rois"))-1), 
                      function(i) length(list.files(list.dirs("rois")[i+1]))))
     all_named       <- 
-      data.frame(photo=unlist(lapply(1:length(vis_files),
+      data.frame(photo = unlist(lapply(1:length(vis_files),
                                         function(i) rep(vis_files[i], each=samples.per.pic[i]))),
-                 alveolo=names(obs.areas))
+                 cell = cell_names)
         if (file.exists("names.csv")) {
       sample_names <- c(as.character(read.csv("names.csv")[, 1]))
       if (length(sample_names) != total_samples) {
