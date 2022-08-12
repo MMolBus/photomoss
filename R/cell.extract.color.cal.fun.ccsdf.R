@@ -7,28 +7,33 @@
 
 cell.extract.color.cal.fun <- 
   function(obs.area, all.bands, chart, manual.mask.test, pdf){
-    obs_ext <- 
-      extent(
-        min(obs.area$x), 
-        max(obs.area$x), 
-        min(obs.area$y),
-        max(obs.area$y))
-  temp_mat <- 
-    raster(matrix(data = NA, nrow = nrow(all.bands), 
-                            ncol = ncol(all.bands), byrow = T))
-  bands_df <- 
-    data.frame(extract(all.bands, obs.area$cells))
-  if(manual.mask.test==T){
-    colnames(bands_df) <- 
-      c("vis.red", "vis.green",
-        "vis.blue", "nir.blue",
-        "mask")
-  }else{
-    colnames(bands_df) <- 
-      c("vis.red", "vis.green",
-        "vis.blue", "nir.blue")
-    
-    }
+        
+        obs_ext <- 
+              extent(obs.area)
+        
+        temp_mat <-
+              raster(matrix(data = NA, 
+                            nrow = nrow(all.bands), 
+                            ncol = ncol(all.bands), 
+                            byrow = T))
+        
+        bands_df <-
+              data.frame(extract(all.bands, obs.area))
+        
+        if(manual.mask.test==T){
+              colnames(bands_df) <-
+                    c("vis.red", 
+                      "vis.green",
+                      "vis.blue", 
+                      "nir.blue",
+                      "mask")
+              }else{
+                    colnames(bands_df) <-
+                          c("vis.red", 
+                            "vis.green",
+                            "vis.blue", 
+                            "nir.blue")
+                    }
   
   red_band <- 
     crop(all.bands[[1]], extent(obs_ext))
