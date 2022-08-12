@@ -1,16 +1,43 @@
 # TITLE: roi2polygon.2 
-# Function: "Transform a '.roi' file created with imageJ to a spatial polygon, Improved and customized read.ijroi internal function, as read.ijroi.2, with respect to the previous version roi2polygon" 
-roi2polygon.2 <- function(roi.path, tif.path){
-  # Para importar los archivos punto .roi instalamos el paquete "RImageJROI"
-  # library(RImageJROI)
-  # Importamos el área de interes que creamos con Image J
-  # usamos como EJEMPLO la número 5 (la numeración de las celdillas las sabemos gracias  a la referencia
-  # y orden conocido de los alveolos en la fotografía, algo que fuimos
-  # apuntando según creabamos las celdillas en el Image J)
-  # roi.path <- roi.paths[[1]]
-  
-  read.ijroi.2 <- function (file, verbose = FALSE) {
-    {
+# Author: Manuel Molina-Bustamnte
+# Date: 2018/04
+# ---------------------------------------------------------------------------------------
+# Function: "Transform a '.roi' file created with imageJ to a spatial polygon.
+# Improved and customized read.ijroi internal function, as read.ijroi.2, with respect 
+# to the previous version roi2polygon"
+# ---------------------------------------------------------------------------------------
+
+roi2polygon.2 <-
+      function(roi.paths, tif.path){
+            
+ # install required packages----
+
+            # "RImageJROI" to import .roi files.
+            if(require(RImageJROI)==F){
+                  install.packages("RImageJROI")
+                  library(RImageJROI)
+                  }else{
+                        library(RImageJROI)}
+            
+            # "spatstat" to edit roi file format make it readable by photomoss
+            if(require(RImageJROI)==F){
+                  install.packages("spatstat")
+                  library(spatstat)
+                  }else{
+                        library(spatstat)
+                        }
+            # "stringr" to set roi names
+            if(require(RImageJROI)==F){
+                  install.packages("stringr")
+                  library(stringr)
+                  }else{
+                        library(stringr)
+                        }
+            
+ # Create  read.ijroi.2 function to read roi files----
+  read.ijroi.2 <- 
+        function (file, verbose = FALSE){
+              {
       getByte <- function(con) {
         pos <- seek(con)
         n <- readBin(con, raw(0), 1, size = 1)
@@ -100,11 +127,6 @@ roi2polygon.2 <- function(roi.path, tif.path){
       getShort(con)
       if (verbose) 
         message("Reading coordinate data")
-      # if (!is.null(name) && (grepl(".roi$", name))) 
-      #   r$name <- substring(name, 1, nchar(name) - 4)
-      # isComposite <- (r$shapeRoiSize > 0)
-      # if (isComposite) {
-      #   stop("Composite ROIs not supported")
     }
     if (r$type %in% types["line"]) {
       if (r$subtype %in% subtypes["ARROW"]) {
@@ -164,42 +186,59 @@ roi2polygon.2 <- function(roi.path, tif.path){
     class(r) <- "ijroi"
     return(r)
   }
-  x_roi5 <- read.ijroi.2(roi.path, verbose = FALSE)
-  # una vez importada el área de interés a nuestro Global Environment vamos a necesitar hacer una serie de cambios de formato
-  # hasta llegar a tener objetos SpatialPolygons legibles por crusCover
-  # para ello, instalamos el paquete "spatstat"
-  # library(spatstat)
-  # primero lo transformamos a formato owin (ijroi ->  owin)
-  x_owin5 <- RImageJROI::ij2spatstat(x_roi5)
-  # Ahora hacemos dos operaciones que son necesarias para que las ventanas coincidan sobre la imagen que proyecta crustCover:
-  # 1) es necesario invertir las coordenadas del eje Y de la ventana, pues imageJ proyecta el eje Y
-  # invertido (y=0 -> borde superior de la imagen) con respecto a cómo lo proyecta crustCover (y=0 -> borde inferior de la imagen)
-  # 2) es necesario reescalar las coordenadas de la ventana tal manera que
-  # correspondan al rango de X e Y que oscila entre 0 y 1 en la imagen proyectada por crustCover
-  # Establecemos la imagen de referencia para hacer los siguietes cálculos
-  # tif.path <- "tif/"
-  # first.tif.filename <- Sys.glob(paste0(tif.path, "vis/*.tif"))[[1]]
-  first.tif.filename <- list.files(path = "./vis",full.names = T)[1]
-  # library(raster)
-  # RGB_stack_DEM <- raster::stack(first.tif.filename)
-  bandred <- raster(first.tif.filename, band=1)
-  # # En el vector de coordenadas y de la ventana hcemos la operación 1 y 2
-  # w5_y_corr <- (nrow(raster::as.matrix(bandred)) - (as.data.frame(x_owin5))$y) / nrow(RGB_stack_DEM)
-  # # En el vector de coordenadas x de la ventana hacemos solo la operación 2
-  # w5_x <- (as.data.frame(x_owin5))$x / raster::ncol(RGB_stack_DEM)
-  # En el vector de coordenadas y de la ventana hcemos la operación 1 y 2
-  w5_y_corr <- (nrow(raster::as.matrix(bandred)) - (as.data.frame(x_owin5))$y) / nrow(bandred)
-  # En el vector de coordenadas x de la ventana hacemos solo la operación 2
-  w5_x <- (as.data.frame(x_owin5))$x / raster::ncol(bandred)
-  #Unimos los vectores
-  xym5 <-  cbind(x = w5_x, y = w5_y_corr)
-  #creamos el polígono
-  p5 <-  sp::Polygon(xym5)
-  # Creamos la lista de polígonos con un solo polígono, en este ejemplo el pocillo 5
-  ps5 <- sp::Polygons(list(p5), "pocillo 5")
-  # creamos el objeto SpatialPolygons
-  sps <- sp::SpatialPolygons(list(ps5))
-  # plot(sps, add=T, col="red")
-  # plot(sps, col="red")
-  return(sps)
-}
+  
+ # we will put all the polygons in a list-----
+  # Create empty list
+  obs_areas <-  list()
+  
+  for(i in seq_along(roi.paths)){
+        
+        # Import ROIs made with imageJ
+        
+        roi <- 
+              read.ijroi.2(roi.paths[i], verbose = FALSE)
+        
+        # Some format transformations
+        # transform ijroi to  owin format
+        owin <- 
+              RImageJROI::ij2spatstat(roi)
+        
+        # Two opeerations to match window oposition over the raster:
+        # 1) Turn upside down Y coordinates of the window
+        # 2) Re-escalate window coordinates to 0 - 1, to match raster image reference.
+        
+        # we use te first image of the series as reference
+        first.tif.filename <- 
+              list.files(path = "./vis",full.names = T)[1]
+        
+        bandred <- 
+              raster(first.tif.filename, band=1)
+        
+        # Make operations 1 and 2 in Y coordinate vector
+        owin_y_corr <- 
+              (nrow(raster::as.matrix(bandred)) - (as.data.frame(owin))$y) / nrow(bandred)
+        
+        # Make operation 2 in X coordinate vector
+        owin_x_corr <- 
+              (as.data.frame(owin))$x / raster::ncol(bandred)
+        
+        # Joint vectors as columns of a data frame
+        owin_xy_corr <-cbind(x = owin_x_corr, y = owin_y_corr)
+        
+        # Create polygon
+        poly <-  sp::Polygon(owin_xy_corr)
+        
+        # create polygon list with one polygon
+        poly_list <- sp::Polygons(list(poly),  
+                                  tail(strsplit(roi.paths[i], "/")[[1]],n=1))
+        
+        # create SpatialPolygons object
+        sps <- sp::SpatialPolygons(list(poly_list))
+        
+        # include in roi list
+        obs_areas[[i]] <- sps
+        
+  }
+  
+  return(obs_areas)
+      }
