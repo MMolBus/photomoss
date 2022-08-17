@@ -224,8 +224,9 @@ calcs <- function(photo,
         as.data.frame(list_df_results[[i]]))
     
     # Set colnames
-    colnames <- c("x", "y", "index_value", "surface_threshold", "surface_manual", 
-                  "b_as_b", "b_as_m","m_as_b", "m_as_m")
+    colnames <- c("x", "y", "index_value", "predict.moss", "predict.backgr", 
+                  "True.Negative","False.Positive", "False.Negative",
+                  "True.Positive")
     
     list_df_results <- lapply(list_df_results, setNames, colnames)
     rm(colnames, surface_class, binary_surfaces)
