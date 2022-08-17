@@ -224,7 +224,7 @@ calcs <- function(photo,
         as.data.frame(list_df_results[[i]]))
     
     # Set colnames
-    colnames <- c("x", "y", "index_value", "predict.moss", "predict.backgr", 
+    colnames <- c("x", "y", "index_value", "predict.surface.class", "baseline.surface.class", 
                   "True.Negative","False.Positive", "False.Negative",
                   "True.Positive")
     
