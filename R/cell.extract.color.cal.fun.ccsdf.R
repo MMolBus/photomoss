@@ -47,7 +47,7 @@ cell.extract.color.cal.fun <-
     mask_band <- crop(all.bands[[5]], extent(obs_ext))
     extent(mask_band) <- extent(c(0, 1, 0, 1))
     moss_poly <- rasterToPolygons(mask_band, fun = function(x) {
-      x == 0
+      x == 1
     }, dissolve = T)
     raster_band <- brick(red_band, green_band, blue_band, 
                          mask_band)
