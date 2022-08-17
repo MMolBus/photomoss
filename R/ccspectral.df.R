@@ -358,37 +358,15 @@ ccspectral.df <- function(tif.path,
       stop("Different number of VIS and NIR photos")
     }
     # Samples per picture 
-    # total samples per picture (same number of samples in each picture) in this case one sample one picture
-    
-    # old code (recycling same obs.areas polygons for each picture)
-    # total_samples <- length(vis_files)*length(obs.areas)
-    # message(paste0(length(vis_files), " pictures with ", length(obs.areas), " areas each = ", total_samples, " total samples"))
-    
-    # new code (one obs area for picture)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-    # total_samples <- length(obs.areas)
-    # message(paste(length(vis_files), "pictures with", 
-    #               length(obs.areas) / length(vis_files), 
-    #               "areas each =", total_samples, "total samples"
-    #   )
-    # )
-    
-    
-    # new code (indetermined obs areas for picture)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+    # indetermined obs areas for picture                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
     total_samples <- length(obs.areas)
-    # message(paste(length(vis_files), "pictures with",
-    #               length(obs.areas) / length(vis_files),
-    #               "areas each =", total_samples, "total samples"
-    #   )
-    # )
     
     # Set sample names #############################################################################
-    
-    
     # extract cell names
     cell_names <- 
           gsub(".*/", "",
                list.files(path = "./rois",pattern=".roi$",full.names = F, recursive = T))
-    # new code
+
    # we have the .roi files in picture named folders in the "rois" directory
     samples.per.pic <- 
       unlist(              
