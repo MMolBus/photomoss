@@ -65,7 +65,7 @@ ccspectral.df <- function(tif.path,
     # Order custom arguments values and test required arguments =============================================
     
     if(calculate.thresh==T){
-      surface. = c("moss", "backgr")  
+      surface. = c("predict.moss", "predict.backgr")  
       if(any(threshold.method==c("Huang", "IJDefault", 
                                  "IsoData", "Li", 
                                  "Mean", "MinErrorI", 
@@ -83,15 +83,15 @@ ccspectral.df <- function(tif.path,
           stop("thershold.vector must have the same length as the 
               index. argument")}
       }
-      surface. = c("predicted.moss", "predicted.backgr")
+      surface. = c("predict.moss", "predict.backgr")
       }
     
     if(manual.mask.test==T){
-     surface. <- c(surface.,"real.moss", "real.backgr", "backgr.as.backgr","backgr.as.moss", "moss.as.backgr",
-                    "moss.as.moss")
+     surface. <- c(surface.,"baseline.moss", "baseline.backgr", "True.Negative","False.Positive", "False.Negative",
+                    "True.Positive")
       }
     
-    surface_order <- c("moss",   "backgr", "manual.mask.moss", "manual.mask.backgr")
+    surface_order <- c("predict.moss",   "predict.backgr", "baseline.moss", "baseline.backgr")
     surface. <- surface.[order(match(surface., surface_order))]
    
     index_order <- c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI",
