@@ -38,9 +38,7 @@ calcs <- function(photo,
   if(manual.mask.test==T){
     mask_photo <- mask.files[photo]
     }
-  
-  
-  
+
   # Select and set sample name 
   
   done_samples <-
@@ -51,11 +49,6 @@ calcs <- function(photo,
   } else{
     sample_names <- c(names = paste0("obs_", 1:(total.samples)))
   }
-  # set sample name
-  # if (done_samples > 0) { 
-  #   sample_name <- sample_names[done_samples + 1]
-  # }else{
-  #   sample_name <- sample_names[1]}
   
   sample_name <- sample_names[photo]
   
@@ -69,7 +62,6 @@ calcs <- function(photo,
   }
   # Cell extraction and color calibration -----------------------------------------------------
   # Read and create raster from tiff =====================================
-  # source("./ccspectral/raster.tif.ccspectral.R")
   
   if(manual.mask.test==T){
     all_bands <-  raster.tiff.ccspectral(vis.photo = vis_photo, nir.photo = nir_photo, 
@@ -79,12 +71,8 @@ calcs <- function(photo,
     all_bands <-  raster.tiff.ccspectral(vis.photo = vis_photo, nir.photo = nir_photo, 
                                          manual.mask.test = manual.mask.test)
   }
-  
-  
-  
-   
-  # ######IF ML
-    # source("./ccspectral/cell.extract.color.cal.fun.R")
+
+  # Calibrate color with color checker
   
   calibration_results <-
     cell.extract.color.cal.fun(
@@ -95,27 +83,14 @@ calcs <- function(photo,
       pdf = pdf
     )
   
- # if(descrip==T){
- #  red_rsq <- calibration_results[3]
- #  green_rsq <- calibration_results[4]
- #  blue_rsq <- calibration_results[5]
- #  nir_rsq <- calibration_results[6]
- #  if(manual.mask.test==T){
- #  real_cover_moss <- sum(getValues(calibration_results[[2]][[4]]))
- #  }
- #  }else{
-    # if(manual.mask.test==T){
-    #   real_cover_moss <- sum(getValues(calibration_results[[2]][[4]]))
-    #   }
-    # }
   if(pdf==T && manual.mask.test==T){
     moss_poly <- calibration_results[7]
-    }
+  }
+  
   ###########################################################################  
   # Calculate index values, as raster and as dataframe ----------------------
   ############################################################################  
 
-    # source("./ccspectral/indexcalculation.fun.R")
   
   list_raster_results <- index.calc.fun(raster.mat  = calibration_results[[1]], 
                                        raster.band = calibration_results[[2]] , 
@@ -129,12 +104,6 @@ calcs <- function(photo,
                                       )
   
   # Calculate thershold results
-  
-  # if(calculate.thresh == TRUE) {
-    # source("./ccspectral/autothreshold.value.func.R")}
-    
-    # source("./ccspectral/calculate.raster.thresh.fun.R")
-    
     
     list_threshold_results <-
       calculate.raster.thresh.fun(
@@ -157,15 +126,15 @@ calcs <- function(photo,
   # Extract mask values -----------------------------------------------------
   #extract mask pixel coordinates
   if(manual.mask.test==T){
-    # Set df list with cell coordinates(x,y) indexvalues(z) 
-    # mask threshold(surface) and mask manual(surface)
-    # Aditionnaly we need to compare manual segmentation and threshold segmentation
-     # we create new surface classes (as new cols in the data frame )
+    # Set data frame list with cell coordinates(x,y) index values(z) 
+    # mask threshold (surface) and mask manual(surface)
+    # Additionnaly we compare manual segmentation and threshold segmentation
+     # We create new surface classes (as new cols in the data frame )
     # by crossing the two classification as follows:
-    # b_as_b => real (manual) background classified as background (by threshold classification) )
-    # m_as_b => real (manual) background classified as moss (by threshold classification)
-    # b_as_m => real (manual) moss classified as background (by threshold classification)
-    # m_as_m => real (manual) moss classified as moss (by threshold classification)
+    # True.Negative => baseline background classified as background.
+    # False.Positive => baseline background classified as moss.
+    # False.Negative => baseline moss classified as background.
+    # True.Positive => baseline moss classified as moss.
     coor <- 
       coordinates(calibration_results[[1]])
     failed_thresholds <-
