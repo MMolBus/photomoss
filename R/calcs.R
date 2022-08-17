@@ -56,7 +56,7 @@ calcs <- function(photo,
 
   print(paste("vis picture name: ", as.character(vis_photo)))
   print(paste("nir picture name: ", as.character(nir_photo)))
-  print(paste("Roi to sample correspondance:", paste0(cell_names[area], " = ", sample_name)))
+  # print(paste("Roi to sample correspondance:", paste0(cell_names[area], " = ", sample_name)))
   if(manual.mask.test==T){
   print(paste("Baseline file", mask_photo))
   }
