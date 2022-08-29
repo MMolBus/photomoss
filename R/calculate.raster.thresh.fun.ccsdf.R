@@ -335,7 +335,7 @@ calculate.raster.thresh.fun <-
       t_values[[16]] <- 
         autothreshold.value(
           raster    = ri,
-          max.index = max(values(ri), na.rm = T),
+          max.index = max(values(ri[[1]]), na.rm = T),
           min.index = 0,
           method    = threshold.method
         )
