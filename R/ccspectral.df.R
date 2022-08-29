@@ -35,7 +35,7 @@ ccspectral.df <- function(tif.path,
                                      "NORR", "NORG", "NORB", "EXR", "EXG", 
                                      "EXB", "EXGR", "CIVE", "VEG", 
                                      "HUE", "SAT", "VAL"),
-                          threshold.method=c("Huang"),
+                          threshold.method,
                           threshold.vector,
                           descriptors. = 
                             c("median","mean","sd","min",
