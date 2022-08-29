@@ -1,12 +1,13 @@
 # TITLE: 
-# ccspectral.multiareas
+# ccspectral.df
 
 # OBJECTIVE: Two main objectives
-# The meassurement of moss physiological activity 
-# Image segmentation between moss and background using 
+# 1. Image segmentation between moss and background using 
 # autothreshold, supervised autothreshold or manual criteria.
+# 2. The meassurement of moss physiological activity 
 
-# To achive this objectives the function calculates diferent 
+
+# To achieve this objectives the function calculates different 
 # index of reflectance: 
 # ndvi, sr, msavi, evi, ci, bsci, bi, 
 # nor_r, nor_g, nor_b, ex_r, ex_g,  ex_b,  ex_gr, cive,  veg
