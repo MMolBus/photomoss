@@ -50,7 +50,7 @@ calculate.raster.thresh.fun <-
       t_values[[2]] <- 
         autothreshold.value(
           raster    = ri,
-          max.index = max(getValues(ri), na.rm = T),
+          max.index = max(getValues(ri[[1]]), na.rm = T),
           min.index = 0,
           method    = threshold.method
         )
@@ -132,7 +132,7 @@ calculate.raster.thresh.fun <-
       t_values[[6]] <- 
         autothreshold.value(
           raster  = ri,
-          max.index = max(getValues(ri), na.rm = T),
+          max.index = max(getValues(ri[[1]]), na.rm = T),
           min.index = 0,
           method    = threshold.method
         )
