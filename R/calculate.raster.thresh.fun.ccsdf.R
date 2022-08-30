@@ -36,7 +36,7 @@ calculate.raster.thresh.fun <-
       }
       if (is.na(t_values[[1]])==T){
         # raster_index_cut[[1]] <- NA
-        raster_index_cut[[1]] <- setValues(ri, NA)
+        raster_index_cut[[1]] <- setValues(ri[[1]],  NA)
         message(paste("Can't calculate",index.[1], "authothreshold by", threshold.method, "method." ))
         }else{
           raster_index_cut[[1]]  <- ri[[1]] >= t_values[[1]]
@@ -56,7 +56,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[2]])==T){
-      raster_index_cut[[2]] <- setValues(ri, NA)
+      raster_index_cut[[2]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[2], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[2]]  <- ri[[1]] >= t_values[[2]]
@@ -76,7 +76,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[3]])==T){
-      raster_index_cut[[3]] <- setValues(ri, NA)
+      raster_index_cut[[3]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[3], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[3]]  <- ri[[1]] >= t_values[[3]]
@@ -97,7 +97,7 @@ calculate.raster.thresh.fun <-
     }
     if (is.na(t_values[[4]])==T){
       # raster_index_cut[[4]] <- NA
-      raster_index_cut[[4]] <- setValues(ri, NA)
+      raster_index_cut[[4]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[4], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[4]]  <- ri[[1]] >= t_values[[4]]
@@ -118,7 +118,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[5]])==T){
-      raster_index_cut[[5]] <- setValues(ri, NA)
+      raster_index_cut[[5]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[5], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[5]]  <- ri[[1]] <= t_values[[5]]
@@ -138,7 +138,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[6]])==T){
-      raster_index_cut[[6]] <- setValues(ri, NA)
+      raster_index_cut[[6]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[6], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[6]]  <- ri[[1]] >= t_values[[6]]}
@@ -157,7 +157,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[7]])==T){
-      raster_index_cut[[7]] <- setValues(ri, NA)
+      raster_index_cut[[7]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[7], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[7]]  <- ri[[1]] <= t_values[[7]]
@@ -177,7 +177,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[8]])==T){
-      raster_index_cut[[8]] <- setValues(ri, NA)
+      raster_index_cut[[8]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[8], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[8]]  <- ri[[1]] >= t_values[[8]]
@@ -198,7 +198,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[9]])==T){
-      raster_index_cut[[9]] <- setValues(ri, NA)
+      raster_index_cut[[9]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[9], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[9]]  <- ri[[1]] <= t_values[[9]]
@@ -220,7 +220,7 @@ calculate.raster.thresh.fun <-
     }
     if (is.na(t_values[[10]])==T){
       # raster_index_cut[[10]] <- NA
-      raster_index_cut[[10]] <- setValues(ri, NA)
+      raster_index_cut[[10]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[10], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[10]] <- ri[[1]] <= t_values[[10]]
@@ -240,7 +240,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[11]])==T){
-      raster_index_cut[[11]] <- setValues(ri, NA)
+      raster_index_cut[[11]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[11], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[11]] <- ri[[1]] >= t_values[[11]]
@@ -260,7 +260,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[12]])==T){
-      raster_index_cut[[12]] <- setValues(ri, NA)
+      raster_index_cut[[12]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[12], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[12]] <- ri[[1]] <= t_values[[12]]
@@ -280,7 +280,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[13]])==T){
-      raster_index_cut[[13]] <- setValues(ri, NA)
+      raster_index_cut[[13]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[13], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[13]] <- ri[[1]] <= t_values[[13]]
@@ -301,7 +301,7 @@ calculate.raster.thresh.fun <-
     }
     if (is.na(t_values[[14]])==T){
       # raster_index_cut[[14]] <- NA
-      raster_index_cut[[14]] <- setValues(ri, NA)
+      raster_index_cut[[14]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[14], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[14]] <- ri[[1]] <= t_values[[14]]
@@ -321,7 +321,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[15]])==T){
-      raster_index_cut[[15]] <- setValues(ri, NA)
+      raster_index_cut[[15]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[15], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[15]] <- ri[[1]] >= t_values[[15]]
@@ -341,7 +341,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[16]])==T){
-      raster_index_cut[[16]] <- setValues(ri, NA)
+      raster_index_cut[[16]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[16], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[16]] <- ri[[1]] <= t_values[[16]]
@@ -361,7 +361,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[17]])==T){
-      raster_index_cut[[17]] <- setValues(ri, NA)
+      raster_index_cut[[17]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[17], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[17]] <- ri[[1]] <= t_values[[17]]
@@ -381,7 +381,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[18]])==T){
-      raster_index_cut[[18]] <- setValues(ri, NA)
+      raster_index_cut[[18]] <- setValues(ri[[1]], NA)
       message(paste("Can't calculate",index.[18], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[18]] <- ri[[1]] >= t_values[[18]]
@@ -401,7 +401,7 @@ calculate.raster.thresh.fun <-
         )
     }
     if (is.na(t_values[[19]])==T){
-      raster_index_cut[[19]] <- setValues(ri, NA)
+      raster_index_cut[[19]] <- setValues(ri[[1]],  NA)
       message(paste("Can't calculate",index.[19], "authothreshold by", threshold.method, "method." ))
     }else{
     raster_index_cut[[19]] <- ri[[1]] <= t_values[[19]]
