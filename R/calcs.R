@@ -151,7 +151,7 @@ calcs <- function(photo,
     surface_class <-
       lapply(grep(paste(succesfull_threshold_names, collapse = "|"), index.),
              function(i)
-               paste0(as.integer(values(calibration_results[[2]][[4]])==0),
+               paste0(as.integer(values(calibration_results[[2]][[4]])),
                       as.integer(values(list_threshold_results[[1]][[i]]))
                       )
              )
