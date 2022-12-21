@@ -117,11 +117,59 @@ calcs <- function(photo,
  # save list threshold results
     print("saving threshold rasters")
     lapply(seq_along(list_threshold_results[[1]]), function(i)
-      writeRaster(list_threshold_results[[1]][[i]], 
+      writeRaster(list_threshold_results[[1]][[i]],
                   paste(index.[i],threshold.method, 
                         paste0(sample_name,".tif"), 
                         sep="_"), 
                         overwrite=T))
+    
+    
+    # if (dir.exists("raster_results") == F) {
+    #       new_dir <- "raster_results"
+    #       dir.create(new_dir)
+    #       print(paste("Creating", new_dir, "folder"))
+    # }
+    # print(paste("Saving threshold rasters at", new_dir, "folder"))
+    # 
+    # for (i in seq_along(list_threshold_results[[1]])) {
+    #       # lapply(seq_along(list_threshold_results[[1]]), function(i)
+    #       writeRaster(list_threshold_results[[1]][[i]],
+    #                   paste0("./",
+    #                         new_dir,
+    #                         "/",
+    #                         paste(
+    #                               index.[i],
+    #                               threshold.method,
+    #                               round(list_threshold_results[[2]][[i]], 2),
+    #                               paste0(sample_name, ".tif"),
+    #                               sep = "_"
+    #                         )
+    #                   ),
+    #                   overwrite = T)
+    #       # raster_export <-
+    #       #       stack(calibration_results[[1]],
+    #       #             list_raster_results[[i]],
+    #       #             list_threshold_results[[1]][[i]])
+    #       # names(raster_export) <-
+    #       #       c("Orange", "Cyan", "NIR", index.[i], "binary")
+    #       # 
+    #       # saveRDS(raster_export,
+    #       #         file.path(
+    #       #               new_dir,
+    #       #               paste(
+    #       #                     "raster",
+    #       #                     index.[i],
+    #       #                     threshold.method,
+    #       #                     threshold.vector[i],
+    #       #                     paste0(sample_name, ".rds"),
+    #       #                     sep = "_"
+    #       #               )
+    #       #         ))
+    #       
+    # }
+    
+    
+    
     
   # Extract mask values -----------------------------------------------------
   #extract mask pixel coordinates
