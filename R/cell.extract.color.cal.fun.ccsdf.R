@@ -9,7 +9,7 @@ cell.extract.color.cal.fun <-
   function(obs.area, all.bands, chart, manual.mask.test, pdf){
         
         obs_ext <- 
-              extent(obs.area)
+              extent(obs.area[[1]])
         
         temp_mat <-
               raster(matrix(data = NA, 
@@ -18,7 +18,7 @@ cell.extract.color.cal.fun <-
                             byrow = T))
         
         bands_df <-
-              data.frame(extract(all.bands, obs.area))
+              data.frame(extract(all.bands, obs.area[[1]]))
         
         if(manual.mask.test==T){
               colnames(bands_df) <-
