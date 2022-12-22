@@ -92,81 +92,84 @@ calcs <- function(photo,
   ############################################################################  
 
   
-  list_raster_results <- index.calc.fun(raster.mat  = calibration_results[[1]], 
-                                       raster.band = calibration_results[[2]] , 
-                                       index. = index.
-                                       # calculate.thresh=calculate.thresh, 
-                                       # threshold.vector,
-                                       # calculate.thresh = calculate.thresh,
-                                       # manual.mask.test = manual.mask.test,
-                                       # threshold.method = threshold.method,
-                                       # pdf = pdf
-                                      )
-  
+  list_raster_results <-
+        index.calc.fun(
+              raster.mat  = calibration_results[[1]],
+              raster.band = calibration_results[[2]] ,
+              index. = index.
+              # calculate.thresh=calculate.thresh,
+              # threshold.vector,
+              # calculate.thresh = calculate.thresh,
+              # manual.mask.test = manual.mask.test,
+              # threshold.method = threshold.method,
+              # pdf = pdf)
+              )
   # Calculate thershold results
     
-    list_threshold_results <-
-      calculate.raster.thresh.fun(
-        list.raster.results = list_raster_results,
-        calculate.thresh    = calculate.thresh,
-        threshold.method    = threshold.method,
-        threshold.vector    = threshold.vector
+  list_threshold_results <-
+        calculate.raster.thresh.fun(
+              list.raster.results = list_raster_results,
+              calculate.thresh    = calculate.thresh,
+              threshold.method    = threshold.method,
+              threshold.vector    = threshold.vector
         )
     
     
- # save list threshold results
-    print("saving threshold rasters")
-    lapply(seq_along(list_threshold_results[[1]]), function(i)
-      writeRaster(list_threshold_results[[1]][[i]],
-                  paste(index.[i],threshold.method, 
-                        paste0(sample_name,".tif"), 
-                        sep="_"), 
-                        overwrite=T))
-    
-    
-    # if (dir.exists("raster_results") == F) {
-    #       new_dir <- "raster_results"
-    #       dir.create(new_dir)
-    #       print(paste("Creating", new_dir, "folder"))
-    # }
-    # print(paste("Saving threshold rasters at", new_dir, "folder"))
-    # 
-    # for (i in seq_along(list_threshold_results[[1]])) {
-    #       # lapply(seq_along(list_threshold_results[[1]]), function(i)
-    #       writeRaster(list_threshold_results[[1]][[i]],
-    #                   paste0("./",
-    #                         new_dir,
-    #                         "/",
-    #                         paste(
-    #                               index.[i],
-    #                               threshold.method,
-    #                               round(list_threshold_results[[2]][[i]], 2),
-    #                               paste0(sample_name, ".tif"),
-    #                               sep = "_"
-    #                         )
-    #                   ),
-    #                   overwrite = T)
-    #       # raster_export <-
-    #       #       stack(calibration_results[[1]],
-    #       #             list_raster_results[[i]],
-    #       #             list_threshold_results[[1]][[i]])
-    #       # names(raster_export) <-
-    #       #       c("Orange", "Cyan", "NIR", index.[i], "binary")
-    #       # 
-    #       # saveRDS(raster_export,
-    #       #         file.path(
-    #       #               new_dir,
-    #       #               paste(
-    #       #                     "raster",
-    #       #                     index.[i],
-    #       #                     threshold.method,
-    #       #                     threshold.vector[i],
-    #       #                     paste0(sample_name, ".rds"),
-    #       #                     sep = "_"
-    #       #               )
-    #       #         ))
-    #       
-    # }
+ # # save list threshold results
+ #    print("saving threshold rasters")
+ #    lapply(seq_along(list_threshold_results[[1]]), function(i)
+ #      terra::writeRaster(list_threshold_results[[1]][[i]],
+ #                  paste(index.[i],threshold.method, 
+ #                        paste0(sample_name,".tif"), 
+ #                        sep="_"), 
+ #                        overwrite=T))
+ #    
+ #    
+ #    # if (dir.exists("raster_results") == F) {
+ #    #       new_dir <- "raster_results"
+ #    #       dir.create(new_dir)
+ #    #       print(paste("Creating", new_dir, "folder"))
+ #    # }else{
+ #    #       new_dir <- "raster_results"
+ #    # }
+ #    # print(paste("Saving threshold rasters at", new_dir, "folder"))
+ # 
+ #    # for (i in seq_along(list_threshold_results[[1]])) {
+ #          # lapply(seq_along(list_threshold_results[[1]]), function(i)
+ #          # writeRaster(list_threshold_results[[1]][[i]],
+ #          #             paste0("./",
+ #          #                   new_dir,
+ #          #                   "/",
+ #          #                   paste(
+ #          #                         index.[i],
+ #          #                         threshold.method,
+ #          #                         round(list_threshold_results[[2]][[i]], 2),
+ #          #                         paste0(sample_name, ".tif"),
+ #          #                         sep = "_"
+ #          #                   )
+ #          #             ),
+ #          #             overwrite = T)
+ #          # raster_export <-
+ #          #       stack(calibration_results[[1]],
+ #          #             list_raster_results[[i]],
+ #          #             list_threshold_results[[1]][[i]])
+ #          # names(raster_export) <-
+ #          #       c("Orange", "Cyan", "NIR", index.[i], "binary")
+ #          #
+ #          # saveRDS(raster_export,
+ #          #         file.path(
+ #          #               new_dir,
+ #          #               paste(
+ #          #                     "raster",
+ #          #                     index.[i],
+ #          #                     threshold.method,
+ #          #                     threshold.vector[i],
+ #          #                     paste0(sample_name, ".rds"),
+ #          #                     sep = "_"
+ #          #               )
+ #          #         ))
+
+    }
     
     
     
