@@ -169,7 +169,7 @@ calcs <- function(photo,
  #          #               )
  #          #         ))
 
-    }
+    # }
     
     
     
