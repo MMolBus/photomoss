@@ -198,7 +198,7 @@ calcs <- function(photo,
         list_threshold_results[[i]][is.na(list_threshold_results[[2]])!=T])
     succesfull_threshold_names <-
       gsub("_thresh_mask","",names(succesfull_thresholds[[1]]))
-    
+    # create class surface predicttion code: 00 = TN, 01 = FP, 10 = FN, 11 = TP 
     surface_class <-
       lapply(grep(paste(succesfull_threshold_names, collapse = "|"), index.),
              function(i)
@@ -207,7 +207,8 @@ calcs <- function(photo,
                       )
              )
     
-    class_label <- c( "00",     "10",     "01",     "11" )
+    # class_label <- c( "00",     "10",     "01",     "11" )
+    class_label <- c( "00",       "01",     "10",     "11" )
       if(require(varhandle)!=T){
         install.packages("varhandle")
         require(varhandle)}
@@ -238,7 +239,7 @@ calcs <- function(photo,
        
        for(i in c(1:length(binary_surfaces))[index. %in% succesfull_threshold_names]){
         if(ncol(binary_surfaces[[i]])!=4){
-          cols <- c("surface.00", "surface.10", "surface.01", "surface.11")
+          cols <- c("surface.00", "surface.01", "surface.10", "surface.11")
           missing_colnames <- cols[is.element(cols, colnames(binary_surfaces[[i]]))!=T]
           missing_cols <-
             matrix(0, ncell(list_threshold_results[[1]][[1]]),
@@ -276,8 +277,7 @@ calcs <- function(photo,
     
     # Set colnames
     colnames <- c("x", "y", "index_value", "predict.surface.class", "baseline.surface.class", 
-                  "True.Negative","False.Positive", "False.Negative",
-                  "True.Positive")
+                  "TN","FP", "FN", "TP")
     
     list_df_results <- lapply(list_df_results, setNames, colnames)
     rm(colnames, surface_class, binary_surfaces)
