@@ -88,8 +88,9 @@ ccspectral.df <- function(tif.path,
       }
     
     if(manual.mask.test==T){
-     surface. <- c(surface.,"baseline.moss", "baseline.backgr", "True.Negative","False.Positive", "False.Negative",
-                    "True.Positive")
+     surface. <- c(surface.,"baseline.moss", "baseline.backgr", "TN","FP", "FN",
+                    "TP")
+     
       }
     
     surface_order <- c("predict.moss",   "predict.backgr", "baseline.moss", "baseline.backgr")
