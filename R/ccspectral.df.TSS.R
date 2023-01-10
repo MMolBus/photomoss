@@ -66,7 +66,8 @@ ccspectral.df <- function(tif.path,
     # Order custom arguments values and test required arguments =============================================
     
     if(calculate.thresh==T){
-      surface. = c("predict.moss", "predict.backgr")  
+      # surface. = c("predict.moss", "predict.backgr")  
+      surface. = c("predict.backgr", "predict.moss")  
       if(any(threshold.method==c("Huang", "IJDefault", 
                                  "IsoData", "Li", 
                                  "Mean", "MinErrorI", 
@@ -84,16 +85,25 @@ ccspectral.df <- function(tif.path,
           stop("thershold.vector must have the same length as the 
               index. argument")}
       }
-      surface. = c("predict.moss", "predict.backgr")
+      # surface. = c("predict.moss", "predict.backgr")
+      surface. = c("predict.backgr", "predict.moss")
       }
     
     if(manual.mask.test==T){
-     surface. <- c(surface.,"baseline.moss", "baseline.backgr", "TN","FP", "FN",
+     # surface. <- c(surface.,"baseline.moss", "baseline.backgr", "TN","FP", "FN",
+     #                "TP")
+     surface. <- c("baseline.backgr", "baseline.moss", surface., "TN","FP", "FN",
                     "TP")
      
       }
     
-    surface_order <- c("predict.moss",   "predict.backgr", "baseline.moss", "baseline.backgr")
+    # surface_order <- c("predict.moss",   "predict.backgr", "baseline.moss", "baseline.backgr")
+    surface_order <- c(
+          "baseline.backgr",
+          "baseline.moss", 
+          "predict.backgr", 
+          "predict.moss"
+          )
     surface. <- surface.[order(match(surface., surface_order))]
    
     index_order <- c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI",
