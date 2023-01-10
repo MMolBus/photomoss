@@ -1,4 +1,7 @@
-# x = numeric vector object 
+# x = c(NA, NA,NA,NA,NA,NA,NA )
+# x = c(1:10)
+
+# des <- c("mean")
 # descriptores.= character vector with descriptors that you whant to calculate over vector x
 # "median", "mean", "sd", "min", "max", "diff.range"
 
@@ -10,7 +13,7 @@ descriptor.fun <- function(x, des) {
   
   res_l <- list()
   
-  res_l[[1]]       <- length(x)
+  res_l[[1]]       <- length(x[!is.na(x)])
    
   
   if(any(unique(grepl(possible_descrip[1], des)))== TRUE){
