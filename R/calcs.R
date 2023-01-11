@@ -316,14 +316,15 @@ calcs <- function(photo,
   ############################################################################  
   # Descriptors calculation -------------------------------------------------
   ############################################################################
-  if(descrip==F){
+  if (descrip == F) {
         if (manual.mask.test == F) {
               int_surf_cover <-
                     unname(do.call(c,
                                    lapply(seq_along(index.), function(i)
                                          c(unlist(lapply(0:1, function(k)
                                                c(table(list.results[[1]][[i]][, 4][list.results[[1]][[i]][, 4] == k]), NA)[-2]))))))
-              }else{
+              int_surf_cover[is.nan(int_surf_cover)] <- NA
+        } else{
               int_surf_cover <-
                     unname(do.call(c,
                                    lapply(seq_along(index.), function(i)
@@ -344,58 +345,53 @@ calcs <- function(photo,
               TSS.IoU <- do.call(c,
                                  lapply(seq_along(index.),
                                         function(i)
-                                              TSS.IoU.calc(list.results[[1]][[i]])
-                                 )
-              )
+                                              TSS.IoU.calc(list.results[[1]][[i]])))
               
-              int_surf_cover <- 
-                  c(int_surf_cover, TSS.IoU)
+              int_surf_cover <-
+                    c(int_surf_cover, TSS.IoU)
               
+              int_surf_cover[is.nan(int_surf_cover)] <- NA
+        }
+  } else{
+        #descrip==T
+        if (manual.mask.test == F) {
+              int_surf_cover <-
+                    unlist(lapply(seq_along(index.), function(i)
+                          do.call(
+                                c, lapply(0:1 , function(k)
+                                      descriptor.fun(list.results[[1]][[i]][, 3][list.results[[1]][[i]][, 4] == k],
+                                                     descriptors.))
+                          )))
+              int_surf_cover[is.nan(int_surf_cover)] <- NA
+        } else{
+              int_surf_cover <-
+                    lapply(seq_along(index.), function(i)
+                          unlist(lapply(4:5 , function(j)
+                                unlist(lapply(0:1, function(k)
+                                      descriptor.fun(list.results[[1]][[i]][, 3][list.results[[1]][[i]][, j] == k],
+                                                     descriptors.))))))
+              test_mask_surfaces <-
+                    lapply(seq_along(index.), function(i)
+                          unlist(lapply(6:9 , function(j)
+                                descriptor.fun(list.results[[1]][[i]][, 3][list.results[[1]][[i]][, j] == 1],
+                                               descriptors.))))
+              int_surf_cover <-
+                    unlist(lapply(seq_along(index.), function(i)
+                          c(int_surf_cover[[i]], test_mask_surfaces[[i]])))
+              TSS.IoU <- do.call(c,
+                                 lapply(seq_along(index.),
+                                        function(i)
+                                              TSS.IoU.calc(list.results[[1]][[i]])))
+              
+              int_surf_cover <-
+                    c(int_surf_cover, TSS.IoU)
+              
+              int_surf_cover[is.nan(int_surf_cover)] <- NA
+              
+              rm(test_mask_surfaces)
               
         }
-  }else{#descrip==T
-        if(manual.mask.test==F){
-          int_surf_cover <-
-                unlist(lapply(seq_along(index.), function(i)
-                      do.call(c, lapply(0:1 , function(k)
-                            descriptor.fun(list.results[[1]][[i]][, 3][list.results[[1]][[i]][, 4] == k],
-                                           descriptors.)))))
-      }else{
-            int_surf_cover <-
-                  lapply(seq_along(index.), function(i)
-                        unlist(lapply(4:5 , function(j)
-                              unlist(
-                                    lapply(0:1, function(k)
-                                          descriptor.fun(list.results[[1]][[i]][, 3][list.results[[1]][[i]][, j] == k],
-                                                         descriptors.))
-                              ))))
-            test_mask_surfaces <-
-                  lapply(seq_along(index.), function(i)
-                        unlist(lapply(6:9 , function(j)
-                              descriptor.fun(list.results[[1]][[i]][, 3][list.results[[1]][[i]][, j] == 1],
-                                             descriptors.)
-                              )
-                              )
-                        )
-            int_surf_cover <-
-                  unlist(lapply(seq_along(index.), function(i)
-                                      c(int_surf_cover[[i]], test_mask_surfaces[[i]])
-                                )
-                         )
-            TSS.IoU <- do.call(c,
-                               lapply(seq_along(index.),
-                                      function(i)
-                                            TSS.IoU.calc(list.results[[1]][[i]])
-                                      )
-                               )
-            
-            int_surf_cover <- 
-                  c(int_surf_cover, TSS.IoU)
-            
-            rm(test_mask_surfaces)
-            
-      }
-    }
+  }
    
 # int_surf_cover[is.na(int_surf_cover)] <- 0
   # START dataframe for index index vaulues presentation --------------------
@@ -404,43 +400,37 @@ calcs <- function(photo,
   
   # names(descriptor_value) <- colnames(dat)[-c(1:7)]
   # 
-  if(calculate.thresh==T){
-    if(length(index.)>1){
-      theresholds.results <-  unname(do.call(c,list_threshold_results[[2]]))
-    }else{
-      theresholds.results <-  unlist(list_threshold_results[[2]])
-    }
-    
-    new_dat <-
-      as.data.frame(
-        as.list(
-          c(
-            sample_name,
-            vis_photo,
-            nir_photo,
-            int_surf_cover,
-            theresholds.results,
-            threshold.method
-            )
-          )
-        )
-  }else{
-    new_dat <-
-      as.data.frame(
-        as.list(
-          c(
-            sample_name,
-            vis_photo,
-            nir_photo,
-            int_surf_cover,
-            threshold.vector,
-            "Predefined"
-          )
-        )
-      )
-    }
-
+  if(calculate.thresh==T) {
+        theresholds.results <-
+              unlist(list_threshold_results[[2]])
+        new_dat <-
+              as.data.frame(as.list(unname(
+                    c(
+                          sample_name,
+                          vis_photo,
+                          nir_photo,
+                          int_surf_cover,
+                          theresholds.results,
+                          threshold.method
+                    )
+              )))
+  } else{
+        new_dat <-
+              as.data.frame(as.list(unname(
+                    c(
+                          sample_name,
+                          vis_photo,
+                          nir_photo,
+                          int_surf_cover,
+                          threshold.vector,
+                          "Predefined"
+                    )
+              )))
+  }
+  
   colnames(new_dat) <- colnames(dat)
+  
+  
   dat_bind <- rbind(dat, new_dat)
   write.csv(dat_bind, summary.file, row.names = F)
   
