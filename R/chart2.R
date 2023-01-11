@@ -1,4 +1,4 @@
-# Title: chart.from.tif
+# Title: chart.2
 # Function:
 # R functions
 #' Manual selection of the image regions where we can find the color checker tiles.
@@ -11,11 +11,11 @@
 #' @author Manuel Molina-Bustamante
 #' @examples
 #'
-#' chart2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg")
+#' chart.2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg")
 #'
 #' @export
 
-chart2 <- function(pic.path,
+chart.2 <- function(pic.path,
                    samp.width = 0.01,
                    pic.format){
 
