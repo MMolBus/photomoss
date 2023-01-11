@@ -1,9 +1,10 @@
-#' chart.2
+#' chart.2: Manual selection of points in the image where are located the color checker tiles.
 #' @description 
-#' Manual selection of the image regions where we can find the color checker tiles.
+#' Manual selection of points in the image where are located the color checker tiles.
 #' You need to click over color tiles in the opened window where you can find the picture with the color chart. 
-#' To click over the tiles you need to folow the order shown in
+#' To click over the tiles you need to follow the order shown in
 #' \href{https://raw.githubusercontent.com/MMolBus/photomoss/master/vignettes/vignette_Photomoss_workflow/chart.png}{this image}.
+#' Preferably, click on the color tile centroids.
 #' @param x string. File path where you can find the image files.
 #' @param samp.width numeric. Distance from original click point to establish the perimeter of the new geometry. Of length 1 replicated to the number of input click points, or of length equal to the number of click points.
 #' @param pic.format character. Picture file format. It could be "jpg" for .jpg,.JPG and .jpeg; or "tif", for .tif format.

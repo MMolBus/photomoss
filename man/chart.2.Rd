@@ -2,7 +2,7 @@
 % Please edit documentation in R/chart2.R
 \name{chart.2}
 \alias{chart.2}
-\title{chart.2}
+\title{chart.2: Manual selection of points in the image where are located the color checker tiles.}
 \usage{
 chart.2(pic.path, samp.width = 0.01, pic.format)
 }
@@ -17,10 +17,11 @@ chart.2(pic.path, samp.width = 0.01, pic.format)
 A raster with 24 features one by each color tile.
 }
 \description{
-Manual selection of the image regions where we can find the color checker tiles.
+Manual selection of points in the image where are located the color checker tiles.
 You need to click over color tiles in the opened window where you can find the picture with the color chart. 
-To click over the tiles you need to folow the order shown in
+To click over the tiles you need to follow the order shown in
 \href{https://raw.githubusercontent.com/MMolBus/photomoss/master/vignettes/vignette_Photomoss_workflow/chart.png}{this image}.
+Preferably, click on the color tile centroids.
 }
 \examples{
 
