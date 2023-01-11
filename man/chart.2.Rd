@@ -7,11 +7,11 @@
 chart.2(pic.path, samp.width = 0.01, pic.format)
 }
 \arguments{
+\item{pic.path}{string. File path where you can find the image files.}
+
 \item{samp.width}{numeric. Distance from original click point to establish the perimeter of the new geometry. Of length 1 replicated to the number of input click points, or of length equal to the number of click points.}
 
 \item{pic.format}{character. Picture file format. It could be "jpg" for .jpg,.JPG and .jpeg; or "tif", for .tif format.}
-
-\item{x}{string. File path where you can find the image files.}
 }
 \value{
 A raster with 24 features one by each color tile.
