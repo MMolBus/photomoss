@@ -434,7 +434,6 @@ calcs <- function(photo,
   dat_bind <- rbind(dat, new_dat)
   write.csv(dat_bind, summary.file, row.names = F)
   
-
   # Create pdf to plot results ---------------------------------------------
   if(pdf == T){
     # plot pdf with results (operated by lists) ---------------------------------
