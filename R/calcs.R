@@ -322,7 +322,7 @@ calcs <- function(photo,
                     unname(do.call(c,
                                    lapply(seq_along(index.), function(i)
                                          c(unlist(lapply(0:1, function(k)
-                                               c(table(list.results[[1]][[i]][, 4][list.results[[1]][[i]][, 4] == k]), NA)[-2]))))))
+                                               c(table(list.results[[1]][[i]][, 4][list.results[[1]][[i]][, 4] == k]), 0)[-2]))))))
               int_surf_cover[is.nan(int_surf_cover)] <- NA
         } else{
               int_surf_cover <-
@@ -331,16 +331,16 @@ calcs <- function(photo,
                                          c(
                                                unlist(lapply(0:1, function(k)
                                                      c(
-                                                           table(list.results[[1]][[i]][, 4][list.results[[1]][[i]][, 4] == k]), NA
+                                                           table(list.results[[1]][[i]][, 4][list.results[[1]][[i]][, 4] == k]), 0
                                                      )[-2])),
                                                unlist(lapply(0:1, function(k)
                                                      c(
-                                                           table(list.results[[1]][[i]][, 5][list.results[[1]][[i]][, 5] == k]), NA
+                                                           table(list.results[[1]][[i]][, 5][list.results[[1]][[i]][, 5] == k]), 0
                                                      )[-2])),
-                                               c(table(list.results[[1]][[i]][, 6][list.results[[1]][[i]][, 6] == 1]), NA)[-2],
-                                               c(table(list.results[[1]][[i]][, 7][list.results[[1]][[i]][, 7] == 1]), NA)[-2],
-                                               c(table(list.results[[1]][[i]][, 8][list.results[[1]][[i]][, 8] == 1]), NA)[-2],
-                                               c(table(list.results[[1]][[i]][, 9][list.results[[1]][[i]][, 9] == 1]), NA)[-2]
+                                               c(table(list.results[[1]][[i]][, 6][list.results[[1]][[i]][, 6] == 1]), 0)[-2],
+                                               c(table(list.results[[1]][[i]][, 7][list.results[[1]][[i]][, 7] == 1]), 0)[-2],
+                                               c(table(list.results[[1]][[i]][, 8][list.results[[1]][[i]][, 8] == 1]), 0)[-2],
+                                               c(table(list.results[[1]][[i]][, 9][list.results[[1]][[i]][, 9] == 1]), 0)[-2]
                                          ))))
               TSS.IoU <- do.call(c,
                                  lapply(seq_along(index.),
