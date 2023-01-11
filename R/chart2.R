@@ -1,6 +1,5 @@
-# Title: chart.2
-# Function:
-# R functions
+#' chart.2
+#' @description 
 #' Manual selection of the image regions where we can find the color checker tiles.
 #' You need to click over color tiles in the opened window where you can find the picture with the color chart. 
 #' To click over the tiles you need to folow the order shown in
