@@ -8,11 +8,11 @@
 #'
 #' @return A raster with 24 features one by each color tile.
 #'
-#' @author Manuel Molina-Bustamante
 #' @examples
 #'
 #' chart.2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg")
 #'
+#' @author Manuel Molina-Bustamante
 #' @export
 
 chart.2 <- function(pic.path,

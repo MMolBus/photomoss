@@ -16,3 +16,4 @@ Depends: raster
 Imports: dplyr, rgeos, data.table, tiff, sp, RColorBrewer, spatstat, RImageJROI
 BugReports: https://github.com/united-ecology/photomoss/issues
 LazyData: true
+RoxygenNote: 7.1.2
