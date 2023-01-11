@@ -209,9 +209,8 @@ calcs <- function(photo,
     
     # class_label <- c( "00",     "10",     "01",     "11" )
     class_label <- c( "00",       "01",     "10",     "11" )
-      if(require(varhandle)!=T){
-        install.packages("varhandle")
-        require(varhandle)}
+    librarian::shelf(varhandle)  
+    
       binary_surfaces <-
         lapply(1:length(surface_class),
                function(i)
