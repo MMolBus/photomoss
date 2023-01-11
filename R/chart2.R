@@ -46,7 +46,7 @@ chart2 <- function(pic.path,
     }
 
     if (pic.format == "tif") {
-      file <- list.files(path = "./vis",
+      file <- list.files(path = pic.path,
                          pattern = ".tif$",
                          full.names = T)[1]
 
