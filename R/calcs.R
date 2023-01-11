@@ -95,14 +95,8 @@ calcs <- function(photo,
   list_raster_results <-
         index.calc.fun(
               raster.mat  = calibration_results[[1]],
-              raster.band = calibration_results[[2]] ,
+              raster.band = calibration_results[[2]],
               index. = index.
-              # calculate.thresh=calculate.thresh,
-              # threshold.vector,
-              # calculate.thresh = calculate.thresh,
-              # manual.mask.test = manual.mask.test,
-              # threshold.method = threshold.method,
-              # pdf = pdf)
               )
   # Calculate thershold results
     
@@ -182,10 +176,10 @@ calcs <- function(photo,
     # Additionnaly we compare manual segmentation and threshold segmentation
      # We create new surface classes (as new cols in the data frame )
     # by crossing the two classification as follows:
-    # True.Negative => baseline background classified as background.
-    # False.Positive => baseline background classified as moss.
-    # False.Negative => baseline moss classified as background.
-    # True.Positive => baseline moss classified as moss.
+    # True.Negative (TN) => baseline background classified as background.
+    # False.Positive (FP) => baseline background classified as moss.
+    # False.Negative (FN)=> baseline moss classified as background.
+    # True.Positive (TP)=> baseline moss classified as moss.
     coor <- 
       coordinates(calibration_results[[1]])
     failed_thresholds <-
@@ -209,9 +203,9 @@ calcs <- function(photo,
     
     # class_label <- c( "00",     "10",     "01",     "11" )
     class_label <- c( "00",       "01",     "10",     "11" )
-      if(require(varhandle)!=T){
-        install.packages("varhandle")
-        require(varhandle)}
+    
+    librarian::shelf(varhandle)  
+    
       binary_surfaces <-
         lapply(1:length(surface_class),
                function(i)
@@ -234,9 +228,9 @@ calcs <- function(photo,
       binary_surfaces <-
         c(binary_surfaces, failed_binary_surfaces)
       
-      binary_surfaces <- binary_surfaces[match(index., names(binary_surfaces))]
+      binary_surfaces <- 
+            binary_surfaces[match(index., names(binary_surfaces))]
      # Correct if are less than 4 classes when we cross baseline mask and calculated mask
-       
        for(i in c(1:length(binary_surfaces))[index. %in% succesfull_threshold_names]){
         if(ncol(binary_surfaces[[i]])!=4){
           cols <- c("surface.00", "surface.01", "surface.10", "surface.11")
@@ -262,8 +256,8 @@ calcs <- function(photo,
             cbind(
               coor,
               getValues(list_raster_results[[i]]),
-              as.integer(values(list_threshold_results[[1]][[i]])),
               getValues(calibration_results[[2]][[4]]),
+              as.integer(values(list_threshold_results[[1]][[i]])),
               binary_surfaces[[i]][,1],
               binary_surfaces[[i]][,2],
               binary_surfaces[[i]][,3],
@@ -276,7 +270,7 @@ calcs <- function(photo,
         as.data.frame(list_df_results[[i]]))
     
     # Set colnames
-    colnames <- c("x", "y", "index_value", "predict.surface.class", "baseline.surface.class", 
+    colnames <- c("x", "y", "index_value", "baseline.surface.class", "predict.surface.class", 
                   "TN","FP", "FN", "TP")
     
     list_df_results <- lapply(list_df_results, setNames, colnames)
@@ -323,163 +317,87 @@ calcs <- function(photo,
   # Descriptors calculation -------------------------------------------------
   ############################################################################
   if(descrip==F){
-    if(manual.mask.test==F){
-      if(length(index.)>1){
-      int_surf_cover <-
-        unname(do.call(c,
-                lapply(c(1:length(index.)),
-                       function(i)
-                         unname(
-                           c(
-                             table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1]
-                           )
-                         )
-                )
-        ))
-      }else{
-        int_surf_cover <-
-          unlist(
-                  lapply(c(1:length(index.)),
-                         function(i)
-                           unname(
-                             c(
-                               table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1]
-                             )
-                           )
-                  )
-          )    
-      }
-    
-  }else{
-    if(length(index.)>1){
-    int_surf_cover <-
-     unname(do.call(c,
-              lapply(c(1:length(index.)),
-                     function(i)
-                       unname(
-                         c(
-                           table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
-                           # table(list.results[[1]][[i]][,5])[1], table(list.results[[1]][[i]][,5])[2],
-                           length(c(list.results[[1]][[i]][,5])[c(list.results[[1]][[i]][,5])==0]),
-                           length(c(list.results[[1]][[i]][,5])[c(list.results[[1]][[i]][,5])==1]),
-                           # table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
-                           # table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
-                           table(list.results[[1]][[i]][,6])[2],
-                           # table(list.results[[1]][[i]][,6])[1],
-                           table(list.results[[1]][[i]][,7])[2], 
-                           # table(list.results[[1]][[i]][,7])[1],
-                           table(list.results[[1]][[i]][,8])[2],
-                           # table(list.results[[1]][[i]][,8])[1],
-                           table(list.results[[1]][[i]][,9])[2]
-                           # table(list.results[[1]][[i]][,9])[1]
-                         )
-                       )
+        if (manual.mask.test == F) {
+              int_surf_cover <-
+                    unname(do.call(c,
+                                   lapply(seq_along(index.), function(i)
+                                         c(unlist(lapply(0:1, function(k)
+                                               c(table(list.results[[1]][[i]][, 4][list.results[[1]][[i]][, 4] == k]), NA)[-2]))))))
+              }else{
+              int_surf_cover <-
+                    unname(do.call(c,
+                                   lapply(seq_along(index.), function(i)
+                                         c(
+                                               unlist(lapply(0:1, function(k)
+                                                     c(
+                                                           table(list.results[[1]][[i]][, 4][list.results[[1]][[i]][, 4] == k]), NA
+                                                     )[-2])),
+                                               unlist(lapply(0:1, function(k)
+                                                     c(
+                                                           table(list.results[[1]][[i]][, 5][list.results[[1]][[i]][, 5] == k]), NA
+                                                     )[-2])),
+                                               c(table(list.results[[1]][[i]][, 6][list.results[[1]][[i]][, 6] == 1]), NA)[-2],
+                                               c(table(list.results[[1]][[i]][, 7][list.results[[1]][[i]][, 7] == 1]), NA)[-2],
+                                               c(table(list.results[[1]][[i]][, 8][list.results[[1]][[i]][, 8] == 1]), NA)[-2],
+                                               c(table(list.results[[1]][[i]][, 9][list.results[[1]][[i]][, 9] == 1]), NA)[-2]
+                                         ))))
+              TSS.IoU <- do.call(c,
+                                 lapply(seq_along(index.),
+                                        function(i)
+                                              TSS.IoU.calc(list.results[[1]][[i]])
+                                 )
               )
-      ))
-    }else{
-      int_surf_cover <-
-        unlist(
-                lapply(c(1:length(index.)),
-                       function(i)
-                         unname(
-                           c(
-                             table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
-                             # table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
-                             length(c(list.results[[1]][[i]][,5])[c(list.results[[1]][[i]][,5])==0]),
-                             length(c(list.results[[1]][[i]][,5])[c(list.results[[1]][[i]][,5])==1]),
-                             # table(list.results[[1]][[i]][,4])[2], table(list.results[[1]][[i]][,4])[1],
-                             # table(list.results[[1]][[i]][,5])[2], table(list.results[[1]][[i]][,5])[1],
-                             table(list.results[[1]][[i]][,6])[2],
-                             # table(list.results[[1]][[i]][,6])[1],
-                             table(list.results[[1]][[i]][,7])[2], 
-                             # table(list.results[[1]][[i]][,7])[1],
-                             table(list.results[[1]][[i]][,8])[2],
-                             # table(list.results[[1]][[i]][,8])[1],
-                             table(list.results[[1]][[i]][,9])[2]
-                             # table(list.results[[1]][[i]][,9])[1]
-                           )
-                         )
-                )
-        )
-    }
-   
-      }
-    
+              
+              int_surf_cover <- 
+                  c(int_surf_cover, TSS.IoU)
+              
+              
+        }
   }else{#descrip==T
-    # source("./ccspectral/Descriptor.calculation.fun.R")
-    if(manual.mask.test==F){
-      if(length(index.)>1){
-        int_surf_cover <-
-          unname(do.call(c,
-                  lapply(c(1:length(index.)),
-                         function(i)
-                           do.call(c,
-                                   lapply( 0:1 , function(j)
-                                     descriptor.fun(
-                                       list.results[[1]][[i]][,3][list.results[[1]][[i]][,4] == j],
-                                       descriptors.)
-                                   )
-                           )
-                  )
-          ))
+        if(manual.mask.test==F){
+          int_surf_cover <-
+                unlist(lapply(seq_along(index.), function(i)
+                      do.call(c, lapply(0:1 , function(k)
+                            descriptor.fun(list.results[[1]][[i]][, 3][list.results[[1]][[i]][, 4] == k],
+                                           descriptors.)))))
       }else{
-        int_surf_cover <-
-         unlist(
-                  lapply(c(1:length(index.)),
-                         function(i)
-                           do.call(c,
-                                   lapply( 0:1 , function(j)
-                                     descriptor.fun(
-                                       list.results[[1]][[i]][,3][list.results[[1]][[i]][,4] == j],
-                                       descriptors.)
-                                   )
-                           )
-                  )
-          )
-      }
-      
-      }else{#manual.mask.test==T
-        
-        int_surf_cover <-
-                  lapply(c(1:length(index.)),
-                         function(i)
-                           unlist(
-                                   lapply(4:5 , function(j)
-                                     unlist(
-                                             lapply(0:1, function(k)
-                                               descriptor.fun(
-                                                 list.results[[1]][[i]][,3][list.results[[1]][[i]][,j] == k],
-                                                 descriptors.)
-                                               )
-                                             )
-                                     )
-                                   )
+            int_surf_cover <-
+                  lapply(seq_along(index.), function(i)
+                        unlist(lapply(4:5 , function(j)
+                              unlist(
+                                    lapply(0:1, function(k)
+                                          descriptor.fun(list.results[[1]][[i]][, 3][list.results[[1]][[i]][, j] == k],
+                                                         descriptors.))
+                              ))))
+            test_mask_surfaces <-
+                  lapply(seq_along(index.), function(i)
+                        unlist(lapply(6:9 , function(j)
+                              descriptor.fun(list.results[[1]][[i]][, 3][list.results[[1]][[i]][, j] == 1],
+                                             descriptors.)
+                              )
+                              )
+                        )
+            int_surf_cover <-
+                  unlist(lapply(seq_along(index.), function(i)
+                                      c(int_surf_cover[[i]], test_mask_surfaces[[i]])
+                                )
                          )
-        test_mask_surfaces <-   
-          lapply(c(1:length(index.)),
-                 function(i)
-                   unlist(
-                           lapply(6:9 , function(j)
-                             descriptor.fun(
-                               list.results[[1]][[i]][,3][list.results[[1]][[i]][,j] == 1],
-                               descriptors.)
-                             )
-                           )
-                 )
-        int_surf_cover <-
-          unlist(
-                  lapply(c(1:length(index.)),
-                         function(i)
-                           c(int_surf_cover[[i]], test_mask_surfaces[[i]]
-                             )
-                         )
-                  )
-        rm(test_mask_surfaces)      
-                         
+            TSS.IoU <- do.call(c,
+                               lapply(seq_along(index.),
+                                      function(i)
+                                            TSS.IoU.calc(list.results[[1]][[i]])
+                                      )
+                               )
+            
+            int_surf_cover <- 
+                  c(int_surf_cover, TSS.IoU)
+            
+            rm(test_mask_surfaces)
+            
       }
     }
    
-int_surf_cover[is.na(int_surf_cover)] <- 0
+# int_surf_cover[is.na(int_surf_cover)] <- 0
   # START dataframe for index index vaulues presentation --------------------
   
   dat <- read.csv(summary.file)
@@ -529,72 +447,9 @@ int_surf_cover[is.na(int_surf_cover)] <- 0
 
   # Create pdf to plot results ---------------------------------------------
   if(pdf == T){
-    # Set plotpdf function to plot results (operated by lists) ---------------------------------
+    # plot pdf with results (operated by lists) ---------------------------------
     pdf_name <- paste0(out_dir, "/", sample_name, ".pdf")
-    
-    plotpdf <-  function(lhist, lind, lman, lover, i.names, asp, pdf.name){
-      # set pdf structure -------------------------------------------------------
-     
-      pdf(file = pdf.name, w = 14, h = 3.571429 * length(index.))
-      par(mfrow = c(length(index.), 4))
-      
-      # set function for pdf graphic content ------------------------------------
-      # hist:raster dataframe with x y coordinates index value (z) and binary mask value (surface)
-      # ind: index raster
-      
-      pdfprint <-   function(hist, ind, man, over, name, asp){
-        # set surface binary image as factor ------------------------------------
-      
-        surface.f <- factor(hist[,4], levels= c(1,0),
-                            labels = c("no_moss","moss"))
-        # surface.overlap <- factor(hist[,5], levels= c(1,2,3),
-        #                     labels = c("substrate","overlap","moss"))
-        #
-        # PLOT densities ----------------------------------------------------------
-        if(require(sm)!=T){
-          install.packages("sm")
-        }
-        sm::sm.density.compare(hist[,3], surface.f, xlab= name)
-        
-        title(main = paste(names), "values by surface")
-        # add legend
-        colfill <- c(2:(2+length(levels(surface.f))))
-        legend("topright", levels(surface.f), fill=colfill)
-        
-        # PLOT index values and real moss contour --------------------------------
-        plot(ind,
-             # main =  paste(toupper(names)),"values",
-             axes = FALSE, box = FALSE,
-             asp  = asp)
-        plot(moss_poly, add=T, border="red")
-        
-        # PLOT index values from real moss area and real moss contour  ------------
-        plot(man,
-             main =  paste(toupper(name)),"moss values over whole scene",
-             axes = FALSE, box = FALSE,
-             asp  = asp)
-        plot(moss_poly, add=T, border="red")
-        
-        # PLOT overlap index values between real moss area and background  ------------
-        plot(over,
-             main =  paste(toupper(names)),"index overlap regions",
-             axes = FALSE, box = FALSE,
-             asp  = asp)
-        plot(moss_poly, add=T, border="red")
-        
-      }
-      # run pdf.print over our list of indexes ----------------------------------
-      lapply(c(1:length(lind)), function(i)
-        pdfprint(hist  = list_df_results[[i]][,3],
-                 ind   = lind[[i]],
-                 man   = lman[[i]],
-                 over  = lover[[i]],
-                 names = i.names[[i]],
-                 asp   = asp))
-      # close pdf ---------------------------------------------------------------
-      dev.off()
-    }
-    
+
     # run plotpdf ------------------------------------------------------------------------------
     plotpdf(lhist   = lhist,
             lind    = index.,
