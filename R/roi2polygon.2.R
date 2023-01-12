@@ -191,8 +191,15 @@ roi2polygon.2 <-
   # Create empty list
   obs_areas <- list()
   # extract .roi file paths from rois folder  
-  roi_paths <- list.files(path = roi.folder, pattern=".roi$",full.names = T, recursive = T)
+  roi_paths <- 
+        list.files(path = roi.folder, pattern=".roi$",full.names = T, recursive = T)
   
+  message(paste(length(roi_paths),"roi files located"))
+  
+  # we use te first image of the series as reference
+  raster_ref <-       
+        list.files(path = pic.folder, full.names = T)[1] %>% 
+        raster(., band=1)
   
   for(i in seq_along(roi_paths)){
         
@@ -210,20 +217,14 @@ roi2polygon.2 <-
         # 1) Turn upside down Y coordinates of the window
         # 2) Re-escalate window coordinates to 0 - 1, to match raster image reference.
         
-        # we use te first image of the series as reference
-        first.tif.filename <- 
-              list.files(path = pic.folder,full.names = T)[1]
-        
-        bandred <- 
-              raster(first.tif.filename, band=1)
         
         # Make operations 1 and 2 in Y coordinate vector
         owin_y_corr <- 
-              (nrow(raster::as.matrix(bandred)) - (as.data.frame(owin))$y) / nrow(bandred)
+              (nrow(raster::as.matrix(raster_ref)) - (as.data.frame(owin))$y) / nrow(raster_ref)
         
         # Make operation 2 in X coordinate vector
         owin_x_corr <- 
-              (as.data.frame(owin))$x / raster::ncol(bandred)
+              (as.data.frame(owin))$x / raster::ncol(raster_ref)
         
         # Joint vectors as columns of a data frame
         owin_xy_corr <-cbind(x = owin_x_corr, y = owin_y_corr)
@@ -241,6 +242,7 @@ roi2polygon.2 <-
         # include in roi list
         obs_areas[[i]] <- sps
         
+        print(paste(i, "of", length(roi_paths), "roi files processed"))
   }
   
   return(obs_areas)
