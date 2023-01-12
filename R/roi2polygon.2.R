@@ -8,7 +8,7 @@
 # ---------------------------------------------------------------------------------------
 
 roi2polygon.2 <-
-      function(roi.paths, tif.path){
+      function(roi.folder, pic.folder){
             
  # install required packages----
 
@@ -189,14 +189,17 @@ roi2polygon.2 <-
   
  # we will put all the polygons in a list-----
   # Create empty list
-  obs_areas <-  list()
+  obs_areas <- list()
+  # extract .roi file paths from rois folder  
+  roi_paths <- list.files(path = roi.folder, pattern=".roi$",full.names = T, recursive = T)
   
-  for(i in seq_along(roi.paths)){
+  
+  for(i in seq_along(roi_paths)){
         
         # Import ROIs made with imageJ
         
         roi <- 
-              read.ijroi.2(roi.paths[i], verbose = FALSE)
+              read.ijroi.2(roi_paths[i], verbose = FALSE)
         
         # Some format transformations
         # transform ijroi to  owin format
@@ -209,7 +212,7 @@ roi2polygon.2 <-
         
         # we use te first image of the series as reference
         first.tif.filename <- 
-              list.files(path = "./vis",full.names = T)[1]
+              list.files(path = pic.folder,full.names = T)[1]
         
         bandred <- 
               raster(first.tif.filename, band=1)
@@ -230,7 +233,7 @@ roi2polygon.2 <-
         
         # create polygon list with one polygon
         poly_list <- sp::Polygons(list(poly),  
-                                  tail(strsplit(roi.paths[i], "/")[[1]],n=1))
+                                  tail(strsplit(roi_paths[i], "/")[[1]],n=1))
         
         # create SpatialPolygons object
         sps <- sp::SpatialPolygons(list(poly_list))
