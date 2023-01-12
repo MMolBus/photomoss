@@ -1,6 +1,4 @@
-#' roi2polygon: Transform a '.roi' files created with ImageJ to a spatial 
-#' polygons.
-#' 
+#' Transform ImageJ '.roi' files to spatial polygons.
 #' @description 
 #' Read '.roi' files located in a folder and subfolders and transform to a list 
 #' of spatial polygons.

@@ -2,8 +2,7 @@
 % Please edit documentation in R/roi2polygon.R
 \name{roi2polygon}
 \alias{roi2polygon}
-\title{roi2polygon: Transform a '.roi' files created with ImageJ to a spatial 
-polygons.}
+\title{Transform ImageJ '.roi' files to spatial polygons.}
 \usage{
 roi2polygon(roi.folder, pic.folder)
 }
