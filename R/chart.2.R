@@ -10,14 +10,14 @@
 #' @param pic.format character. Picture file format. It could be "jpg" for .jpg,.JPG and .jpeg; or "tif", for .tif format.
 #'
 #' @return A raster with 24 features one by each color tile.
-#'
-#' @export
 #' 
 #' @examples
 #'
 #' chart.2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg")
 #'
 #' @author Manuel Molina-Bustamante
+#'
+#' @export
 
 chart.2 <- function(pic.path,
                    samp.width = 0.01,
