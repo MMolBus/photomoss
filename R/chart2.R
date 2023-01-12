@@ -110,3 +110,4 @@ chart2 <- function(pic.path,
   return(chart)
 
 }
+
