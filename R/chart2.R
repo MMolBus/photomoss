@@ -1,6 +1,6 @@
 #' chart.2: Manual selection of points in the image where are located the color checker tiles.
 #' @description 
-#' Manual selection of points in the image where are located the color checker tiles.
+#' Manual selection of points where color checker tiles are located in the image .
 #' You need to click over color tiles in the opened window where you can find the picture with the color chart. 
 #' To click over the tiles you need to follow the order shown in
 #' \href{https://raw.githubusercontent.com/MMolBus/photomoss/master/vignettes/vignette_Photomoss_workflow/chart.png}{this image}.
