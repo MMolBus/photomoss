@@ -1,6 +1,3 @@
-# Title: chart.from.tif
-# Function:
-# R functions
 #' Manual selection of the image regions where we can find the color checker tiles.
 #' @param x string. File path where you can find the image files.
 #' @param samp.width numeric. Distance from original click point to establish the perimeter of the new geometry. Of length 1 replicated to the number of input click points, or of length equal to the number of click points.
