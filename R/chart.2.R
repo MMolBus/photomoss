@@ -11,12 +11,13 @@
 #'
 #' @return A raster with 24 features one by each color tile.
 #'
+#' @export
+#' 
 #' @examples
 #'
 #' chart.2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg")
 #'
 #' @author Manuel Molina-Bustamante
-#' @export
 
 chart.2 <- function(pic.path,
                    samp.width = 0.01,
@@ -114,5 +115,5 @@ chart.2 <- function(pic.path,
   plot(chart, add = T, col = "green")
 
   return(chart)
-
+  
 }
