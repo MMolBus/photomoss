@@ -112,7 +112,7 @@ chart.2 <- function(pic.path,
                   pic.format = pic.format)
 
   # plot(chart, add = T, col = "green")
-  msigPlot(chart, add = T, col = "green")
+  plot(chart, add = T, col = "green")
 
   return(chart)
 
