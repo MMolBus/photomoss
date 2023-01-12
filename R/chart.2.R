@@ -1,4 +1,4 @@
-#' chart.2:  Manual selection of points where color checker tiles are located an image.
+#' Manual selection of points where color checker tiles are located an image.
 #' @description 
 #' Manual selection of points where color checker tiles are located an image.
 #' You need to click over color tiles in the opened window where you can find the picture with the color chart. 

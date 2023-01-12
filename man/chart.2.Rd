@@ -2,7 +2,7 @@
 % Please edit documentation in R/chart.2.R
 \name{chart.2}
 \alias{chart.2}
-\title{chart.2:  Manual selection of points where color checker tiles are located an image.}
+\title{Manual selection of points where color checker tiles are located an image.}
 \usage{
 chart.2(pic.path, samp.width = 0.01, pic.format)
 }
