@@ -3,9 +3,9 @@ chart.2 <- function(pic.path,
                    pic.format){
 
 
-  chartf <- function(pic.path,
-                     samp.width,
-                     pic.format) {
+  # chartf <- function(pic.path,
+  #                    samp.width,
+  #                    pic.format) {
     if (require(jpeg) == F) {
       install.packages("jpeg")
 
@@ -82,17 +82,17 @@ chart.2 <- function(pic.path,
     chart_buff <-
       rgeos::gBuffer(sp.chart, width = samp.width, byid = T)
 
-    # plot(chart_buff, add = T, col = "green")
+    plot(chart_buff, add = T, col = "green")
 
     return(chart_buff)
   }
 
-  chart <- chartf(pic.path = pic.path,
-                  samp.width = samp.width,
-                  pic.format = pic.format)
-
-  plot(chart, add = T, col = "green")
-
-  return(chart)
-  
-}
+  # chart <- chartf(pic.path = pic.path,
+  #                 samp.width = samp.width,
+  #                 pic.format = pic.format)
+  # 
+  # plot(chart, add = T, col = "green")
+  # 
+  # return(chart)
+  # 
+# }
