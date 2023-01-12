@@ -1,24 +1,3 @@
-#' Manual selection of points where color checker tiles are located an image.
-#' @description 
-#' Manual selection of points where color checker tiles are located an image.
-#' You need to click over color tiles in the opened window where you can find the picture with the color chart. 
-#' To click over the tiles you need to follow the order shown in
-#' \href{https://raw.githubusercontent.com/MMolBus/photomoss/master/vignettes/vignette_Photomoss_workflow/chart.png}{this image}.
-#' Preferably, click on the color tile centroids.
-#' @param pic.path string. File path where you can find the image files.
-#' @param samp.width numeric. Distance from original click point to establish the perimeter of the new geometry. Of length 1 replicated to the number of input click points, or of length equal to the number of click points.
-#' @param pic.format character. Picture file format. It could be "jpg" for .jpg,.JPG and .jpeg; or "tif", for .tif format.
-#'
-#' @return A raster with 24 features one by each color tile.
-#' 
-#' @examples
-#'
-#' chart.2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg")
-#'
-#' @author Manuel Molina-Bustamante
-#'
-#' @export
-
 chart.2 <- function(pic.path,
                    samp.width = 0.01,
                    pic.format){
