@@ -28,25 +28,79 @@
 #' 
 #' @description 
 #' Image segmentation to calculate areas of Biological Soil Covers dominated
-#' by photosynthetic organims.calculates spectral indices, and segments and 
-#' classifies foreground (moss) and background based on global histogram 
-#' threshold values (Kaur, 2012). 
+#' by photosynthetic organisms.Calculates spectral indices, segments and 
+#' classifies Biological Soil Covers (foreground) and soil (background) based on
+#' global histogram threshold values. 
 #' 
-#' It offers the option to set thresholding values either automatically, 
-#' based on 11 segmentation methods based on  (see Annex I), or manually. 
+#' Automatic thresholding are  based on _autothresholdr_ package
+#' (\href{https://onlinelibrary.wiley.com/doi/full/10.1111/jmi.12474}{Landini et al., 2017}), 
+#' an adaptation to R of \href{https://imagej.net/Auto_Threshold}{Auto Threshold plugin from ImageJ}.
+#' Also, thresholding can be set manually.
 #' 
-#' @param pic.path string. File path where you can find the image files.
-#' @param samp.width numeric. Distance from original click point to establish 
-#' the perimeter of the new geometry. Of length 1 replicated to the number of 
-#' input click points, or of length equal to the number of click points.
-#' @param pic.format character. Picture file format. It could be "jpg" for .jpg,
-#' .JPG and .jpeg; or "tif", for .tif format.
+#' To assess segmentation performance, logical _manual.mask.test_ requires the 
+#' user to provides a manually delimited outline moss contour, and then, create 
+#' a binary mask that separates background (0) from foreground (1) in ImageJ. 
+#' This binary mask is used as baseline (or ground true) image to compare with 
+#' the automatically calculated area. The function generates a confusion matrix 
+#' comparing pixel values of the baseline and the calculated values. This 
+#' confusion matrix could be used to calculate two classification 
+#' evaluation metrcs as True Skill Statistic (TSS) or Intersection over Union 
+#' (IoU). 
+#' 
+#' @param wd.path string. 
+#' Working directory path where you can find the mandatory directories.
+#' @param chart. SpatialPolygons. 
+#' Spatial polygons provided by chart.2 function that set position of color chart tiles in the pictures. 
+#' @param pic.format character. 
+#' Picture file format. It could be "jpg" for .jpg, .JPG and .jpeg; or "tif", for .tif format. 
+#' Default = "tif"
+#' @param obs.areas list of SpatialPolygons. 
+#' Spatial polygons that set the areas where the samples are located in the pictures.   
+#' @param pdf logical. 
+#' If a pdf with results is crated. 
+#' Default= F
+#' @param calculate.thresh logical. 
+#' Requires autothreshold calculation. See _threshold.method_ argument. 
+#' Default = F 
+#' @param descrip logical. 
+#' Requires descriptor calculation of index values over segmented areas. 
+#' See _descriptors._ argument. 
+#' Default = F
+#' @param manual.mask.test logical. 
+#' Requires segmentation performance calculation. If TRUE, _mask_ folder with baseline masks must be in working directory. 
+#' Default = F
+#' @param index. character.  
+#' Sets the possible spectral indices that must be calculated.
+#' It must be an vector with some of the following values (representing spectral index codes):  
+#' "NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI", "NORR", "NORG", "NORB", 
+#' "EXR", "EXG", "EXB", "EXGR", "CIVE", "VEG","HUE", "SAT", "VAL". 
+#' To see the meaning of the spectral index codes that can be included, see \href{https://github.com/MMolBus/photomoss/blob/master/vignettes/vignette_Photomoss_workflow/Vignette_Photomoss.md}{this vignette}. 
+#' @param threshold.method character. 
+#' If _calculate.thresh_ = TRUE. 
+#' Indicate which one of the possible autothresholding methods must be applied over the calculated spectral index images
+#' based on _autothresholdr_ package
+#' (\href{https://onlinelibrary.wiley.com/doi/full/10.1111/jmi.12474}{Landini et al., 2017}), 
+#' an adaptation to R of \href{https://imagej.net/Auto_Threshold}{Auto Threshold plugin from ImageJ}.
+#' It must have only *ONE* of the following values: 
+#' "Huang", "IsoData", "IJDefault", "Li", "Mean", "MinErrorI", "Moments", "Otsu",
+#' "Percentile", "RenyiEntropy", "Shanbhag", "Triangle".
+#' For more details, see \href{https://github.com/MMolBus/photomoss/blob/master/vignettes/vignette_Photomoss_workflow/Vignette_Photomoss.md}{this vignette}. 
+#' @param threshold.vector numeric.
+#' If _calculate.thresh_ = FALSE.
+#' Indicate which threshold values must be applied must be applied over the calculated spectral index images.
+#' It must have the same lenght as _index._ argumet. And desired threshold values for each index must be set in the same order than in _index._ argument. 
+#' @param descriptors. character. 
+#' Indicates what descriptor metrics must be calculated over the segmented surfaces.   
+#' It can be some of the following values: "median", "mean", "sd", "min", "max", "diff.range".
 #'
 #' @return 
-#' A raster with 24 features one by each color tile.
+#' A dataframe with the following columns for each sample 
 #'
-#' @examples#'
-#' chart.2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg")
+#' @examples
+#' 
+#' df <- ccspectral.df(wd.path ="./my_wd" , chart, obs.areas, pdf = F, calculate.thresh = F,
+#' descrip = F, manual.mask.test = F, index. = c("SR"), threshold.method = c("Li"), threshold.vector = c(0.6),
+#' descriptors. = c("mean") )
 #'
 #' @author Manuel Molina-Bustamante
 #' @export
@@ -58,7 +112,7 @@ ccspectral.df <- function(wd.path,
                           pic.format="tif",
                           obs.areas,
                           pdf = F,
-                          calculate.thresh = T,
+                          calculate.thresh = F,
                           descrip = F,
                           manual.mask.test=F,
                           index. = c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI",

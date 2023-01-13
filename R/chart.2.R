@@ -17,7 +17,7 @@
 #' .JPG and .jpeg; or "tif", for .tif format.
 #'
 #' @return 
-#' A raster with 24 features one by each color tile.
+#' A spatial.polygon with 24 features one by each color tile.
 #'
 #' @examples#'
 #' chart.2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg")

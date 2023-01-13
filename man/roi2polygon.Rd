@@ -22,7 +22,7 @@ Read '.roi' files located in a folder and subfolders and transform to a list
 of spatial polygons.
 }
 \examples{
-
+#' 
 roi2polygon.2 <- function(roi.folder = "./myrois", pic.folder = "./mypics")
 
 }

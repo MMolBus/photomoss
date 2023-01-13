@@ -2,29 +2,34 @@
 % Please edit documentation in R/chart.2.R
 \name{chart.2}
 \alias{chart.2}
-\title{chart.2:  Manual selection of points where color checker tiles are located in the image.}
+\title{chart.2:  Manual selection of points where color checker tiles are located in
+the image.}
 \usage{
 chart.2(pic.path, samp.width = 0.01, pic.format)
 }
 \arguments{
 \item{pic.path}{string. File path where you can find the image files.}
 
-\item{samp.width}{numeric. Distance from original click point to establish the perimeter of the new geometry. Of length 1 replicated to the number of input click points, or of length equal to the number of click points.}
+\item{samp.width}{numeric. Distance from original click point to establish 
+the perimeter of the new geometry. Of length 1 replicated to the number of 
+input click points, or of length equal to the number of click points.}
 
-\item{pic.format}{character. Picture file format. It could be "jpg" for .jpg,.JPG and .jpeg; or "tif", for .tif format.}
+\item{pic.format}{character. Picture file format. It could be "jpg" for .jpg,
+.JPG and .jpeg; or "tif", for .tif format.}
 }
 \value{
-A raster with 24 features one by each color tile.
+A spatial.polygon with 24 features one by each color tile.
 }
 \description{
 Manual selection of points where color checker tiles are located in the image.
-You need to click over color tiles in the opened window where you can find the picture with the color chart. 
+You need to click over color tiles in the opened window where you can find 
+the picture with the color chart. 
 To click over the tiles you need to follow the order shown in
 \href{https://raw.githubusercontent.com/MMolBus/photomoss/master/vignettes/vignette_Photomoss_workflow/chart.png}{this image}.
 Preferably, click on the color tile centroids.
 }
 \examples{
-
+#'
 chart.2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg")
 
 }
