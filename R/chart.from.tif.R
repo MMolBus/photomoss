@@ -1,7 +1,7 @@
 # Title: chart.from.tif
 # Function:manual selection of the image regions where we can find the color checker tiles
 
-chart.from.tif <- function(tif.path, 
+chart.from.tif <- function(wd.path, 
                            samp.width = 0.01){
 
   if (require(tiff) == F ) {
