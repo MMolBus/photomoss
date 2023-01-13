@@ -1,4 +1,5 @@
 #' Transform ImageJ '.roi' files to spatial polygons.
+#' 
 #' @description 
 #' Read '.roi' files located in a folder and subfolders and transform to a list 
 #' of spatial polygons.
@@ -12,8 +13,7 @@
 #' @return 
 #' A list of spatial polygons
 #' 
-#' @examples
-#' 
+#' @examples#' 
 #' roi2polygon.2 <- function(roi.folder = "./myrois", pic.folder = "./mypics")
 #'
 #' @author Manuel Molina-Bustamante
