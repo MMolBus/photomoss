@@ -1,5 +1,4 @@
 # TITLE: 
-# ccspectral.df
 
 # OBJECTIVE: Two main objectives
 # 1. Image segmentation between moss and background using 
@@ -20,12 +19,43 @@
 # # # # pkg[!(pkg %in% installed.packages()[, "Package"])]
 # # # #
 # # # # if (!require("sm")) install.packages("sm")
-#   tif.path <- wd
+#   wd.path <- wd
 #   threshold.method <- "Mean"
 # index. <-"SAT"
 
-ccspectral.df <- function(tif.path,
+#' ccspectral.df: Image segmentation to calculate areas of Biological Soil Covers dominated
+#' by photosynthetic organims. 
+#' 
+#' @description 
+#' Image segmentation to calculate areas of Biological Soil Covers dominated
+#' by photosynthetic organims.calculates spectral indices, and segments and 
+#' classifies foreground (moss) and background based on global histogram 
+#' threshold values (Kaur, 2012). 
+#' 
+#' It offers the option to set thresholding values either automatically, 
+#' based on 11 segmentation methods based on  (see Annex I), or manually. 
+#' 
+#' @param pic.path string. File path where you can find the image files.
+#' @param samp.width numeric. Distance from original click point to establish 
+#' the perimeter of the new geometry. Of length 1 replicated to the number of 
+#' input click points, or of length equal to the number of click points.
+#' @param pic.format character. Picture file format. It could be "jpg" for .jpg,
+#' .JPG and .jpeg; or "tif", for .tif format.
+#'
+#' @return 
+#' A raster with 24 features one by each color tile.
+#'
+#' @examples#'
+#' chart.2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg")
+#'
+#' @author Manuel Molina-Bustamante
+#' @export
+
+
+
+ccspectral.df <- function(wd.path,
                           chart,
+                          pic.format="tif",
                           obs.areas,
                           pdf = F,
                           calculate.thresh = T,
@@ -52,7 +82,7 @@ ccspectral.df <- function(tif.path,
        any(list.files(getwd()) %in% "mask")) {
     }else{
       wd <- getwd()
-      setwd(tif.path)
+      setwd(wd.path)
       on.exit(setwd(wd))
     }
       }else{
@@ -60,7 +90,7 @@ ccspectral.df <- function(tif.path,
          any(list.files(getwd()) %in% "vis")) {
       }else{
         wd <- getwd()
-        setwd(tif.path)
+        setwd(wd.path)
         on.exit(setwd(wd))}}
     
     # Order custom arguments values and test required arguments =============================================
@@ -288,6 +318,7 @@ ccspectral.df <- function(tif.path,
       vis.files = all_named[,1],
       nir.files = all_named[,1],
       chart=chart,
+      pic.format=pic.format,
       mask.files = mask_files,
       manual.mask.test = manual.mask.test,
       summary.file = summary_file,
@@ -302,5 +333,5 @@ ccspectral.df <- function(tif.path,
       start.time=start_time
       )
   })
-  message("Processed files may be found at: ", paste0(tif.path, out_dir))
+  message("Processed files may be found at: ", paste0(wd.path, out_dir))
 }
