@@ -111,8 +111,8 @@ chart.2 <- function(pic.path,
                   samp.width = samp.width,
                   pic.format = pic.format)
 
+  
   # plot(chart, add = T, col = "green")
-  plot(chart, add = T, col = "green")
 
   return(chart)
 
