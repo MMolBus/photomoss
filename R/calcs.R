@@ -17,6 +17,7 @@ calcs <- function(photo,
                   obs.areas, 
                   vis.files,
                   nir.files,
+                  pic.format,
                   manual.mask.test,
                   mask.files, 
                   summary.file,
@@ -62,20 +63,47 @@ calcs <- function(photo,
   }
   # Cell extraction and color calibration -----------------------------------------------------
   # Read and create raster from tiff =====================================
-  
-  if(manual.mask.test==T){
-    all_bands <-  raster.tiff.ccspectral(vis.photo = vis_photo, nir.photo = nir_photo, 
-                                         manual.mask.test = manual.mask.test, 
-                                         mask.photo = mask_photo)
-  }else{
-    all_bands <-  raster.tiff.ccspectral(vis.photo = vis_photo, nir.photo = nir_photo, 
-                                         manual.mask.test = manual.mask.test)
+  if(pic.format=="tif") {
+        if (manual.mask.test == T) {
+              all_bands <-
+                    raster.tiff.ccspectral(
+                          vis.photo = vis_photo,
+                          nir.photo = nir_photo,
+                          manual.mask.test = manual.mask.test,
+                          mask.photo = mask_photo
+                    )
+        } else{
+              all_bands <-
+                    raster.tiff.ccspectral(
+                          vis.photo = vis_photo,
+                          nir.photo = nir_photo,
+                          manual.mask.test = manual.mask.test
+                    )
+        }      
+  } else{
+        if (manual.mask.test == T) {
+              all_bands <-
+                    raster.jpg.ccspectral(
+                          vis.photo = vis_photo,
+                          nir.photo = nir_photo,
+                          manual.mask.test = manual.mask.test,
+                          mask.photo = mask_photo
+                    )
+        } else{
+              all_bands <-
+                    raster.jpg.ccspectral(
+                          vis.photo = vis_photo,
+                          nir.photo = nir_photo,
+                          manual.mask.test = manual.mask.test
+                    )
+        }
   }
 
   # Calibrate color with color checker
   
   calibration_results <-
-    cell.extract.color.cal.fun(
+    
+        cell.extract.color.cal.fun(
       obs.area = obs_area,
       all.bands = all_bands,
       chart = chart,
