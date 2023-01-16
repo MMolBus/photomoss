@@ -8,7 +8,9 @@ Date: 24/7/2020
 
 ## What is *PhotomossR*? 
 ***PhotomossR*** is a developement from **mosscoder/crustcover** package
-(https://github.com/mosscoder/crustCover). ***PhotomossR*** is the analitical part of the Photomoss protocol, an open source focused on meassure of Biological Soil Covers areas in field or lab experiments. To achieve this duty, it uses the
+(https://github.com/mosscoder/crustCover). ***PhotomossR*** is the analitical part 
+of the Photomoss protocol, an open source protocol focused on meassure of Biological 
+Soil Covers areas in field or lab experiments. To achieve this duty, it uses the
 same principles as (Fischer2012) that take advantage of Near InfraRed
 (NIR) and visible RGB images. With the color channels of this images, we can
 calculate several spectral indexes. In contrast with *crustcover* that measures
