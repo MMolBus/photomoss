@@ -80,7 +80,7 @@ It can be some of the following values: "median", "mean", "sd", "min", "max", "d
 Spatial polygons provided by chart.2 function that set position of color chart tiles in the pictures.}
 }
 \value{
-A dataframe with the following columns for each sample
+A dataframe with the required results
 }
 \description{
 Image segmentation to calculate areas of Biological Soil Covers dominated
@@ -105,7 +105,7 @@ evaluation metrcs as True Skill Statistic (TSS) or Intersection over Union
 }
 \examples{
 
-df <- ccspectral.df(wd.path ="./my_wd" , chart, obs.areas, pdf = F, calculate.thresh = F,
+df <- ccspectral.df(wd.path ="./my_wd" , pic.format = "tif", chart = chart_polys, obs.areas = obs_areas_poly_list, pdf = F, calculate.thresh = F,
 descrip = F, manual.mask.test = F, index. = c("SR"), threshold.method = c("Li"), threshold.vector = c(0.6),
 descriptors. = c("mean") )
 

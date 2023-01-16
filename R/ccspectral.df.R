@@ -94,11 +94,11 @@
 #' It can be some of the following values: "median", "mean", "sd", "min", "max", "diff.range".
 #'
 #' @return 
-#' A dataframe with the following columns for each sample 
+#' A dataframe with the required results 
 #'
 #' @examples
 #' 
-#' df <- ccspectral.df(wd.path ="./my_wd" , chart, obs.areas, pdf = F, calculate.thresh = F,
+#' df <- ccspectral.df(wd.path ="./my_wd" , pic.format = "tif", chart = chart_polys, obs.areas = obs_areas_poly_list, pdf = F, calculate.thresh = F,
 #' descrip = F, manual.mask.test = F, index. = c("SR"), threshold.method = c("Li"), threshold.vector = c(0.6),
 #' descriptors. = c("mean") )
 #'
