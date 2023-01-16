@@ -16,6 +16,6 @@ Description: Calculates spectral vegetation and color indices (NDVI...) in multi
 License: GPL (>= 2)
 Depends: raster
 Imports: dplyr, rgeos, data.table, tiff, jpeg, sp, RColorBrewer, spatstat, RImageJROI, raster, varhandle
-BugReports: https://github.com/MMolBus/photomoss/issues
+BugReports: https://github.com/MMolBus/PhotomossR/issues
 LazyData: true
 RoxygenNote: 7.1.2
