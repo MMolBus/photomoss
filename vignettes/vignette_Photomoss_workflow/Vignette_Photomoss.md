@@ -35,7 +35,7 @@ We need to install *devtools* package:
 
 Then we install *photomoss* from my GitHub branch:
 
-    install_github("mossmusgo/photomoss")
+    install_github("MMolBUs/photomoss")
     library(photomoss)
 
 Maybe you need to install some other packages, so be aware of warnings
