@@ -5,8 +5,7 @@ Version: 1.1
 Date: 2023-01-16
 Author: Manuel Molina-Bustamante with essential collaboration from Indradatta deCastro-Arrazola
 Maintainer: Manuel Molina-Bustamante <manuel.molinab@uam.es>
-Authors@R: c(
-person("Manuel", "Molina-Bustamante", email = "manuel.molinab@uam.es", role = c("aut", "cre")), 
+Authors@R: c(person("Manuel", "Molina-Bustamante", email = "manuel.molinab@uam.es", role = c("aut", "cre")), 
 person("Indradatta", "deCastro-Arrazola", email = "indra@mncn.csic.es", role = c("aut")),
 person("Kyle", "Doherty", email = "kdoherty@mpgranch.com", role = c("aut", "com")),
 person("Nagore G.", "Medina", email = "nagore.garcia@uam.es", role = c("aut", "ths")))
@@ -15,7 +14,7 @@ Description: Calculates spectral vegetation and color indices (NDVI...) in multi
     heavily based on package crustcover (available at GitHub username mosscoder).
 License: GPL (>= 2)
 Depends: raster
-Imports: dplyr, rgeos, data.table, tiff, jpeg, sp, RColorBrewer, spatstat, RImageJROI, raster, varhandle
+Imports: dplyr, rgeos, data.table, tiff, jpeg, sp, RColorBrewer, spatstat, RImageJROI
 BugReports: https://github.com/MMolBus/PhotomossR/issues
 LazyData: true
 RoxygenNote: 7.1.2
