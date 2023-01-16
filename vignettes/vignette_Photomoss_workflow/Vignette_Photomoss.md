@@ -1,4 +1,4 @@
-Photomoss workflow
+PhotomossR workflow
 ================
 
 Author: Manuel Molina-Bustamante
