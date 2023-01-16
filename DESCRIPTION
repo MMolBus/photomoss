@@ -6,9 +6,6 @@ Date: 2023-01-16
 Author: Manuel Molina-Bustamante with essential collaboration from Indradatta deCastro-Arrazola
 Maintainer: Manuel Molina-Bustamante <manuel.molinab@uam.es>
 Authors@R: person("Manuel", "Molina-Bustamante", email = "manuel.molinab@uam.es", role = c("aut", "cre"))
-person("Indradatta", "deCastro-Arrazola", email = "indra@mncn.csic.es", role = c("aut"))
-person("Kyle", "Doherty", email = "kdoherty@mpgranch.com", role = c("aut", "com"))
-person("Nagore G.", "Medina", email = "nagore.garcia@uam.es", role = c("aut", "ths"))
 Description: Calculates spectral vegetation and color indices (NDVI...) in multiple
     VIS (=VISible) and NIR (=Near InfraRed) pairs of photos. The package is 
     heavily based on package crustcover (available at GitHub username mosscoder).
