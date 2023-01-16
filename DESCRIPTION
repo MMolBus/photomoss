@@ -1,19 +1,21 @@
 Package: photomoss
 Type: Package
 Title: Calculates Spectral Indices for Multiple Areas per Photo
-Version: 1.0
-Date: 2018-04-18
-Author: Manuel Molina with essential collaboration from Indradatta deCastro-Arrazola
-Maintainer: Indradatta deCastro-Arrazola <indra@mncn.csic.es>
+Version: 1.1
+Date: 2023-01-16
+Author: Manuel Molina-Bustamante with essential collaboration from Indradatta deCastro-Arrazola
+Maintainer: Manuel Molina-Bustamante <manuel.molinab@uam.es>
 Authors@R: c(
-    person("Indradatta", "deCastro-Arrazola", email = "indra@mncn.csic.es", role = c("aut", "cre")),
-    person("Manuel", "Molina", email = "manuel.molbus@gmail.com", role = "aut"))
-Description: Calculates spectral indices (NDVI...) for several areas of interest in multiple
+person("Manuel", "Molina-Bustamante", email = "manuel.molinab@uam.es", role = c("aut", "cre")), 
+person("Indradatta", "deCastro-Arrazola", email = "indra@mncn.csic.es", role = c("aut")),
+person("Kyle", "Doherty", email = "kdoherty@mpgranch.com", role = c("aut", "com")),
+person("Nagore G.", "Medina", email = "nagore.garcia@uam.es", role = c("aut", "ths")))
+Description: Calculates spectral vegetation and color indices (NDVI...) in multiple
     VIS (=VISible) and NIR (=Near InfraRed) pairs of photos. The package is 
     heavily based on package crustcover (available at GitHub username mosscoder).
 License: GPL (>= 2)
 Depends: raster
-Imports: dplyr, rgeos, data.table, tiff, sp, RColorBrewer, spatstat, RImageJROI
-BugReports: https://github.com/united-ecology/photomoss/issues
+Imports: dplyr, rgeos, data.table, tiff, jpeg, sp, RColorBrewer, spatstat, RImageJROI, raster, varhandle
+BugReports: https://github.com/MMolBus/photomoss/issues
 LazyData: true
 RoxygenNote: 7.1.2
