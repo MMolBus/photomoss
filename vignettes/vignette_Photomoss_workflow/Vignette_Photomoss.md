@@ -6,25 +6,24 @@ Author: Manuel Molina-Bustamante
 Date: 24/7/2020
 ---
 
-## What is *photomoss*? 
-***Photomoss*** is a developement from **mosscoder/crustcover** package
-(https://github.com/mosscoder/crustCover). ***photomoss*** enables size meassure of Biological Soil Crust areas in
-field or lab experiments. To achieve this duty, it uses the
+## What is *PhotomossR*? 
+***PhotomossR*** is a developement from **mosscoder/crustcover** package
+(https://github.com/mosscoder/crustCover). ***PhotomossR*** is the analitical part of the Photomoss protocol, an open source focused on meassure of Biological Soil Covers areas in field or lab experiments. To achieve this duty, it uses the
 same principles as (Fischer2012) that take advantage of Near InfraRed
 (NIR) and visible RGB images. With the color channels of this images, we can
 calculate several spectral indexes. In contrast with *crustcover* that measures
-seven index, *photomoss* can use a great set of 19 spectral indexes. As
-*crust cover*, *photomoss* core function can calculate moss area using a
+seven index, *PhotomossR* can use a great set of 19 spectral indexes. As
+*crust cover*, *PhotomossR* core function can calculate moss area using a
 given spectral index and implementigg a custom threshold value, but in
 addition, it can apply an authomatic segmentation following a set of 12
 different segmentation methods if needed. Other additional
-functionalities of *photomoss* in comparison with *crustcover* are the
+functionalities of *PhotomossR* in comparison with *crustcover* are the
 semiautomatisation of annalysis over the images, and a segmentation
 accuracy test functionality, to test the segmentation accuracy comparing
 the calculated surfaces with a the baseline prvidedby a binary mask done with ImageJ.
 
 
-## Installing photomoss
+## Installing PhotomossR
 
 We need to install *devtools* package:
 
@@ -33,10 +32,10 @@ We need to install *devtools* package:
       require(devtools)
     }
 
-Then we install *photomoss* from my GitHub branch:
+Then we install *PhotomossR* from GitHub branch:
 
-    install_github("MMolBUs/photomoss")
-    library(photomoss)
+    install_github("MMolBUs/PhotomossR")
+    library(PhotomossR)
 
 Maybe you need to install some other packages, so be aware of warnings
 and install them.
@@ -81,22 +80,22 @@ Our working directory have to include the following folders and files:
 
     wd #your working directory
     setwd (wd)
-    tif.path <- getwd()
+    wd.path <- getwd()
 
 
 ## Start with the functions
 
 
 
-### *chart.from.tif*
+### *chart.2*
 
 
 We create the chart object (a list of polygons) with the
-*chart.from.tif* function. To do this we click over the color cells
-chart in the image. Importantnote: folow the order as indicated in the
+*chart.2* function. To do this we click over the color cells
+chart in the image. Important note: folow the order as indicated in the
 figure.
 
-    chart<- chart.from.tif(tif.path) 
+    chart <- chart.2(wd.path) 
 
 ![image](chart.png){width="5.83333in" height="3.28125in"}
 
@@ -111,14 +110,14 @@ files from the ImageJ .roi files. Then we crop the
 pixels that fell inside the polygons and obtain a list ploygon
 data.frame (*obs.areas* object)
 
-    roi.paths<- list.files(path = "./rois",pattern=".roi$",full.names = T, recursive = T)
+   roi_paths <- list.files(path = "./rois",pattern=".roi$",full.names = T, recursive = T)
 
-    obs.areas <- lapply(roi.paths, roi2polygon.2, tif.path)
+   obs.areas <- roi2polygon(roi.folder = "./rois", pic.folder ="./vis")
 
 
 ### *ccspectral.df*
 
-This is the core function of photomoss.
+This is the core function of PhotomossR.
 
 The basic result of this function is a dataframe with the **areas in
 number of pixels** of background and moss area for each sample. If
@@ -127,22 +126,25 @@ areas.
 
 #### Arguments in *ccspectral.df*:
 
--   _**tif.path**: the path of the working directory where are the
+-   _**wd.path**: the path of the working directory where are the
     _vis_, _nir_, _mask_, _rois_ folders and _names.csv_ file.
 
--   _**chart**_: polygon list obtained with *chart.from.tif* function.
+-   _**chart**_: polygon list obtained with *chart.2* function.
 
--   _**obs.areas**_: list of polygons data.frame obtained with
-    *extractPIX.from.Poly* function.
+-   _**pic.format**_: Picture file format. It could be "jpg" for .jpg, 
+    .JPG and .jpeg; or "tif", for .tif format. Default = "tif".
 
--   _**pdf**_: logical, to present the results in image and histogram of
-    moss areas. Default = F.
+-   _**obs.areas**_: list of polygons data.frame obtained with 
+    *roi2polygon* function.
 
--   _**calculate.thresh**_: logical, to Calculate autothreshold. Default =
-    T.
+-   _**pdf**_: logical, to present the results in image and histogram 
+    of moss areas. Default = F.
+
+-   _**calculate.thresh**_: logical, to Calculate autothreshold. 
+    Default = F.
 
 -   _**descrip**_: logical, to calculate statistical descriptors of index
-    value in the moss area, backround area,... Default = F.
+    value in the classified areas. Default = F.
 
 -   _**manual.mask.test**_: logical, if you want to test the accuracy of
     image segmentation comparing with handmade drawn moss area. Default
@@ -155,7 +157,7 @@ areas.
 
 -   _**threshold.method**_: character, if *calculate.thresh= T.* The
     autosegmentation method to separate moss from background. The
-    argument can have one of the following values: "Huang", "IJDefault",
+    argument can be ONE of the following values: "Huang", "IJDefault",
     "IsoData", "Li", "Mean", "MinErrorI", "Moments", "Otsu",
     "Percentile", "RenyiEntropy", "Shanbhag", "Triangle". Autothereshold methods are more detailed bellow.
 
