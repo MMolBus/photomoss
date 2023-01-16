@@ -1,4 +1,4 @@
-Package: photomoss
+Package: PhotomossR
 Type: Package
 Title: Calculates Spectral Indices for Multiple Areas per Photo
 Version: 1.1
