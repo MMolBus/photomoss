@@ -39,10 +39,17 @@ cell.extract.color.cal.fun <-
     crop(all.bands[[1]], extent(obs_ext))
   extent(red_band) <- 
     extent(c(0, 1, 0, 1))
-  green_band <- crop(all.bands[[2]], extent(obs_ext))
-  extent(green_band) <- extent(c(0, 1, 0, 1))
-  blue_band <- crop(all.bands[[3]], extent(obs_ext))
-  extent(blue_band) <- extent(c(0, 1, 0, 1))
+ 
+  green_band <- 
+        crop(all.bands[[2]], extent(obs_ext))
+  extent(green_band) <- 
+        extent(c(0, 1, 0, 1))
+  
+  blue_band <- 
+        crop(all.bands[[3]], extent(obs_ext))
+  extent(blue_band) <- 
+        extent(c(0, 1, 0, 1))
+  
   if (manual.mask.test == T) {
     mask_band <- crop(all.bands[[5]], extent(obs_ext))
     extent(mask_band) <- extent(c(0, 1, 0, 1))
@@ -55,20 +62,28 @@ cell.extract.color.cal.fun <-
     raster_band <- brick(red_band, green_band, blue_band)
   }
   train_df <- data.frame()
-  chart_vals <- data.frame(red.chart = c(0.17, 0.63, 0.15, 
-                                         0.11, 0.31, 0.2, 0.63, 0.12, 0.57, 0.21, 0.33, 0.67, 
-                                         0.04, 0.1, 0.6, 0.79, 0.7, 0.07, 0.93, 0.59, 0.36, 0.18, 
-                                         0.08, 0.03), 
-                           green.chart = c(0.1, 0.32, 0.19, 0.14, 0.22,
-                                           0.47, 0.27, 0.11, 0.13, 0.06, 0.48, 0.4, 0.06, 0.27, 
-                                                                      0.07, 0.62, 0.13, 0.22, 0.95, 0.62, 0.38, 0.2, 0.09, 
-                                                                      0.03), 
-                           blue.chart = c(0.07, 0.24, 0.34, 0.06, 0.42, 0.42, 
-                                                                                            0.06, 0.36, 0.12, 0.14, 0.1, 0.06, 0.24, 0.09, 0.04, 
-                                                                                            0.08, 0.31, 0.38, 0.93, 0.62, 0.39, 0.2, 0.09, 0.02), 
-                           nir.chart = c(0.43, 0.87, 0.86, 0.18, 0.86, 0.43, 0.85, 
-                                         0.54, 0.54, 0.79, 0.49, 0.66, 0.52, 0.44, 0.72, 0.82, 
-                                         0.88, 0.42, 0.91, 0.51, 0.27, 0.13, 0.06, 0.02))
+  
+  
+  chart_vals <- data.frame(red.chart = 
+                                 c(0.17, 0.63, 0.15, 0.11, 0.31, 0.20,
+                                   0.63, 0.12, 0.57, 0.21, 0.33, 0.67,
+                                   0.04, 0.10, 0.60, 0.79, 0.70, 0.07,
+                                   0.93, 0.59, 0.36, 0.18, 0.08, 0.03), 
+                           green.chart = 
+                                 c(0.10, 0.32, 0.19, 0.14, 0.22, 0.47, 
+                                   0.27, 0.11, 0.13, 0.06, 0.48, 0.40, 
+                                   0.06, 0.27, 0.07, 0.62, 0.13, 0.22, 
+                                   0.95, 0.62, 0.38, 0.20, 0.09, 0.03), 
+                           blue.chart = 
+                                 c(0.07, 0.24, 0.34, 0.06, 0.42, 0.42,
+                                   0.06, 0.36, 0.12, 0.14, 0.10, 0.06, 
+                                   0.24, 0.09, 0.04, 0.08, 0.31, 0.38, 
+                                   0.93, 0.62, 0.39, 0.20, 0.09, 0.02), 
+                           nir.chart = 
+                                 c(0.43, 0.87, 0.86, 0.18, 0.86, 0.43, 
+                                   0.85, 0.54, 0.54, 0.79, 0.49, 0.66, 
+                                   0.52, 0.44, 0.72, 0.82, 0.88, 0.42, 
+                                   0.91, 0.51, 0.27, 0.13, 0.06, 0.02))
   for (i in c(1:24)[-3]) {
     poly <- chart[i]
     options(warn = -1)
