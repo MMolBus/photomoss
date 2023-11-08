@@ -17,4 +17,4 @@ Depends: raster
 Imports: dplyr, rgeos, data.table, tiff, jpeg, sp, RColorBrewer, spatstat, RImageJROI
 BugReports: https://github.com/MMolBus/PhotomossR/issues
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3

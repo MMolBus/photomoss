@@ -18,7 +18,16 @@ ccspectral.df(
     "EXR", "EXG", "EXB", "EXGR", "CIVE", "VEG", "HUE", "SAT", "VAL"),
   threshold.method,
   threshold.vector,
-  descriptors. = c("median", "mean", "sd", "min", "max", "diff.range")
+  descriptors. = c("median", "mean", "sd", "min", "max", "diff.range"),
+  chart.vals = data.frame(red.chart = c(0.17, 0.63, 0.15, 0.11, 0.31, 0.2, 0.63, 0.12,
+    0.57, 0.21, 0.33, 0.67, 0.04, 0.1, 0.6, 0.79, 0.7, 0.07, 0.93, 0.59, 0.36, 0.18,
+    0.08, 0.03), green.chart = c(0.1, 0.32, 0.19, 0.14, 0.22, 0.47, 0.27, 0.11, 0.13,
+    0.06, 0.48, 0.4, 0.06, 0.27, 0.07, 0.62, 0.13, 0.22, 0.95, 0.62, 0.38, 0.2, 0.09,
+    0.03), blue.chart = c(0.07, 0.24, 0.34, 0.06, 0.42, 0.42, 0.06, 0.36, 0.12, 0.14,
+    0.1, 0.06, 0.24, 0.09, 0.04, 0.08, 0.31, 0.38, 0.93, 0.62, 0.39, 0.2, 0.09, 0.02),
+    nir.chart = c(0.43, 
+     0.87, 0.86, 0.18, 0.86, 0.43, 0.85, 0.54, 0.54, 0.79, 0.49,
+    0.66, 0.52, 0.44, 0.72, 0.82, 0.88, 0.42, 0.91, 0.51, 0.27, 0.13, 0.06, 0.02))
 )
 }
 \arguments{
@@ -78,6 +87,10 @@ It can be some of the following values: "median", "mean", "sd", "min", "max", "d
 
 \item{chart.}{SpatialPolygons. 
 Spatial polygons provided by chart.2 function that set position of color chart tiles in the pictures.}
+
+\item{chart.values}{dataframe. The color chart values from the spectral channels we are working with. Deffault values for Red, Green, Blue, and Near Infrared. Colour chart enable colour equalization between images using a known colour reference.
+In our case we provide the color reference for ColorChecker® Classic of X-Rite following the reference values provided in \href{https://elibrary.asabe.org/abstract.asp??JID=3&AID=25359&CID=aeaj2008&v=24&i=6&T=1}{Ritchie et al. 2008}.
+The dataframe must be provided with the following colnames red.chart, green.chart, blue.chart, nir.chart. Each column have to contain the reference color values of the color chart we are using for the red, green, blue and near infrared channels.}
 }
 \value{
 A dataframe with the required results
