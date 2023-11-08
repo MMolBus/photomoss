@@ -27,7 +27,9 @@
 
 chart.2 <- function(pic.path,
                    samp.width = 0.01,
-                   pic.format){
+                   pic.format, 
+                   xriteclassic.chart = T,
+                   n.color.tiles){
 
 
   chartf <- function(pic.path,
@@ -90,17 +92,32 @@ chart.2 <- function(pic.path,
     options(warn = 0)
 
     # chart.coords <- data.frame(x = numeric(), y = numeric())
-
-    message(
-      "Color chart has 6 columns and 4 rows. Bottom row correspond to grayscale tiles. Click on all 24 color chart cells in sequence. The sequence follows left to right as follows: starts at cell 1 (brown, top left) and finishes on cell 24 (black, bottom right)."
-    )
+if(xriteclassic.chart == T){
+      message(
+            "You are using Xrite classic ColorCheker"
+            )
+      message(
+            "Color chart has 6 columns and 4 rows. Bottom row correspond to grayscale tiles. Click on all 24 color chart cells in sequence. The sequence follows left to right as follows: starts at cell 1 (brown, top left) and finishes on cell 24 (black, bottom right)."
+            )
 
     # for (i in 1:24) {
     #   options(warn = -1)
     #   chart.coords[i, 1:2] <- click(xy = T)[1:2]
     #   options(warn = 0)
     # }
-    chart.coords <- locator(n = 24, type = "p")
+      n.color.tiles <- 24
+      chart.coords <- locator(n = n.color.tiles, type = "p")
+    }else{
+          if(exists("n.color.tiles")==T){
+                
+          chart.coords <- locator(n = n.color.tiles, type = "p")
+          }else{
+                message(
+                      "You are not using Xrite classic ColorCheker but you has not provided the number of tiles you want to check in the new color chart")
+          }
+          
+}
+    
     chart.coords <- cbind(chart.coords[[1]], chart.coords[[2]])
     colnames(chart.coords) <- c("x", "y")
 
