@@ -63,8 +63,32 @@ cell.extract.color.cal.fun <-
   }
   train_df <- data.frame()
   
-  
-  chart_vals <- chart.vals
+  if(identical(
+        chart.vals,
+        data.frame(
+              red.chart =
+              c(0.17, 0.63, 0.15, 0.11, 0.31, 0.20,
+                0.63, 0.12, 0.57, 0.21, 0.33, 0.67,
+                0.04, 0.10, 0.60, 0.79, 0.70, 0.07,
+                0.93, 0.59, 0.36, 0.18, 0.08, 0.03),
+              green.chart =
+              c(0.10, 0.32, 0.19, 0.14, 0.22, 0.47,
+            0.27, 0.11, 0.13, 0.06, 0.48, 0.40,
+             0.06, 0.27, 0.07, 0.62, 0.13, 0.22,
+             0.95, 0.62, 0.38, 0.20, 0.09, 0.03),
+           blue.chart = 
+           c(0.07, 0.24, 0.34, 0.06, 0.42, 0.42,
+             0.06, 0.36, 0.12, 0.14, 0.10, 0.06,
+             0.24, 0.09, 0.04, 0.08, 0.31, 0.38,
+             0.93, 0.62, 0.39, 0.20, 0.09, 0.02),
+           nir.chart = 
+           c(0.43, 0.87, 0.86, 0.18, 0.86, 0.43,
+             0.85, 0.54, 0.54, 0.79, 0.49, 0.66,
+             0.52, 0.44, 0.72, 0.82, 0.88, 0.42,
+             0.91, 0.51, 0.27, 0.13, 0.06, 0.02))) 
+     ){
+        chart_vals <- chart.vals
+        print("You are using Xrite classic ColorCheker")
   # chart_vals <- data.frame(red.chart = 
   #                                c(0.17, 0.63, 0.15, 0.11, 0.31, 0.20,
   #                                  0.63, 0.12, 0.57, 0.21, 0.33, 0.67,
@@ -94,9 +118,26 @@ cell.extract.color.cal.fun <-
     if (nrow(df_samp) >= 50) {
       df_samp <- df_samp[sample(x = 1:nrow(df_samp), size = 50, 
                                 replace = F), ]
-    }
+      }
     train_df <- rbind(train_df, df_samp)
+    }
+  }else{
+        chart_vals <- chart.vals
+        print("You are NOT using Xrite classic ColorCheker")
+          for (i in seq_along(chart)) {
+    poly <- chart[i]
+    options(warn = -1)
+    df_samp <- data.frame(chart_vals[i, ], extract(all.bands, 
+                                                   poly))
+    options(warn = 0)
+    if (nrow(df_samp) >= 50) {
+      df_samp <- df_samp[sample(x = 1:nrow(df_samp), size = 50, 
+                                replace = F), ]
+      }
+    train_df <- rbind(train_df, df_samp)
+    }
   }
+  
   red_nls <- nls(red.chart ~ (a * exp(b * vis.red)), trace = F, 
                  data = train_df, start = c(a = 0.1, b = 0.1))
   red_preds <- predict(red_nls, bands_df)
