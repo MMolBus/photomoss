@@ -11,6 +11,7 @@
 # threshold.method = threshold.method
 # area <- 1
 # photo <- 1
+# chart.vals <- chart.vals
 
 calcs <- function(photo,
                   area, 
@@ -30,7 +31,8 @@ calcs <- function(photo,
                   descrip,
                   threshold.method,
                   pdf,
-                  start.time
+                  start.time,
+                  chart.vals
                   ){
   # Prepare data
   obs_area   <- obs.areas[[area]]
@@ -108,6 +110,7 @@ calcs <- function(photo,
       all.bands = all_bands,
       chart = chart,
       manual.mask.test = manual.mask.test,
+      chart.vals = chart.vals,
       pdf = pdf
     )
   
