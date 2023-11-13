@@ -15,9 +15,21 @@
 #' input click points, or of length equal to the number of click points.
 #' @param pic.format character. Picture file format. It could be "jpg" for .jpg,
 #' .JPG and .jpeg; or "tif", for .tif format.
+#' @param xriteclassic.chart logical. Indicates if we are using 24 color tiles 
+#' from Xrite classic ColorCheker to make the color calibration. Default = TRUE. 
+#' If FALSE (you are not using Xrite classic ColorCheker, or you want to use 
+#' another quantity of color tiles) you need to provide the number of tiles 
+#' you would use in the n.color.tiles parameter  
+#' @param n.color.tiles numeric. Only required if you would not use 24 color tiles 
+#' from Xrite Classic ColorCheker to make the color calibration. In that case 
+#' you need to provide the number of tiles (n) you would use in your color chart to 
+#' make the color calibration.
+
 #'
 #' @return 
-#' A spatial.polygon with 24 features one by each color tile.
+#' A spatial.polygon with 24 features one by each color tile in case 
+#' xriteclassic.chart = T, or n features if xriteclassic.chart = F and n.color.tiles = n.
+#'  
 #'
 #' @examples#'
 #' chart.2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg")
