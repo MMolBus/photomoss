@@ -109,7 +109,7 @@ cell.extract.color.cal.fun <-
   #                                  0.85, 0.54, 0.54, 0.79, 0.49, 0.66, 
   #                                  0.52, 0.44, 0.72, 0.82, 0.88, 0.42, 
   #                                  0.91, 0.51, 0.27, 0.13, 0.06, 0.02))
-  for (i in c(1:24)[-3]) {
+  for (i in c(1:24)) {
     poly <- chart[i]
     options(warn = -1)
     df_samp <- data.frame(chart_vals[i, ], extract(all.bands, 
