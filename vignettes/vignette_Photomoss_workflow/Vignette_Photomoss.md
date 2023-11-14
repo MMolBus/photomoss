@@ -89,15 +89,15 @@ Our working directory have to include the following folders and files:
 
 
 
-### *chart.2*
+### *chart2*
 
 
 We create the chart object (a list of polygons) with the
-*chart.2* function. To do this we click over the color cells
+*chart2* function. To do this we click over the color cells
 chart in the image. Important note: folow the order as indicated in the
 figure.
 
-    chart <- chart.2(wd.path) 
+    chart <- chart2(wd.path) 
 
 ![image](chart.png){width="5.83333in" height="3.28125in"}
 
@@ -292,7 +292,7 @@ areas.
 
 Where:
 * *tif.path* = your working directory
-* *chart*= object **chart** obtained wuith teh function *chart.from.tif*
+* *chart*= object **chart** obtained wuith the function *chart2*
 * *obs.areas*= Polygon files obtained with *roi2polygon.2* function
 
 The resulting data.frame is saved in a new folder in your working
