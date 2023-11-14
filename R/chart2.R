@@ -1,4 +1,4 @@
-#' chart.2:  Manual selection of points where color checker tiles are located in
+#' chart2:  Manual selection of points where color checker tiles are located in
 #' the image.
 #' 
 #' @description 
@@ -37,7 +37,7 @@
 #' @author Manuel Molina-Bustamante
 #' @export
 
-chart.2 <- function(pic.path,
+chart2 <- function(pic.path,
                    samp.width = 0.01,
                    pic.format, 
                    xriteclassic.chart = T,
