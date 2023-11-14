@@ -34,7 +34,6 @@
 #' @examples#'
 #' chart2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg", 
 #' xriteclassic.chart = T, n.color.tiles)
-#' 
 #' chart2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg", 
 #' xriteclassic.chart = F, n.color.tiles = 4) # if you only want to calibrate with a color chart with 4 tiles
 #'
