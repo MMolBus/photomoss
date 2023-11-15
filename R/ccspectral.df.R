@@ -23,8 +23,8 @@
 #   threshold.method <- "Mean"
 # index. <-"SAT"
 
-#' ccspectral.df: Image segmentation to calculate areas of Biological Soil Covers dominated
-#' by photosynthetic organims. 
+#' ccspectral.df: Image segmentation to calculate areas of Biological Soil 
+#' Covers dominated by photosynthetic organims. 
 #' 
 #' @description 
 #' Image segmentation to calculate areas of Biological Soil Covers dominated
@@ -50,12 +50,14 @@
 #' @param wd.path string. 
 #' Working directory path where you can find the mandatory directories.
 #' @param chart. SpatialPolygons. 
-#' Spatial polygons provided by chart.2 function that set position of color chart tiles in the pictures. 
+#' Spatial polygons provided by chart.2 function that set position of color 
+#' chart tiles in the pictures. 
 #' @param pic.format character. 
-#' Picture file format. It could be "jpg" for .jpg, .JPG and .jpeg; or "tif", for .tif format. 
-#' Default = "tif"
+#' Picture file format. It could be "jpg" for .jpg, .JPG and .jpeg; or "tif", 
+#' for .tif format. Default = "tif"
 #' @param obs.areas list of SpatialPolygons. 
-#' Spatial polygons that set the areas where the samples are located in the pictures.   
+#' Spatial polygons that set the areas where the samples are located in the 
+#' pictures.   
 #' @param pdf logical. 
 #' If a pdf with results is crated. 
 #' Default= F
@@ -67,41 +69,67 @@
 #' See _descriptors._ argument. 
 #' Default = F
 #' @param manual.mask.test logical. 
-#' Requires segmentation performance calculation. If TRUE, _mask_ folder with baseline masks must be in working directory. 
-#' Default = F
+#' Requires segmentation performance calculation. If TRUE, _mask_ folder with 
+#' baseline masks must be in working directory. Default = F
 #' @param index. character.  
 #' Sets the possible spectral indices that must be calculated.
-#' It must be an vector with some of the following values (representing spectral index codes):  
-#' "NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI", "NORR", "NORG", "NORB", 
-#' "EXR", "EXG", "EXB", "EXGR", "CIVE", "VEG","HUE", "SAT", "VAL". 
-#' To see the meaning of the spectral index codes that can be included, see \href{https://github.com/MMolBus/photomoss/blob/master/vignettes/vignette_Photomoss_workflow/Vignette_Photomoss.md}{this vignette}. 
+#' It must be an vector with some of the following values (representing spectral
+#' index codes): "NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI", "NORR", 
+#' "NORG", "NORB", "EXR", "EXG", "EXB", "EXGR", "CIVE", "VEG", "HUE", "SAT", 
+#' "VAL". 
+#' To see the meaning of the spectral index codes that can be included, see 
+#' \href{https://github.com/MMolBus/photomoss/blob/master/vignettes/vignette_Photomoss_workflow/Vignette_Photomoss.md}{this vignette}. 
+#' 
 #' @param threshold.method character. 
 #' If _calculate.thresh_ = TRUE. 
-#' Indicate which one of the possible autothresholding methods must be applied over the calculated spectral index images
-#' based on _autothresholdr_ package
+#' Indicate which one of the possible autothresholding methods must be applied
+#' over the calculated spectral index images based on _autothresholdr_ package
 #' (\href{https://onlinelibrary.wiley.com/doi/full/10.1111/jmi.12474}{Landini et al., 2017}), 
 #' an adaptation to R of \href{https://imagej.net/Auto_Threshold}{Auto Threshold plugin from ImageJ}.
 #' It must have only *ONE* of the following values: 
-#' "Huang", "IsoData", "IJDefault", "Li", "Mean", "MinErrorI", "Moments", "Otsu",
-#' "Percentile", "RenyiEntropy", "Shanbhag", "Triangle".
+#' "Huang", "IsoData", "IJDefault", "Li", "Mean", "MinErrorI", "Moments", 
+#' "Otsu", "Percentile", "RenyiEntropy", "Shanbhag", "Triangle".
 #' For more details, see \href{https://github.com/MMolBus/photomoss/blob/master/vignettes/vignette_Photomoss_workflow/Vignette_Photomoss.md}{this vignette}. 
 #' @param threshold.vector numeric.
 #' If _calculate.thresh_ = FALSE.
-#' Indicate which threshold values must be applied must be applied over the calculated spectral index images.
-#' It must have the same lenght as _index._ argumet. And desired threshold values for each index must be set in the same order than in _index._ argument. 
+#' Indicate which threshold values must be applied must be applied over the 
+#' calculated spectral index images.
+#' It must have the same lenght as _index._ argumet. And desired threshold 
+#' values for each index must be set in the same order than in _index._ 
+#' argument. 
 #' @param descriptors. character. 
-#' Indicates what descriptor metrics must be calculated over the segmented surfaces.   
-#' It can be some of the following values: "median", "mean", "sd", "min", "max", "diff.range".
-#' @param chart.values dataframe. The color chart values from the spectral channels we are working with. Deffault values for Red, Green, Blue, and Near Infrared. Colour chart enable colour equalization between images using a known colour reference.
-#' In our case we provide the color reference for ColorChecker® Classic of X-Rite following the reference values provided in \href{https://elibrary.asabe.org/abstract.asp??JID=3&AID=25359&CID=aeaj2008&v=24&i=6&T=1}{Ritchie et al. 2008}.
-#' The dataframe must be provided with the following colnames red.chart, green.chart, blue.chart, nir.chart. Each column have to contain the reference color values of the color chart we are using for the red, green, blue and near infrared channels. 
+#' Indicates what descriptor metrics must be calculated over the segmented 
+#' surfaces.   
+#' It can be some of the following values: "median", "mean", "sd", "min", "max",
+#'  "diff.range".
+#' @param chart.values dataframe. The color chart values from the spectral 
+#' channels we are working with. Deffault values for Red, Green, Blue, and 
+#' Near Infrared. Colour chart enable colour equalization between images using a
+#' known colour reference.
+#' In our case we provide the color reference for ColorChecker® Classic of 
+#' X-Rite following the reference values provided in \href{https://elibrary.asabe.org/abstract.asp??JID=3&AID=25359&CID=aeaj2008&v=24&i=6&T=1}{Ritchie et al. 2008}.
+#' The dataframe must be provided with the following colnames red.chart, 
+#' green.chart, blue.chart, nir.chart. Each column have to contain the reference
+#' color values of the color chart we are using for the red, green, blue and 
+#' near infrared channels. 
+#' 
 #' @return 
 #' A dataframe with the required results 
 #'
 #' @examples
-#' 
-#' df <- ccspectral.df(wd.path ="./my_wd" , pic.format = "tif", chart = chart_polys, obs.areas = obs_areas_poly_list, pdf = F, calculate.thresh = F,
-#' descrip = F, manual.mask.test = F, index. = c("SR"), threshold.method = c("Li"), threshold.vector = c(0.6),
+#' df <- 
+#' ccspectral.df(
+#' wd.path ="./my_wd", 
+#' pic.format = "tif", 
+#' chart = chart_polys, 
+#' obs.areas = obs_areas_poly_list, 
+#' pdf = F, 
+#' calculate.thresh = F,
+#' descrip = F, 
+#' manual.mask.test = F, 
+#' index. = c("SR"), 
+#' threshold.method = c("Li"), 
+#' threshold.vector = c(0.6),
 #' descriptors. = c("mean") )
 #'
 #' @author Manuel Molina-Bustamante
