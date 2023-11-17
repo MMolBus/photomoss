@@ -7,7 +7,7 @@ the image.}
 \usage{
 chart2(
   pic.path,
-  samp.width = 0.01,
+  samp.width = 40,
   pic.format,
   xriteclassic.chart = T,
   n.color.tiles
@@ -16,8 +16,8 @@ chart2(
 \arguments{
 \item{pic.path}{string. File path where you can find the image files.}
 
-\item{samp.width}{numeric. Distance from original click point to establish 
-the perimeter of the new geometry. Of length 1 replicated to the number of 
+\item{samp.width}{numeric. Distance to establish 
+the buffer arround click point. This argument feeds the argument with from terra::buffer function operated internally by chart2. Default value with = 40. 
 input click points, or of length equal to the number of click points.}
 
 \item{pic.format}{character. Picture file format. It could be "jpg" for .jpg,
