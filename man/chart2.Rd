@@ -9,6 +9,8 @@ chart2(
   pic.path,
   samp.width = 40,
   pic.format,
+  interactive = F,
+  tile.coords,
   xriteclassic.chart = T,
   n.color.tiles
 )
@@ -17,11 +19,24 @@ chart2(
 \item{pic.path}{string. File path where you can find the image files.}
 
 \item{samp.width}{numeric. Distance to establish 
-the buffer arround click point. This argument feeds the argument with from terra::buffer function operated internally by chart2. Default value with = 40. 
+the buffer arround click point. This argument feeds the argument with from 
+terra::buffer function operated internally by chart2. 
+Default value with = 40. 
 input click points, or of length equal to the number of click points.}
 
 \item{pic.format}{character. Picture file format. It could be "jpg" for .jpg,
 .JPG and .jpeg; or "tif", for .tif format.}
+
+\item{interactive}{Logical. If set to TRUE, the function requires the user to
+manually position the color tile over the image of the color card. 
+If set to FALSE, you need to provide a coordinate dataframe in the 
+tile.coords argument with the centroid coordinates of the color tiles. 
+Default is FALSE.}
+
+\item{tile.coords}{A dataframe containing the centroid coordinates (pixel 
+column and row) of color tiles. Each row in the dataframe represents a color 
+tile, and it should have columns for the X and Y coordinates.
+This argument is required when the interactive parameter is set to FALSE.}
 
 \item{xriteclassic.chart}{logical. Indicates if we are using color tiles 
 from Xrite classic ColorCheker to make the color calibration. Default = TRUE. 
@@ -29,21 +44,15 @@ If FALSE (you are not using Xrite classic ColorCheker, or you want to use
 another quantity of color tiles) you need to provide the number of tiles 
 you would use in the n.color.tiles parameter}
 
-\item{n.color.tiles}{numeric. Only required if you would not use the color tiles 
-from Xrite Classic ColorCheker to make the color calibration. In that case 
-you need to provide the number of tiles (n) you would use in your color chart to 
-make the color calibration.}
-
-\item{interactive}{Logical. If set to TRUE, the function requires the user to manually position the color tile over the image of the color card. 
-If set to FALSE, you need to provide a coordinate dataframe in the tile.coords argument with the centroid coordinates of the color tiles. Default is FALSE.}
-
-\item{tile.coords}{A dataframe containing the centroid coordinates of color tiles. 
-Each row in the dataframe represents a color tile, and it should have columns for the X and Y coordinates.
-This argument is required when the interactive parameter is set to FALSE.}
+\item{n.color.tiles}{numeric. Only required if you would not use the color 
+tiles from Xrite Classic ColorCheker to make the color calibration. In that 
+case you need to provide the number of tiles (n) you would use in your color 
+chart to make the color calibration.}
 }
 \value{
 A spatial.polygon with 24 features one by each color tile in case 
-xriteclassic.chart = T, or n features if xriteclassic.chart = F and n.color.tiles = n.
+xriteclassic.chart = T, or n features if xriteclassic.chart = F and 
+n.color.tiles = n.
 }
 \description{
 Manual selection of points where color checker tiles are located in the image.
@@ -58,7 +67,8 @@ Preferably, click on the color tile centroids.
 chart2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg", 
 xriteclassic.chart = T, n.color.tiles)
 chart2(pic.path="./JPG", samp.width = 0.01, pic.format = "jpg", 
-xriteclassic.chart = F, n.color.tiles = 4) # if you only want to calibrate with a color chart with 4 tiles
+xriteclassic.chart = F, n.color.tiles = 4) # if you only want to calibrate
+with a color chart with 4 tiles
 
 }
 \author{

@@ -22,10 +22,9 @@
 #' If set to FALSE, you need to provide a coordinate dataframe in the 
 #' tile.coords argument with the centroid coordinates of the color tiles. 
 #' Default is FALSE.
-#' @param tile.coords A dataframe containing the centroid coordinates of color 
-#' tiles. 
-#' Each row in the dataframe represents a color tile, and it should have columns
-#' for the X and Y coordinates.
+#' @param tile.coords A dataframe containing the centroid coordinates (pixel 
+#' column and row) of color tiles. Each row in the dataframe represents a color 
+#' tile, and it should have columns for the X and Y coordinates.
 #' This argument is required when the interactive parameter is set to FALSE.
 #' @param xriteclassic.chart logical. Indicates if we are using color tiles 
 #' from Xrite classic ColorCheker to make the color calibration. Default = TRUE. 
