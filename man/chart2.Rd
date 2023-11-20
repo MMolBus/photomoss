@@ -23,16 +23,23 @@ input click points, or of length equal to the number of click points.}
 \item{pic.format}{character. Picture file format. It could be "jpg" for .jpg,
 .JPG and .jpeg; or "tif", for .tif format.}
 
-\item{xriteclassic.chart}{logical. Indicates if we are using 24 color tiles 
+\item{xriteclassic.chart}{logical. Indicates if we are using color tiles 
 from Xrite classic ColorCheker to make the color calibration. Default = TRUE. 
 If FALSE (you are not using Xrite classic ColorCheker, or you want to use 
 another quantity of color tiles) you need to provide the number of tiles 
 you would use in the n.color.tiles parameter}
 
-\item{n.color.tiles}{numeric. Only required if you would not use 24 color tiles 
+\item{n.color.tiles}{numeric. Only required if you would not use the color tiles 
 from Xrite Classic ColorCheker to make the color calibration. In that case 
 you need to provide the number of tiles (n) you would use in your color chart to 
 make the color calibration.}
+
+\item{interactive}{Logical. If set to TRUE, the function requires the user to manually position the color tile over the image of the color card. 
+If set to FALSE, you need to provide a coordinate dataframe in the tile.coords argument with the centroid coordinates of the color tiles. Default is FALSE.}
+
+\item{tile.coords}{A dataframe containing the centroid coordinates of color tiles. 
+Each row in the dataframe represents a color tile, and it should have columns for the X and Y coordinates.
+This argument is required when the interactive parameter is set to FALSE.}
 }
 \value{
 A spatial.polygon with 24 features one by each color tile in case 
