@@ -20,192 +20,147 @@
 #'
 #' @export
 
-roi2polygon <- function(roi.folder, pic.folder){
- # 1. install required packages ----
-      # "RImageJROI" to import .roi files
-      # "spatstat" to edit roi file format make it readable by photomoss
-      # "stringr" to set roi names
- # 2. Create read.ijroi.2 function to read roi files ----
-  read.ijroi.2 <- function(file, verbose = FALSE){
-      ## Todo esto  hasta linea 119 entre corchetes que es
-    {
-      getByte <- function(con){
-        pos <- seek(con)
-        n <- readBin(con, raw(0), 1, size = 1)
-        if(verbose) 
-          message(paste("Pos ", pos, ": Byte ", n, sep = ""))
-        return(as.integer(n))
-      }
-      getShort <- function(con){
-        pos <- seek(con)
-        n <- readBin(con, integer(0), 1, size = 2, signed = TRUE, endian = "big")
-        if(n < -5000) {
-          seek(con, -2, origin = "current")
-          n <- readBin(con, integer(0), 1, size = 2, signed = FALSE, endian = "big")
-        }
-        if(verbose) 
-          message(paste("Pos ", pos, ": Short ", n, sep = ""))
-        return(n)
-      }
-      getInt <- function(con){
-        pos <- seek(con)
-        n <- readBin(con, integer(0), 1, size = 4, signed = TRUE, endian = "little")
-        if(verbose) 
-          message(paste("Pos ", pos, ": Integer ", n, sep = ""))
-        return(n)
-      }
-      getFloat <- function(con){
-        pos <- seek(con)
-        n <- readBin(con, double(0), 1, size = 4, signed = TRUE, endian = "big")
-        if(verbose) 
-          message(paste("Pos ", pos, ": Float ", n, sep = ""))
-        return(n)
+roi2polygon <- function(roi.folder, pic.folder) {
+      
+      # 1. Install required packages ----
+      # Packages used in this function:
+      # - "RImageJROI": to import .roi files
+      # - "spatstat": to edit .roi file format to make it readable by photomoss
+      # - "stringr": to handle ROI file names
+      
+      # 2. Create read.ijroi.2 function to read ROI files ----
+      read.ijroi.2 <- function(file, verbose = FALSE) {
+            # Define helper functions to read binary data from ROI files:
+            
+            # Function to read a single byte
+            getByte <- function(con) { 
+                  pos <- seek(con)  # Current position in file
+                  n <- readBin(con, raw(0), 1, size = 1)  # Read a single byte
+                  if (verbose) 
+                        message(paste("Pos ", pos, ": Byte ", n, sep = ""))
+                  return(as.integer(n))
+            }
+            
+            # Function to read a short integer (2 bytes)
+            getShort <- function(con) { 
+                  pos <- seek(con)
+                  n <- readBin(con, integer(0), 1, size = 2, signed = TRUE, endian = "big")
+                  if (n < -5000) {  # Special case for certain ROI files
+                        seek(con, -2, origin = "current")
+                        n <- readBin(con, integer(0), 1, size = 2, signed = FALSE, endian = "big")
+                  }
+                  if (verbose) 
+                        message(paste("Pos ", pos, ": Short ", n, sep = ""))
+                  return(n)
+            }
+            
+            # Function to read a 4-byte integer
+            getInt <- function(con) { 
+                  pos <- seek(con)
+                  n <- readBin(con, integer(0), 1, size = 4, signed = TRUE, endian = "little")
+                  if (verbose) 
+                        message(paste("Pos ", pos, ": Integer ", n, sep = ""))
+                  return(n)
+            }
+            
+            # Function to read a 4-byte float
+            getFloat <- function(con) { 
+                  pos <- seek(con)
+                  n <- readBin(con, double(0), 1, size = 4, signed = TRUE, endian = "big")
+                  if (verbose) 
+                        message(paste("Pos ", pos, ": Float ", n, sep = ""))
+                  return(n)
+            }
+            
+            # Subtype, option, and type definitions for ROIs
+            subtypes <- list(TEXT = 1, ARROW = 2, ELLIPSE = 3, IMAGE = 4)
+            opts <- list(SPLINE_FIT = 1, DOUBLE_HEADED = 2, OUTLINE = 4)
+            types <- list(polygon = 0, rect = 1, oval = 2, line = 3, 
+                          freeline = 4, polyline = 5, noRoi = 6, freehand = 7, 
+                          traced = 8, angle = 9, point = 10)
+            
+            # Open the ROI file for reading
+            con <- file(file, "rb")
+            if (getByte(con) != 73 || getByte(con) != 111) {  # Check for valid ROI file
+                  stop("This is not an ImageJ ROI")
+            }
+            if (verbose) 
+                  message("Reading format data")
+            
+            # Parse the ROI file and extract data
+            r <- list()  # Initialize an empty list for ROI data
+            getShort(con)  # Skip reserved bytes
+            r$version <- getShort(con)  # ROI version
+            r$type <- getByte(con)  # ROI type
+            getByte(con)  # Skip a byte
+            r$top <- getShort(con)  # Top coordinate
+            r$left <- getShort(con)  # Left coordinate
+            r$bottom <- getShort(con)  # Bottom coordinate
+            r$right <- getShort(con)  # Right coordinate
+            r$width <- with(r, right - left)  # ROI width
+            r$height <- with(r, bottom - top)  # ROI height
+            r$n <- getShort(con)  # Number of points (for polygon types)
+            
+            # Additional ROI properties
+            r$x1 <- getFloat(con)
+            r$y1 <- getFloat(con)
+            r$x2 <- getFloat(con)
+            r$y2 <- getFloat(con)
+            r$strokeWidth <- getShort(con)
+            r$shapeRoiSize <- getInt(con)
+            r$strokeColor <- getInt(con)
+            r$fillColor <- getInt(con)
+            r$subtype <- getShort(con)
+            r$options <- getShort(con)
+            
+            # Close the file connection
+            close(con)
+            
+            # Return the parsed ROI as a list
+            return(r)
       }
       
-      subtypes <- list(TEXT = 1, ARROW = 2, ELLIPSE = 3, IMAGE = 4)
-      opts <- list(SPLINE_FIT = 1, DOUBLE_HEADED = 2, OUTLINE = 4)
-      types <- list(polygon = 0, rect = 1, oval = 2, line = 3, 
-                    freeline = 4, polyline = 5, noRoi = 6, freehand = 7, 
-                    traced = 8, angle = 9, point = 10)
-      name <- NULL
-      if(!is.null(file)){
-        size <- file.info(file)$size
-        if(!grepl(".roi$", file) && size > 5242880) 
-          stop("This is not an ROI or file size>5MB)")
-        name <- basename(file)
-      }
-      con <- file(file, "rb")
-      if(getByte(con) != 73 || getByte(con) != 111){
-        stop("This is not an ImageJ ROI")
-      }
-      if(verbose) 
-        message("Reading format data")
+      # 3. Extract and process all ROI files into polygons ----
       
-      r <- list()
-      getShort(con)
-      r$version <- getShort(con)
-      r$type <- getByte(con)
-      getByte(con)
-      r$top <- getShort(con)
-      r$left <- getShort(con)
-      r$bottom <- getShort(con)
-      r$right <- getShort(con)
-      r$width <- with(r, right - left)
-      r$height <- with(r, bottom - top)
-      r$n <- getShort(con)
-      r$x1 <- getFloat(con)
-      r$y1 <- getFloat(con)
-      r$x2 <- getFloat(con)
-      r$y2 <- getFloat(con)
-      r$strokeWidth <- getShort(con)
-      r$shapeRoiSize <- getInt(con)
-      r$strokeColor <- getInt(con)
-      r$fillColor <- getInt(con)
-      r$subtype <- getShort(con)
-      r$options <- getShort(con)
+      # Create an empty list to store polygons
+      obs_areas <- list()
       
-      if((r$type == types["freehand"]) && (r$subtype == subtypes["ELLIPSE"])){
-        r$aspectRatio <- getFloat(con)
-      }else{
-        r$style <- getByte(con)
-        r$headSize <- getByte(con)
-        r$arcSize <- getShort(con)
+      # List all .roi files in the provided folder
+      roi_paths <- list.files(path = roi.folder, pattern = ".roi$", full.names = TRUE, recursive = TRUE)
+      message(paste(length(roi_paths), "ROI files located"))
+      
+      # Use the first image in the folder as a reference for spatial alignment
+      raster_ref <- list.files(path = pic.folder, full.names = TRUE)[1] %>% 
+            terra::rast(.)
+      
+      # Loop through each ROI file
+      for (i in seq_along(roi_paths)) {
+            # Import ROI using the helper function
+            roi <- read.ijroi.2(roi_paths[i], verbose = FALSE)
+            
+            # Convert ROI to spatial polygon format
+            owin <- RImageJROI::ij2spatstat(roi)
+            
+            # Correct the Y coordinates (invert and normalize)
+            owin_y_corr <- (nrow(terra::as.matrix(raster_ref)) - (as.data.frame(owin))$y) / terra::nrow(raster_ref)
+            
+            # Normalize the X coordinates
+            owin_x_corr <- (as.data.frame(owin))$x / terra::ncol(raster_ref)
+            
+            # Combine corrected X and Y coordinates into a data frame
+            owin_xy_corr <- cbind(owin_x_corr, owin_y_corr)
+            
+            # Create a polygon from the corrected coordinates
+            poly <- terra::rast(owin_xy_corr)
+            sps <- terra::as.polygons(poly)
+            
+            # Add the polygon to the list
+            obs_areas[[i]] <- sps
+            
+            # Print progress
+            print(paste(i, "of", length(roi_paths), "ROI files processed"))
       }
-      r$position <- getInt(con)
-      getShort(con)
-      getShort(con)
-      if(verbose) 
-        message("Reading coordinate data")
-    } 
-    
-    if(r$type %in% types["line"]){
-      if(r$subtype %in% subtypes["ARROW"]){
-        r$doubleHeaded <- (r$options & opts$DOUBLE_HEADED)
-        r$outline <- (r$options & opts$OUTLINE)
-      }
-    }
-    if(r$type %in% types[c("polygon", "freehand", "traced", 
-                            "polyline", "freeline", "angle", "point")]){
-                         r$coords <- matrix(NA, r$n, 2)
-                         if(r$n > 0){
-                                for(i in 1:r$n){
-                                  r$coords[i, 1] <- getShort(con)
-                                }
-                                for(i in 1:r$n){
-                                  r$coords[i, 2] <- getShort(con)
-                                }
-                                r$coords[r$coords < 0] <- 0
-                                r$coords[, 1] <- r$coords[, 1] + r$left
-                                r$coords[, 2] <- r$coords[, 2] + r$top
-      }
-    }
-    close(con)
-    
-    if(r$type %in% types["line"]){
-                              r$coords <- matrix(NA, 2, 2)
-                              r$coords[1, 1] <- r$x1
-                              r$coords[2, 1] <- r$x2
-                              r$coords[1, 2] <- r$y1
-                              r$coords[2, 2] <- r$y2
-    }
-    if(is.null(r$coords)){
-      Xcoords <- unlist(c(r[names(r) %in% c("left", "x1")], 
-                          r[names(r) %in% c("right", "x2")]))
-      Ycoords <- unlist(c(r[names(r) %in% c("top", "y1")], 
-                          r[names(r) %in% c("bottom", "y2")]))
-      r$coords <- data.frame(x = Xcoords, y = Ycoords)
-    }
-    colnames(r$coords) <- c("x", "y")
-    r$types <- types
-    r$strType <- names(types)[which(types == r$type)]
-    
-    if(r$subtype != 0){
-      r$subtypes <- subtypes
-      r$strSubtype <- names(subtypes)[which(subtypes == r$subtype)]
-    }
-    if(r$type == r$types[["oval"]] | r$type == r$types[["rect"]]){
-      r$xrange <- range(c(r$left, r$right))
-    }else{
-      r$xrange <- range(r$coords[, 1])
-    }
-    if(r$type == r$types[["oval"]] | r$type == r$types[["rect"]]){
-      r$yrange <- range(c(r$top, r$bottom))
-    }else{
-      r$yrange <- range(r$coords[, 2])
-    }
-    class(r) <- "ijroi"
-    return(r)
-  }
- # 3. put all the polygons in a list -----
-  # Create empty list
-  obs_areas <- list()
-  # Extract .roi file paths from rois folder  
-  roi_paths <- list.files(path = roi.folder, pattern = ".roi$", full.names = T, recursive = T)
-  message(paste(length(roi_paths), "roi files located"))
-  # Use first image of the series as reference
-  raster_ref <- list.files(path = pic.folder, full.names = T)[1] %>% 
-                                          terra::rast(.)
-  for(i in seq_along(roi_paths)){
-        # Import ROIs made with imageJ
-        roi <- read.ijroi.2(roi_paths[i], verbose = FALSE)
-        # Transform ijroi to  owin format
-        owin <- RImageJROI::ij2spatstat(roi)
-        # Two operations to match window position over the raster:
-        # 1) Turn upside down Y coordinates of the window
-        # 2) Re-escalate window coordinates to 0 - 1, to match raster image reference.
-        # Make operations 1 and 2 in Y coordinate vector
-        owin_y_corr <- (nrow(terra::as.matrix(raster_ref)) - (as.data.frame(owin))$y) / terra::nrow(raster_ref)
-        # Make operation 2 in X coordinate vector
-        owin_x_corr <- (as.data.frame(owin))$x / terra::ncol(raster_ref)
-        # Joint vectors as columns of a data frame
-        owin_xy_corr <- cbind(owin_x_corr, owin_y_corr)
-
-        # Create polygon 
-        poly <- terra::rast(owin_xy_corr)
-        sps <- terra::as.polygons(poly)
-        # Include in roi list
-        obs_areas[[i]] <- sps
-        print(paste(i, "of", length(roi_paths), "roi files processed"))
-        }
-  return(obs_areas)
+      
+      # Return the list of polygons
+      return(obs_areas)
 }
