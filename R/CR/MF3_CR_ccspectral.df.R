@@ -22,12 +22,10 @@
 #   wd.path <- wd
 #   threshold.method <- "Mean"
 # index. <-"SAT"
-
-#' ccspectral.df: Image segmentation to calculate areas of Biological Soil 
-#' Covers dominated by photosynthetic organims. 
+# R functions
+#' ccspectral.df: 
 #' 
-#' @description 
-#' Image segmentation to calculate areas of Biological Soil Covers dominated
+#' @description Image segmentation to calculate areas of Biological Soil Covers dominated
 #' by photosynthetic organisms.Calculates spectral indices, segments and 
 #' classifies Biological Soil Covers (foreground) and soil (background) based on
 #' global histogram threshold values. 
@@ -148,218 +146,211 @@ ccspectral.df <- function(wd.path,
                           threshold.vector,
                           descriptors. = c("median", "mean", "sd", "min", "max", "diff.range"),
                           chart.vals =
-                          data.frame(red.chart = red_chart,
-                                     green.chart = green_chart, 
-                                     blue.chart = blue_chart, 
-                                     nir.chart = nir_chart)
-                          ){  
-### Subsection 1: Preparing data -----------------------------------------------
-  ## Predefined values for indices and charts #### 
-  index_list <- c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI", "NORR", 
-                  "NORG", "NORB", "EXR", "EXG", "EXB", "EXGR", "CIVE", "VEG", 
-                  "HUE", "SAT", "VAL")
-  red_chart <- c(0.17, 0.63, 0.15, 0.11, 0.31, 0.20, 0.63, 0.12, 0.57, 0.21, 0.33, 
-                 0.67, 0.04, 0.10, 0.60, 0.79, 0.70, 0.07, 0.93, 0.59, 0.36, 0.18, 
-                 0.08, 0.03)
-  green_chart <- c(0.10, 0.32, 0.19, 0.14, 0.22, 0.47,
-                   0.27, 0.11, 0.13, 0.06, 0.48, 0.40,
-                   0.06, 0.27, 0.07, 0.62, 0.13, 0.22,
-                   0.95, 0.62, 0.38, 0.20, 0.09, 0.03)
-  
-  blue_chart <- c(0.07, 0.24, 0.34, 0.06, 0.42, 0.42,
-                  0.06, 0.36, 0.12, 0.14, 0.10, 0.06,
-                  0.24, 0.09, 0.04, 0.08, 0.31, 0.38,
-                  0.93, 0.62, 0.39, 0.20, 0.09, 0.02)
-  nir_chart <- c(0.43, 0.87, 0.86, 0.18, 0.86, 0.43,
-                 0.85, 0.54, 0.54, 0.79, 0.49, 0.66,
-                 0.52, 0.44, 0.72, 0.82, 0.88, 0.42,
-                 0.91, 0.51, 0.27, 0.13, 0.06, 0.02)
-  # 1.1 Check workspace MANDATORY sub-directories ----
-    if(manual.mask.test == T){
-          if(any(list.files(getwd()) %in% "nir") &
-             any(list.files(getwd()) %in% "vis") &
-             any(list.files(getwd()) %in% "mask")){
-          }else{
-                wd <- getwd()
-                setwd(wd.path)
-                on.exit(setwd(wd))
-          }
-      }else{
-            if(any(list.files(getwd()) %in% "nir") &
-               any(list.files(getwd()) %in% "vis")){
+                                data.frame(red.chart = red_chart,
+                                           green.chart = green_chart, 
+                                           blue.chart = blue_chart, 
+                                           nir.chart = nir_chart)
+){  
+      ### Subsection 1: Preparing data -----------------------------------------------
+      ## Predefined values for indices and charts ####
+      # Define a list of indices and corresponding chart values
+      index_list <- c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI", "NORR", 
+                      "NORG", "NORB", "EXR", "EXG", "EXB", "EXGR", "CIVE", "VEG", 
+                      "HUE", "SAT", "VAL")
+      red_chart <- c(0.17, 0.63, 0.15, 0.11, 0.31, 0.20, 0.63, 0.12, 0.57, 0.21, 
+                     0.33, 0.67, 0.04, 0.10, 0.60, 0.79, 0.70, 0.07, 0.93, 0.59, 
+                     0.36, 0.18, 0.08, 0.03)
+      green_chart <- c(0.10, 0.32, 0.19, 0.14, 0.22, 0.47, 0.27, 0.11, 0.13, 0.06, 
+                       0.48, 0.40, 0.06, 0.27, 0.07, 0.62, 0.13, 0.22, 0.95, 0.62, 
+                       0.38, 0.20, 0.09, 0.03)
+      blue_chart <- c(0.07, 0.24, 0.34, 0.06, 0.42, 0.42, 0.06, 0.36, 0.12, 0.14, 
+                      0.10, 0.06, 0.24, 0.09, 0.04, 0.08, 0.31, 0.38, 0.93, 0.62, 
+                      0.39, 0.20, 0.09, 0.02)
+      nir_chart <- c(0.43, 0.87, 0.86, 0.18, 0.86, 0.43, 0.85, 0.54, 0.54, 0.79, 
+                     0.49, 0.66, 0.52, 0.44, 0.72, 0.82, 0.88, 0.42, 0.91, 0.51, 
+                     0.27, 0.13, 0.06, 0.02)
+      
+      # 1.1 Check workspace MANDATORY sub-directories ----
+      # Ensure required subdirectories exist, adjust working directory if necessary
+      if(manual.mask.test == T){
+            if(any(list.files(getwd()) %in% c("nir", "vis", "mask"))){
+                  # Subdirectories exist; proceed
             }else{
                   wd <- getwd()
                   setwd(wd.path)
-                  on.exit(setwd(wd))}
-       }
-  # 1.2 Order custom arguments values and test required arguments ----
-    if(calculate.thresh == T){
-       surface. = c("predict.backgr", "predict.moss")  
-      if(any(threshold.method == c("Huang", "IJDefault", 
-                                 "IsoData", "Li", 
-                                 "Mean", "MinErrorI", 
-                                 "Moments", "Otsu",
-                                 "Percentile", "RenyiEntropy",
-                                 "Shanbhag", "Triangle")) == F){
-      stop("if you want to calculate auto threshold value you need to define a valid threshold.method argument.")}
-      }else{
-      if(exists("threshold.vector") == F){
-        stop("if you don't want to calculate autothreshold values you need to define a threshold.vector values for the selected index.")
-      }else{ 
-        if(length(index.) != length(threshold.vector)){
-          stop("threshold.vector must have the same length as the index. argument")}
+                  on.exit(setwd(wd))
+            }
+      } else {
+            if(any(list.files(getwd()) %in% c("nir", "vis"))){
+                  # Subdirectories exist; proceed
+            } else {
+                  wd <- getwd()
+                  setwd(wd.path)
+                  on.exit(setwd(wd))
+            }
       }
-      surface. = c("predict.backgr", "predict.moss")
+      
+      # 1.2 Order custom argument values and validate required arguments ----
+      # Check thresholds and handle missing arguments
+      if(calculate.thresh == T){
+            surface. = c("predict.backgr", "predict.moss")  
+            if(!threshold.method %in% c("Huang", "IJDefault", "IsoData", "Li", "Mean", 
+                                        "MinErrorI", "Moments", "Otsu", "Percentile", 
+                                        "RenyiEntropy", "Shanbhag", "Triangle")){
+                  stop("Define a valid threshold.method argument.")
+            }
+      } else {
+            if(!exists("threshold.vector")){
+                  stop("Define a threshold.vector for the selected index.")
+            } else if(length(index.) != length(threshold.vector)){
+                  stop("threshold.vector must match the length of index.")
+            }
+            surface. = c("predict.backgr", "predict.moss")
       }
-    
-    if(manual.mask.test == T){
-     surface. <- c("baseline.backgr", "baseline.moss", surface., "TN", "FP", "FN", "TP")
-    }
-    surface_order <- c("baseline.backgr", "baseline.moss", "predict.backgr", "predict.moss")
-    surface. <- surface.[order(match(surface., surface_order))]
-   
-    index_order <- index_list 
-    index. <- index.[order(match(index., index_order))]
-   
-    descriptors_order <- c("median", "mean", "sd", "min", "max", "diff.range")
-    descriptors. <- descriptors.[order(match(descriptors., descriptors_order))]
-  # 1.3 Create exportation folder ----
-    out_dir <- paste0("output ", Sys.time(), " ", threshold.method)
-    out_dir <- gsub(":", ".", out_dir)
-    dir.create(out_dir)
-  # 1.4 Prepare dataframe for exportation of results and write empty csv ---- 
-   # 1.4.1 Create empty data.frame ----
-    if(descrip == F){
-          if(manual.mask.test == F){
-                
-           df_names <- c("sample", "vis.file", "nir.file",
-                      unlist(lapply(1:length(index.), function(i)
-                                    c(apply(expand.grid(surface., index.[i]), 1, paste, collapse = "."))
-                                   )
-                      ),
-                      apply(expand.grid("threshold.value", index.), 1, paste, collapse = "."), "threshold.method")
-          }else{
-           df_names <- c("sample", "vis.file", "nir.file",
-                         unlist(lapply(1:length(index.), function(i)
-                                 c(apply(expand.grid(surface., index.[i]), 1, paste, collapse = "."))
-                                   )
-                       ),
-                  apply(expand.grid(c("TSS","IoU"), index.), 1, paste, collapse = "."),
-                  apply(expand.grid("threshold.value", index.), 1, paste, collapse = "."), "threshold.method")
-                
-          }
-    }else{
-          if(manual.mask.test == F){
-            df_names <- c("sample", "vis.file", "nir.file",
-                         unlist(
-                           unlist(
-                             lapply(1:length(index.), function(i) 
-                                   lapply(1:length(surface.), function(j)
-                                          c(apply(expand.grid(surface.[j], index.[i]), 1, paste, collapse = "."),
-                                             apply(expand.grid(surface.[j], descriptors., index.[i]), 1, paste, collapse = ".")
+      
+      # Adjust surfaces, indices, and descriptors based on priorities
+      surface_order <- c("baseline.backgr", "baseline.moss", "predict.backgr", "predict.moss")
+      surface. <- surface.[order(match(surface., surface_order))]
+      index_order <- index_list
+      index. <- index.[order(match(index., index_order))]
+      descriptors_order <- c("median", "mean", "sd", "min", "max", "diff.range")
+      descriptors. <- descriptors.[order(match(descriptors., descriptors_order))]
+      
+      # 1.3 Create exportation folder ----
+      # Generate an output directory for results
+      out_dir <- gsub(":", ".", paste0("output ", Sys.time(), " ", threshold.method))
+      dir.create(out_dir)
+      
+      # 1.4 Prepare a data frame for results and write an empty CSV ----
+      # Define column names for the results data frame
+      if(descrip == F){
+            if(manual.mask.test == F){
+                  df_names <- c("sample", "vis.file", "nir.file",
+                                unlist(lapply(1:length(index.), function(i)
+                                      c(apply(expand.grid(surface., index.[i]), 1, paste, collapse = "."))
+                                )),
+                                apply(expand.grid("threshold.value", index.), 1, paste, collapse = "."), 
+                                "threshold.method")
+            } else {
+                  df_names <- c("sample", "vis.file", "nir.file",
+                                unlist(lapply(1:length(index.), function(i)
+                                      c(apply(expand.grid(surface., index.[i]), 1, paste, collapse = "."))
+                                )),
+                                apply(expand.grid(c("TSS","IoU"), index.), 1, paste, collapse = "."),
+                                apply(expand.grid("threshold.value", index.), 1, paste, collapse = "."),
+                                "threshold.method")
+            }
+      } else {
+            if(manual.mask.test == F){
+                  df_names <- c("sample", "vis.file", "nir.file",
+                                unlist(lapply(1:length(index.), function(i) 
+                                      lapply(1:length(surface.), function(j)
+                                            c(apply(expand.grid(surface.[j], index.[i]), 1, paste, collapse = "."),
+                                              apply(expand.grid(surface.[j], descriptors., index.[i]), 1, paste, collapse = ".")
                                             )
-                                          )
-                                    )
-                                  )
-                          ),
-             apply(expand.grid("threshold.value", index.), 1, paste, collapse = "."), "threshold.method")
-          }else{
-                df_names <- c("sample", "vis.file", "nir.file", 
-                        unlist(
-                              unlist(
-                                    lapply(1:length(index.), function(i)
-                                          lapply(1:length(surface.), function(j)
-                                                c(apply(expand.grid(surface.[j],
-                                                                    index.[i]), 1, paste, collapse="."),
-                                                  apply(expand.grid(surface.[j],
-                                                                    descriptors.,
-                                                                    index.[i]), 1, paste, collapse=".")
-                                                )
-                                          )
-                                    )
-                              )
-                        ),
-            apply(expand.grid(c("TSS", "IoU"), index.), 1, paste, collapse = "."),
-            apply(expand.grid("threshold.value", index.), 1, paste, collapse = "."), "threshold.method")
-     }
-    }
-    df <- data.frame(matrix(ncol = length(df_names), nrow = 0))
-    colnames(df) <- df_names
-    # set df col class
-    col_class <- c(rep("character", 3), rep("numeric", length(df_names) - 4),"character")
-    for (i in c(1:length(col_class))){class(df[, i]) <- col_class[i]}
-    rm(col_class)
-   # 1.4.2 Create results csv ----
-          if(calculate.thresh == TRUE){
-                summary_file <- paste0(out_dir,  paste0("/", threshold.method, "_", "summary_data.csv"))
-                  if(!file.exists(summary_file)){write.csv(df, summary_file, row.names = F)}
-          }else{
-                summary_file <- paste0(out_dir, paste0("/summary_data.csv"))
-                  if(!file.exists(summary_file)){write.csv(df, summary_file, row.names = F)}}
-          
-  # 1.5 Import images as list --------------------------------------------------
-    vis_files <- list.files(path = "./vis")
-    nir_files <- list.files(path = "./nir")
-    if(manual.mask.test == T){mask_files <- list.files(path = "./mask", pattern = ".tif$")}
-  # 1.6 Check if a matching error exists between lists --------------------------
-    if(length(vis_files) != length(nir_files)){stop("Different number of VIS and NIR photos")}
-    # Samples per picture 
-    # undetermined obs areas for picture                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-    total_samples <- length(obs.areas)
-  # 1.7 Set sample names ----------------------------------------------------
-    # extract cell names
-    cell_names <- gsub(".*/", "", list.files(path = "./rois", pattern = ".roi$", full.names = F, recursive = T))
-    # .roi files in picture named folders in the "rois" directory
-    samples.per.pic <- unlist(lapply(1:(length(list.dirs("rois")) -1), 
-                        function(i) length(list.files(list.dirs("rois")[i + 1]))))
-  
-     ##CORRIENDO EL CODIGO ENTERO EL ERROR APARECE AQUI POR DIFIERENTES NUMEROS DE LENGTH!!
-   all_named <- data.frame(photo = unlist(lapply(1:length(vis_files),
-                                        function(i) rep(vis_files[i], each = samples.per.pic[i]))), cell = cell_names)
-    
-  if(file.exists("names.csv")){
-      sample_names <- c(as.character(read.csv("names.csv")[, 1]))
-      if(length(sample_names) != total_samples){
-        stop("File of sample names contains less/more names than samples")
+                                      )
+                                )),
+                                apply(expand.grid("threshold.value", index.), 1, paste, collapse = "."),
+                                "threshold.method")
+            } else {
+                  df_names <- c("sample", "vis.file", "nir.file", 
+                                unlist(lapply(1:length(index.), function(i)
+                                      lapply(1:length(surface.), function(j)
+                                            c(apply(expand.grid(surface.[j], index.[i]), 1, paste, collapse = "."),
+                                              apply(expand.grid(surface.[j], descriptors., index.[i]), 1, paste, collapse = ".")
+                                            )
+                                      )
+                                )),
+                                apply(expand.grid(c("TSS", "IoU"), index.), 1, paste, collapse = "."),
+                                apply(expand.grid("threshold.value", index.), 1, paste, collapse = "."),
+                                "threshold.method")
+            }
       }
-      all_named$moss <- sample_names
-      }else{
-      all_named$moss <- c(names = paste0("obs_", 1:(total_samples)))
-  }
-    print(all_named)
-### Subsection 2: set functions----
-    #  OJO QUE ESTA SUBSECTION NO HACE NADA WHAT???? 
-      # Calcs function
-    # source("./ccspectral/calcs.autothreshold.R")
-   
-### Subsection 3: make calculations ----
-    all <- data.frame(Var1 = 1:length(all_named[,1]), Var2 = 1:length(obs.areas))
-    all <- dplyr::arrange(all, Var1)
-    print(all)
-    start_time <- Sys.time()
-    message(paste("Starting calculations at", start_time))
-    apply(all, 1, function(pair){
-          calcs(pair[1],
-                pair[1],
-                obs.areas = obs.areas,
-                vis.files = all_named[,1],
-                nir.files = all_named[,1],
-                chart = chart,
-                pic.format = pic.format,
-                mask.files = mask_files,
-                manual.mask.test = manual.mask.test,
-                summary.file = summary_file,
-                total.samples = total_samples,
-                index. = index.,
-                descriptors. = descriptors.,
-                calculate.thresh = calculate.thresh,
-                descrip = descrip,
-                threshold.method = threshold.method,
-                threshold.vector = threshold.vector,
-                pdf = pdf,
-                start.time = start_time,
-                chart.vals
-                )
-        })
-    message("Processed files may be found at: ", paste0(wd.path, out_dir))
+      
+      # Create an empty data frame with the defined structure
+      df <- data.frame(matrix(ncol = length(df_names), nrow = 0))
+      colnames(df) <- df_names
+      col_class <- c(rep("character", 3), rep("numeric", length(df_names) - 4),"character")
+      for (i in c(1:length(col_class))){class(df[, i]) <- col_class[i]}
+      rm(col_class)
+      
+      # Export an empty summary CSV file if it doesn't already exist
+      if(calculate.thresh == TRUE){
+            summary_file <- paste0(out_dir, "/", threshold.method, "_summary_data.csv")
+            if(!file.exists(summary_file)){write.csv(df, summary_file, row.names = F)}
+      } else {
+            summary_file <- paste0(out_dir, "/summary_data.csv")
+            if(!file.exists(summary_file)){write.csv(df, summary_file, row.names = F)}
+      }
+          
+      # 1.5 Import images as list --------------------------------------------------
+      vis_files <- list.files(path = "./vis")
+      nir_files <- list.files(path = "./nir")
+      if(manual.mask.test == T){mask_files <- list.files(path = "./mask", pattern = ".tif$")}
+      # 1.6 Check if a matching error exists between lists --------------------------
+      if(length(vis_files) != length(nir_files)){stop("Different number of VIS and NIR photos")}
+      # Total number of samples per observation area
+      total_samples <- length(obs.areas)
+      # 1.7 Set sample names -------------------------------------------------------
+      # Extract cell names
+      cell_names <- gsub(".*/", "", list.files(path = "./rois", pattern = ".roi$", full.names = F, recursive = T))
+      # .roi files in picture-named folders in the "rois" directory
+      samples.per.pic <- unlist(lapply(1:(length(list.dirs("rois")) - 1), 
+                                       function(i) length(list.files(list.dirs("rois")[i + 1]))))
+      
+      ## ERROR CHECK: Ensure `samples.per.pic` matches with number of VIS files
+      if(sum(samples.per.pic) != length(cell_names)) {
+            stop("Mismatch between ROI files and sample counts in `samples.per.pic`")
+      }
+      
+      all_named <- data.frame(photo = unlist(lapply(1:length(vis_files),
+                                                    function(i) rep(vis_files[i], each = samples.per.pic[i]))), 
+                              cell = cell_names)
+      
+      # Optional: Use sample names from a CSV file if available
+      if(file.exists("names.csv")){
+            sample_names <- c(as.character(read.csv("names.csv")[, 1]))
+            if(length(sample_names) != total_samples){
+                  stop("File of sample names contains less/more names than samples")
+            }
+            all_named$moss <- sample_names
+      } else {
+            all_named$moss <- c(names = paste0("obs_", 1:total_samples))
+      }
+      print(all_named)
+      
+      
+      ### Subsection 2: Perform calculations -----------------------------------------
+      all <- data.frame(Var1 = 1:length(all_named[,1]), Var2 = 1:length(obs.areas))
+      all <- dplyr::arrange(all, Var1)
+      print(all)
+      
+      start_time <- Sys.time()
+      message(paste("Starting calculations at", start_time))
+      
+      apply(all, 1, function(pair){
+            calcs(pair[1],
+                  pair[1],
+                  obs.areas = obs.areas,
+                  vis.files = all_named[,1],
+                  nir.files = all_named[,1],
+                  chart = chart,
+                  pic.format = pic.format,
+                  mask.files = mask_files,
+                  manual.mask.test = manual.mask.test,
+                  summary.file = summary_file,
+                  total.samples = total_samples,
+                  index. = index.,
+                  descriptors. = descriptors.,
+                  calculate.thresh = calculate.thresh,
+                  descrip = descrip,
+                  threshold.method = threshold.method,
+                  threshold.vector = threshold.vector,
+                  pdf = pdf,
+                  start.time = start_time,
+                  chart.vals
+            )
+      })
+      
+      message("Processed files may be found at: ", paste0(wd.path, out_dir))
 }
