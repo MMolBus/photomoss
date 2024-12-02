@@ -60,79 +60,94 @@ chart2 <- function(pic.path,
                    tile.coords,
                    xriteclassic.chart = T,
                    n.color.tiles){
-      ## OJo Aquí nueva version para instalar y cargar paquetes en bloque en vez de uno a uno
-     pkgs <- c('tiff', 'terra', 'jpeg','jpg', 'sm', 'spatstat', 'RImageJROI', 
-               'stringr', 'librarian', 'varhandle', 'autothresholdr')
-     for(i in pkgs){
-           if(! i %in% installed.packages()){
-                 install.packages(i, dependencies = TRUE)
-           }
-     }
-     library(pkgs)
-     lapply(pkgs, require, character.only = TRUE)
-     
-      # Choose picture format jpg or tif
+      # Install and load required packages in bulk
+      pkgs <- c('tiff', 'terra', 'jpeg','jpg', 'sm', 'spatstat', 'RImageJROI', 
+                'stringr', 'librarian', 'varhandle', 'autothresholdr')
+      for(i in pkgs){
+            if(! i %in% installed.packages()){
+                  install.packages(i, dependencies = TRUE)  # Install missing packages
+            }
+      }
+      library(pkgs)  # Load the installed packages
+      lapply(pkgs, require, character.only = TRUE)  # Ensure all packages are loaded
+      
+      # Choose picture format: jpg or tif
       if(pic.format == "jpg"){
             file <- list.files(path = pic.path, pattern = ".jpg$|.JPG$|.jpeg$", full.names = T)[1]
-            pic <- jpeg::readJPEG(file)
+            pic <- jpeg::readJPEG(file)  # Read JPEG image
       }
       if(pic.format == "tif"){
             file <- list.files(path = pic.path, pattern = ".tif$", full.names = T)[1]
-            pic <- tiff::readTIFF(file)
+            pic <- tiff::readTIFF(file)  # Read TIFF image
       }
       
+      # Convert the picture into a raster object
       pic.raster <- terra::rast(pic)
-      options(warn = -1)
-      op <- par(mfrow = c(1, 1),
-                mar = c(0, 0, 0, 0),
-                oma = c(0, 0, 0, 0)
-              )
-      on.exit(par(op))
-
+      
+      # Set graphical parameters for plotting
+      options(warn = -1)  # Suppress warnings
+      op <- par(mfrow = c(1, 1), mar = c(0, 0, 0, 0), oma = c(0, 0, 0, 0))
+      on.exit(par(op))  # Restore original graphical parameters on exit
+      
+      # Open a new window and plot the image
       X11()
       terra::plotRGB(pic.raster, r = 1, g = 2, b = 3, scale = 1)
-      options(warn = 0)
+      options(warn = 0)  # Reset warnings
 
-    if(interactive == T){
-          if(xriteclassic.chart == T){
-                message("You are using Xrite classic ColorCheker")
-                message("Color chart has 6 columns and 4 rows. Bottom row 
-                      correspond to grayscale tiles. Click on all 24 color chart
-                      cells in sequence. The sequence follows left to right as 
-                      follows: starts at cell 1 (brown, top left) and finishes 
-                      on cell 24 (black, bottom right).")
-                n.color.tiles <- 24
-                chart.coords <- locator(n = n.color.tiles, type = "p")
-                chart.coords <- cbind(chart.coords[[1]], chart.coords[[2]])
-                colnames(chart.coords) <- c("x", "y")
-                sp.chart <- terra::vect(chart.coords[, c("x", "y")])
-          }else{
-                if(exists("n.color.tiles") == T){
-                      chart.coords <- locator(n = n.color.tiles, type = "p")
-                      chart.coords <- cbind(chart.coords[[1]], chart.coords[[2]])
-                      colnames(chart.coords) <- c("x", "y")
-                      sp.chart <- terra::vect(chart.coords[, c("x", "y")])
-                }else{
-                      message("You are not using Xrite classic ColorCheker or you 
-                            do not want to use all the color tiles, but you has 
-                            not provided the number of tiles you want to check 
-                            in the new color chart")
-                }
-          }
-    }else{
-          message("You are using Xrite classic ColorCheker.")
-          if(exists("tile.coords") == F){
-                message("You are not providing the reqired tile.coords argument, a
-                            dataframe containing the centroid coordinates of color 
-                            tiles. Each row in the dataframe represents a color tile,
-                            and it should have columns for the X and Y coordinates. 
-                            This argument is required when the interactive parameter 
-                            is set to FALSE ")
-          }else{chart.coords <- tile.coords}
-    }
-    sp.chart <- terra::vect(chart.coords[, c("x", "y")])
-    chart_buff <- terra::buffer(sp.chart, width = samp.width)
-    terra::plotRGB(pic.raster, r = 1, g = 2, b = 3, scale = 1)
-    terra::points(chart_buff, col = "green", cex = 0.25)
-    return(chart_buff)
+      # Interactive mode for selecting color tiles
+      if(interactive == T){
+            if(xriteclassic.chart == T){
+                  # Guide for using Xrite classic ColorChecker
+                  message("You are using Xrite classic ColorChecker")
+                  message("Color chart has 6 columns and 4 rows. Bottom row 
+                        corresponds to grayscale tiles. Click on all 24 color chart
+                        cells in sequence. The sequence follows left to right as 
+                        follows: starts at cell 1 (brown, top left) and finishes 
+                        on cell 24 (black, bottom right).")
+                  n.color.tiles <- 24  # Number of tiles for Xrite classic ColorChecker
+                  chart.coords <- locator(n = n.color.tiles, type = "p")  # Get user input for tile coordinates
+                  chart.coords <- cbind(chart.coords[[1]], chart.coords[[2]])
+                  colnames(chart.coords) <- c("x", "y")  # Name columns for X and Y
+                  sp.chart <- terra::vect(chart.coords[, c("x", "y")])  # Create spatial vector
+            }else{
+                  if(exists("n.color.tiles") == T){
+                        # If a non-standard chart is used, allow user-defined number of tiles
+                        chart.coords <- locator(n = n.color.tiles, type = "p")
+                        chart.coords <- cbind(chart.coords[[1]], chart.coords[[2]])
+                        colnames(chart.coords) <- c("x", "y")
+                        sp.chart <- terra::vect(chart.coords[, c("x", "y")])
+                  }else{
+                        # Error message if tile count is not provided
+                        message("You are not using Xrite classic ColorChecker or you 
+                              do not want to use all the color tiles, but you have 
+                              not provided the number of tiles you want to check 
+                              in the new color chart")
+                  }
+            }
+      }else{
+            # Non-interactive mode for pre-defined tile coordinates
+            message("You are using Xrite classic ColorChecker.")
+            if(exists("tile.coords") == F){
+                  # Error message if tile.coords argument is missing
+                  message("You are not providing the required tile.coords argument, a
+                              dataframe containing the centroid coordinates of color 
+                              tiles. Each row in the dataframe represents a color tile,
+                              and it should have columns for the X and Y coordinates. 
+                              This argument is required when the interactive parameter 
+                              is set to FALSE ")
+            }else{
+                  chart.coords <- tile.coords  # Use provided tile coordinates
+            }
+      }
+      
+      # Create a spatial vector and buffer around tile coordinates
+      sp.chart <- terra::vect(chart.coords[, c("x", "y")])
+      chart_buff <- terra::buffer(sp.chart, width = samp.width)
+      
+      # Plot the buffered regions on the image
+      terra::plotRGB(pic.raster, r = 1, g = 2, b = 3, scale = 1)
+      terra::points(chart_buff, col = "green", cex = 0.25)  # Highlight tile regions
+      
+      # Return the buffer object
+      return(chart_buff)
 }
