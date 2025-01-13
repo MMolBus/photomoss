@@ -12,6 +12,10 @@
       # area <- 1
       # photo <- 1
       # chart.vals <- chart.vals
+# Function to process image data, calculate indices, apply thresholds, 
+# and compute surface descriptors, with the option to generate a summary 
+# report and visualizations in a PDF.
+
 calcs <- function(photo,
                   area, 
                   obs.areas, 
@@ -33,7 +37,11 @@ calcs <- function(photo,
                   start.time,
                   chart.vals
                   ){
-  # 1. Prepare data ----
+# Step 1: Prepare data and check inputs
+# --------------------------------------------------------
+# Extract the area associated with the current photo and check if 
+# the number of sample names match the total number of samples.
+# Also checks if manual masking is used and prepares the mask file.
   obs_area <- obs.areas[[1]]
   vis_photo <- vis.files[1]
   nir_photo <- nir.files[1]
