@@ -37,32 +37,40 @@ calcs <- function(photo,
                   start.time,
                   chart.vals
                   ){
-# Step 1: Prepare data and check inputs
-# --------------------------------------------------------
-# Extract the area associated with the current photo and check if 
-# the number of sample names match the total number of samples.
-# Also checks if manual masking is used and prepares the mask file.
-  obs_area <- obs.areas[[1]]
-  vis_photo <- vis.files[1]
-  nir_photo <- nir.files[1]
-  if(manual.mask.test == T){mask_photo <- mask.files[photo]}
-  # 2. Select and set sample name ----
-  done_samples <- nrow(data.table::fread(summary.file, select = 1L, header = T))
-  if(file.exists("names.csv")){
-        sample_names <- c(as.character(read.csv("names.csv")[, 1]))
-      if(length(sample_names) != total.samples){
-        stop("File of sample names contains less/more names than samples")}
-  }else{
-   sample_names <- c(names = paste0("obs_", 1:(total.samples)))
-   }
-   sample_name <- sample_names[photo]
-  # 3. Check all single elements that have been correctly set ----
+# Step 1: Prepare data and check inputs-----------------------------------------
+
+      # Extract the area associated with the current photo and check if 
+      # the number of sample names match the total number of samples.
+      # Also checks if manual masking is used and prepares the mask file.
+      
+      ## 1.1 Define input values------------------------------------------------
+      obs_area <- obs.areas[[1]]
+      vis_photo <- vis.files[1]
+      nir_photo <- nir.files[1]
+      if(manual.mask.test == T){mask_photo <- mask.files[photo]}
+      
+      ## 1.2 Select and set sample names ---------------------------------------
+      done_samples <- nrow(data.table::fread(summary.file, select = 1L, header = T))
+      # Check if file name exists, if not, set default sample names
+      if (file.exists("names.csv")) {
+            sample_names <- c(as.character(read.csv("names.csv")[, 1]))
+            if (length(sample_names) != total.samples) {
+                  stop("File of sample names contains less/more names than samples")
+            }
+      } else{
+            sample_names <- c(names = paste0("obs_", 1:(total.samples)))
+      }
+      sample_name <- sample_names[photo]
+      
+      ## 1.3. Check all single elements that have been correctly set -----------
    print(paste("vis picture name: ", as.character(vis_photo)))
    print(paste("nir picture name: ", as.character(nir_photo)))
    if(manual.mask.test == T){print(paste("Baseline file", mask_photo))}
-  # 4. Cell extraction and colour calibration ----
-       # 4.1 Read and create raster from tiff
+   
+# Step 2: Cell extraction and colour calibration -------------------------------
+       ## 2.1 Read and create raster from image
         if(pic.format == "tif"){
+              ### 2.1.a Read and create raster from tif image-------------------
             if(manual.mask.test == T){
               all_bands <- raster.tiff.ccspectral(
                 vis.photo = vis_photo,
@@ -78,6 +86,7 @@ calcs <- function(photo,
         }else{
             if(manual.mask.test == T){
               all_bands <- raster.jpg.ccspectral(
+              ### 2.1.b Read and create raster from jpg image-------------------
                 vis.photo = vis_photo,
                 nir.photo = nir_photo,
                 manual.mask.test = manual.mask.test,
@@ -89,7 +98,7 @@ calcs <- function(photo,
                 manual.mask.test = manual.mask.test)
             }
       }
-       # 4.2 Calibrate color with colour checker
+       ## 2.2 Calibrate colour  cell.extract.color.cal.fun function-------------
         calibration_results <- cell.extract.color.cal.fun(
                                     obs.area = obs_area,
                                     all.bands = all_bands,
@@ -98,38 +107,47 @@ calcs <- function(photo,
                                     chart.vals = chart.vals,
                                     pdf = pdf)
         if(pdf == T && manual.mask.test == T){moss_poly <- calibration_results[7]}
-  # 5. Calculate index values, as raster and as dataframe ----
+# 3. Calculate index values, as raster and as dataframe ------------------------
+   # Create a list with calibration results: matrix, raster and index calculation (result)
    list_raster_results <- index.calc.fun(
                                 raster.mat  = calibration_results[[1]],
                                 raster.band = calibration_results[[2]],
                                 index. = index.)
-  # 6. Calculate threshold results ----
+  ## 3.1 Calculate threshold results -------------------------------------------
    list_threshold_results <- calculate.raster.thresh.fun(
                                 list.raster.results = list_raster_results,
                                 calculate.thresh = calculate.thresh,
                                 threshold.method = threshold.method,
                                 threshold.vector = threshold.vector)
-  # 7. Extract mask values ----
-  # extract mask pixel coordinates
+  ## 3.2 Extract mask values ---------------------------------------------------
   if(manual.mask.test == T){
     # Set data frame list with cell coordinates(x,y) index values(z) 
-    # mask threshold (surface) and mask manual(surface)
-    # Additionally we compare manual segmentation and threshold segmentation
-    # We create new surface classes (as new cols in the dataframe )
+    # threshold mask surface and manual mask (baseline) surface.
+    # Additionally we compare manual mask surgface and threshold mask surface
+    # We create new surface classes (as new columns in the data frame )
     # by crossing the two classification as follows:
     # True.Negative (TN) => baseline background classified as background.
     # False.Positive (FP) => baseline background classified as moss.
     # False.Negative (FN)=> baseline moss classified as background.
     # True.Positive (TP)=> baseline moss classified as moss.
+  # extract mask pixel coordinates
     coor <- coordinates(calibration_results[[1]])
+   
+    failed_thresholds <- 
+          lapply(1:2, 
+                 function(i) 
+                       list_threshold_results[[i]][is.na(list_threshold_results[[2]]) == T]
+                 )
+    failed_threshold_names <- 
+          gsub("_thresh_mask", "", names(failed_thresholds[[1]]))
     
-    failed_thresholds <- lapply(1:2, function(i)
-                                    list_threshold_results[[i]][is.na(list_threshold_results[[2]]) == T])
-    failed_threshold_names <- gsub("_thresh_mask", "", names(failed_thresholds[[1]]))
-    
-    succesfull_thresholds <- lapply(1:2, function(i)
-                                      list_threshold_results[[i]][is.na(list_threshold_results[[2]]) != T])
-    succesfull_threshold_names <- gsub("_thresh_mask", "", names(succesfull_thresholds[[1]]))
+    succesfull_thresholds <- 
+          lapply(1:2, 
+                 function(i)
+                       list_threshold_results[[i]][is.na(list_threshold_results[[2]]) != T]
+                 )
+    succesfull_threshold_names <- 
+          gsub("_thresh_mask", "", names(succesfull_thresholds[[1]]))
     
     # create class surface prediction code: 00 = TN, 01 = FP, 10 = FN, 11 = TP 
     surface_class <- lapply(grep(paste(succesfull_threshold_names, collapse = "|"), index.),
@@ -172,8 +190,6 @@ calcs <- function(photo,
    list_df_results <- lapply(1:length(binary_surfaces), function(i)
                               cbind(
                                 coor,
-                                # getValues(list_raster_results[[i]]),
-                                # getValues(calibration_results[[2]][[4]]),
                                 terra::values(list_raster_results[[i]]),
                                 terra::values(calibration_results[[2]][[4]]),
                                 as.integer(values(list_threshold_results[[1]][[i]])),
@@ -196,8 +212,6 @@ calcs <- function(photo,
     list_df_results <- lapply(c(1:length(list_raster_results)), function(i)
                                  cbind(
                                    coor,
-                                   # getValues(list_raster_results[[i]]),
-                                   # getValues(list_threshold_results[[1]][[i]])
                                    terra::values(list_raster_results[[i]]),
                                    terra::values(list_threshold_results[[1]][[i]])
                                    ))
@@ -272,7 +286,7 @@ calcs <- function(photo,
               rm(test_mask_surfaces)
         }
   }
-  # 9. START dataframe for index index values presentation ----
+  # 9. START dataframe for index values presentation ----
   dat <- read.csv(summary.file)
   if(calculate.thresh == T){
         theresholds.results <- unlist(list_threshold_results[[2]])
@@ -310,6 +324,7 @@ calcs <- function(photo,
             asp = asp,
             pdf.name = paste0(sample_name, ".pdf"))
     }
+# print timer check point  
        loop_time <- strsplit(as.character((as.numeric(Sys.time()) - as.numeric(start.time))/60), "\\.")[[1]]
        loop_time[2] <- round(60 * as.numeric(paste0("0.", as.character(loop_time[2]))))
         
