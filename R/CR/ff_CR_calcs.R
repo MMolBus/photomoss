@@ -44,18 +44,22 @@ calcs <- function(photo,
       # Also checks if manual masking is used and prepares the mask file.
       
       ## 1.1 Define input values------------------------------------------------
-      obs_area <- obs.areas[[1]]
-      vis_photo <- vis.files[1]
-      nir_photo <- nir.files[1]
-      if(manual.mask.test == T){mask_photo <- mask.files[photo]}
+      obs_area   <- obs.areas[[area]]
+      vis_photo  <- vis.files[photo]
+      nir_photo  <- nir.files[photo]
+      if(manual.mask.test==T){
+            mask_photo <- mask.files[photo]
+      }
       
       ## 1.2 Select and set sample names ---------------------------------------
-      done_samples <- nrow(data.table::fread(summary.file, select = 1L, header = T))
+      done_samples <-
+            nrow(data.table::fread(summary.file, select = 1L, header = T))
       # Check if file name exists, if not, set default sample names
       if (file.exists("names.csv")) {
-            sample_names <- c(as.character(read.csv("names.csv")[, 1]))
+            sample_names <- 
+                  c(as.character(read.csv("names.csv")[, 1]))
             if (length(sample_names) != total.samples) {
-                  stop("File of sample names contains less/more names than samples")
+                  stop("Sample names contains less/more names than samples")
             }
       } else{
             sample_names <- c(names = paste0("obs_", 1:(total.samples)))
@@ -106,9 +110,11 @@ calcs <- function(photo,
                                     manual.mask.test = manual.mask.test,
                                     chart.vals = chart.vals,
                                     pdf = pdf)
-        if(pdf == T && manual.mask.test == T){moss_poly <- calibration_results[7]}
+        if(pdf == T && manual.mask.test == T){
+              moss_poly <- calibration_results[7]}
 # 3. Calculate index values, as raster and as dataframe ------------------------
-   # Create a list with calibration results: matrix, raster and index calculation (result)
+   # Create a list with calibration results: 
+   # matrix, raster and index calculation (result)
    list_raster_results <- index.calc.fun(
                                 raster.mat  = calibration_results[[1]],
                                 raster.band = calibration_results[[2]],
@@ -131,21 +137,26 @@ calcs <- function(photo,
     # False.Negative (FN)=> baseline moss classified as background.
     # True.Positive (TP)=> baseline moss classified as moss.
   # extract mask pixel coordinates
-    coor <- coordinates(calibration_results[[1]])
-   
+    coor <-
+          coordinates(calibration_results[[1]])
+    # set failed thresholds  
     failed_thresholds <- 
-          lapply(1:2, 
-                 function(i) 
-                       list_threshold_results[[i]][is.na(list_threshold_results[[2]]) == T]
-                 )
+          lapply(1:2, function(i)
+                list_threshold_results[[i]][is.na(list_threshold_results[[2]]) == T]
+                )
+    
+    # set failed thresholds names 
     failed_threshold_names <- 
           gsub("_thresh_mask", "", names(failed_thresholds[[1]]))
     
+    # set succesfull thresholds  
     succesfull_thresholds <- 
           lapply(1:2, 
                  function(i)
                        list_threshold_results[[i]][is.na(list_threshold_results[[2]]) != T]
                  )
+    
+    # set succesfull thresholds names 
     succesfull_threshold_names <- 
           gsub("_thresh_mask", "", names(succesfull_thresholds[[1]]))
     
@@ -156,25 +167,32 @@ calcs <- function(photo,
                                         as.integer(values(list_threshold_results[[1]][[i]]))
                                         )
                              )
+    # set class label name
     class_label <- c("00", "01", "10", "11")
-
+    # Create a dummy matrix from surface categoric vectors for each 
+    # succesfull threshold classification 
     binary_surfaces <- lapply(1:length(surface_class),
                        function(i)
                        varhandle::to.dummy(surface_class[[i]], "surface")
                        )
+    
     names(binary_surfaces) <- succesfull_threshold_names
     
+    # Create a dummy matrix from surface categoric vectors for each 
+    # failed threshold classification 
     failed_binary_surfaces <- matrix(as.numeric(rep(NA, 4*ncell(list_raster_results[[1]]))),
                                                 nrow = ncell(list_raster_results[[1]]),
                                                 ncol = 4)
     failed_binary_surfaces <- lapply(1:length(failed_threshold_names), 
                                        function(i) failed_binary_surfaces)
-      
-   names(failed_binary_surfaces) <- failed_threshold_names
+    names(failed_binary_surfaces) <- failed_threshold_names
+    
+    # unify succsesful and failed threshold binary surfaces lists and 
+    # sort it by index. names 
       
    binary_surfaces <- c(binary_surfaces, failed_binary_surfaces)
    binary_surfaces <- binary_surfaces[match(index., names(binary_surfaces))]
-   # Correct if are less than 4 classes when we cross baseline mask and calculated mask
+   # Correct if there are less than 4 classes when we cross baseline mask and calculated mask
    for(i in c(1:length(binary_surfaces))[index. %in% succesfull_threshold_names]){
          if(ncol(binary_surfaces[[i]])!= 4){
                       cols <- c("surface.00", "surface.01", "surface.10", "surface.11")
@@ -187,6 +205,7 @@ calcs <- function(photo,
           binary_surfaces[[i]] <- binary_surfaces[[i]]
         }
    }
+   # get calculation results ensemble
    list_df_results <- lapply(1:length(binary_surfaces), function(i)
                               cbind(
                                 coor,
@@ -232,8 +251,9 @@ calcs <- function(photo,
     # List raster results an df results
     list.results <- list(list_df_results, list_raster_results)
     names(list.results) <- c("data.frames", "rasters")}
-  # 8. Descriptors calculation ----
-  if(descrip == F){
+  ## 3.3. Descriptors calculation ----------------------------------------------
+  # inrtroduce statistical descriptor values as a result if descrip ==T 
+   if(descrip == F){
         if(manual.mask.test == F){
               int_surf_cover <- unname(do.call(c, lapply(seq_along(index.), 
                                                          function(i) 
@@ -286,8 +306,10 @@ calcs <- function(photo,
               rm(test_mask_surfaces)
         }
   }
-  # 9. START dataframe for index values presentation ----
-  dat <- read.csv(summary.file)
+ # 4. START dataframe for index values presentation ----------------------------
+  # read existing results file
+   dat <- read.csv(summary.file)
+   # preparea as data farame new data results 
   if(calculate.thresh == T){
         theresholds.results <- unlist(list_threshold_results[[2]])
         new_dat <- as.data.frame(as.list(unname(
@@ -308,10 +330,11 @@ calcs <- function(photo,
                                                  "Predefined")
                                                 )))
   }
+  # join new  and old results and save as the summary file
   colnames(new_dat) <- colnames(dat)
   dat_bind <- rbind(dat, new_dat)
   write.csv(dat_bind, summary.file, row.names = F)
-  # 10. Create pdf to plot results ----
+  # 10. Create pdf to plot results ---------------------------------------------
   if(pdf == T){
     # plot pdf with results (operated by lists)
     pdf_name <- paste0(out_dir, "/", sample_name, ".pdf")
