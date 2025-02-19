@@ -1,21 +1,50 @@
-# Function: cell extraction and color calibration function
-# obs.area <- obs_area
-# all.bands <- all_bands
-# chart
-# manual.mask.test
-# pdf
+#' Cell Extraction and Color Calibration Function
+#'
+#' This function extracts cell values from a raster dataset and performs color calibration
+#' using a nonlinear regression model based on a standard or custom color checker.
+#'
+#' @param obs.area A SpatVector representing the observed area.
+#' @param all.bands A SpatRaster containing spectral bands.
+#' @param chart A list of spatial polygons defining the color chart patches.
+#' @param manual.mask.test A logical indicating whether to use a manual mask (TRUE or FALSE).
+#' @param chart.vals A data frame containing reference color chart values.
+#'
+#'
+#' @return A list containing:
+#'   \item{raster_mat}{SpatRaster of the corrected spectral bands.}
+#'   \item{raster_band}{SpatRaster of the original spectral bands.}
+#'   \item{red_rsq}{Adjusted R-squared for red band calibration.}
+#'   \item{green_rsq}{Adjusted R-squared for green band calibration.}
+#'   \item{blue_rsq}{Adjusted R-squared for blue band calibration.}
+#'   \item{nir_rsq}{Adjusted R-squared for near-infrared band calibration.}
+#'   \item{moss_poly}{(Optional) A polygon representing the manually masked area, if applicable.}
+#'
+#' @details The function performs the following steps:
+#'   \enumerate{
+#'     \item Extracts spectral band values from the observed area.
+#'     \item Applies manual masking if enabled.
+#'     \item Crops spectral bands to match the observed area extent.
+#'     \item Extracts color chart values and samples data for model training.
+#'     \item Fits nonlinear models to calibrate the spectral bands.
+#'     \item Predicts corrected values and generates a calibrated raster.
+#'   }
+#'
+#' @importFrom terra ext extract crop rast as.polygons
+#' @importFrom stats nls predict var
+#'
+#' @keywords internal
 
-cell.extract.color.cal.fun <- function(obs.area, all.bands, chart, manual.mask.test, chart.vals, pdf){
+cell.extract.color.cal.fun <- 
+      function(obs.area, all.bands, chart, manual.mask.test, chart.vals){
+  
+            # Get the extent of the observed area
   obs_ext <- terra::ext(obs.area) # raster::extent
-  # temp_mat <- raster::raster(matrix(data = NA, 
-  #                           nrow = nrow(all.bands), 
-  #                           ncol = ncol(all.bands), 
-  #                           byrow = T))
+  # Create an empty raster matrix to store predictions
   temp_mat <- terra::rast(matrix(data = NA,
                                     nrow = nrow(all.bands),
                                     ncol = ncol(all.bands),
                                     byrow = T))
-  # bands_df <- data.frame(raster::extract(all.bands, obs.area))
+  # Extract spectral band values from the observed area
   bands_df <- data.frame(terra::extract(all.bands, obs.area))
   
   if(manual.mask.test == T){
@@ -23,6 +52,7 @@ cell.extract.color.cal.fun <- function(obs.area, all.bands, chart, manual.mask.t
   }else{colnames(bands_df) <- c("vis.red", "vis.green", "vis.blue", "nir.blue")
   }
   
+  # Crop individual spectral bands to match the observed area extent
   red_band <- terra::crop(all.bands[[1]], terra::ext(obs_ext))
   terra::ext(red_band) <- terra::ext(c(0, 1, 0, 1))
  
@@ -32,6 +62,7 @@ cell.extract.color.cal.fun <- function(obs.area, all.bands, chart, manual.mask.t
   blue_band <- terra::crop(all.bands[[3]], terra::ext(obs_ext))
   terra::ext(blue_band) <- terra::ext(c(0, 1, 0, 1))
   
+  # If manual mask is used, process the mask band and generate polygons
   if(manual.mask.test == T){
     mask_band <- terra::crop(all.bands[[5]], terra::ext(obs_ext))
     terra::ext(mask_band) <- terra::ext(c(0, 1, 0, 1))
@@ -43,7 +74,11 @@ cell.extract.color.cal.fun <- function(obs.area, all.bands, chart, manual.mask.t
       # raster_band <- brick(red_band, green_band, blue_band)
       raster_band <- terra::rast(red_band, green_band, blue_band)
   }
+  
+  # Initialize an empty dataframe for training data
   train_df <- data.frame()
+  
+  # Standard color checker reference values
   chart_values_list <- data.frame(
                           red.chart =
                                 c(0.17, 0.63, 0.15, 0.11, 0.31, 0.20,
@@ -65,7 +100,7 @@ cell.extract.color.cal.fun <- function(obs.area, all.bands, chart, manual.mask.t
                                   0.85, 0.54, 0.54, 0.79, 0.49, 0.66,
                                   0.52, 0.44, 0.72, 0.82, 0.88, 0.42,
                                   0.91, 0.51, 0.27, 0.13, 0.06, 0.02))
-
+  # Determine if using standard color checker or a custom one
   if(identical(chart.vals, chart_values_list)){
           chart_vals <- chart.vals
           print("You are using Xrite classic ColorCheker")
@@ -95,48 +130,58 @@ cell.extract.color.cal.fun <- function(obs.area, all.bands, chart, manual.mask.t
                       }
          }
    
-  # Red
+  # Fit nonlinear models for color correction
   red_nls <- nls(red.chart ~ (a * exp(b * vis.red)), trace = F, 
                  data = train_df, start = c(a = 0.1, b = 0.1))
-  red_preds <- predict(red_nls, bands_df)
-  red_rsq <- 1 - sum((train_df$red.chart - predict(red_nls, train_df))^2)/(length(train_df$red.chart) * var(train_df$red.chart))
-  red_mat <- temp_mat
-  red_mat <- terra::crop(red_mat, terra::ext(obs_ext))
-  terra::ext(red_mat) <- terra::ext(c(0, 1, 0, 1))
-  values(red_mat) <- red_preds
-  # Green
   green_nls <- nls(green.chart ~ (a * exp(b * vis.green)), trace = F, 
                    data = train_df, start = c(a = 0.1, b = 0.1))
-  green_preds <- predict(green_nls, bands_df)
-  green_rsq <- 1 - sum((train_df$green.chart - predict(green_nls, 
-                                                       train_df))^2)/(length(train_df$green.chart) * var(train_df$green.chart))
-  green_mat <- temp_mat
-  green_mat <- terra::crop(green_mat, terra::ext(obs_ext))
-  terra::ext(green_mat) <- terra::ext(c(0, 1, 0, 1))
-  values(green_mat) <- green_preds
-  # Blue
   blue_nls <- nls(blue.chart ~ (a * exp(b * vis.blue)), trace = F, 
                   data = train_df, start = c(a = 0.1, b = 0.1))
-  blue_preds <- predict(blue_nls, bands_df)
-  blue_rsq <- 1 - sum((train_df$blue.chart - predict(blue_nls, 
-                                                     train_df))^2)/(length(train_df$blue.chart) * var(train_df$blue.chart))
-  blue_mat <- temp_mat
-  blue_mat <- terra::crop(blue_mat, terra::ext(obs_ext))
-  terra::ext(blue_mat) <- terra::ext(c(0, 1, 0, 1))
-  values(blue_mat) <- blue_preds
-  # NIR
   nir_nls <- nls(nir.chart ~ (a * exp(b * nir.blue)), trace = F, 
                  data = train_df, start = c(a = 0.1, b = 0.1))
+  
+  # Predict corrected values for each band
+  red_preds <- predict(red_nls, bands_df)
+  green_preds <- predict(green_nls, bands_df)
+  blue_preds <- predict(blue_nls, bands_df)
   nir_preds <- predict(nir_nls, bands_df)
+  
+  # Calculate adjusted R-squared (coefficient of determination
+  red_rsq <- 1 - sum((train_df$red.chart - predict(red_nls, 
+                                                   train_df))^2)/(length(train_df$red.chart) * var(train_df$red.chart))
+  green_rsq <- 1 - sum((train_df$green.chart - predict(green_nls, 
+                                                       train_df))^2)/(length(train_df$green.chart) * var(train_df$green.chart))
+  blue_rsq <- 1 - sum((train_df$blue.chart - predict(blue_nls, 
+                                                     train_df))^2)/(length(train_df$blue.chart) * var(train_df$blue.chart))
   nir_rsq <- 1 - sum((train_df$nir.chart - predict(nir_nls, 
                                                    train_df))^2)/(length(train_df$nir.chart) * var(train_df$nir.chart))
+  
+  
+  # Create corrected raster matrices
+  red_mat <- temp_mat
+  green_mat <- temp_mat
+  blue_mat <- temp_mat
   nir_mat <- temp_mat
+  
+  red_mat <- terra::crop(red_mat, terra::ext(obs_ext))
+  green_mat <- terra::crop(green_mat, terra::ext(obs_ext))
+  blue_mat <- terra::crop(blue_mat, terra::ext(obs_ext))
   nir_mat <- terra::crop(nir_mat, terra::ext(obs_ext))
-  terra::ext(nir_mat) <- terra::ext(c(0, 1, 0, 1))
+  
+  values(red_mat) <- red_preds
+  values(green_mat) <- green_preds
+  values(blue_mat) <- blue_preds
   values(nir_mat) <- nir_preds
-  #Brick
-  # raster_mat <- brick(red_mat, green_mat, blue_mat, nir_mat)
+  
+  terra::ext(red_mat) <- terra::ext(c(0, 1, 0, 1))
+  terra::ext(green_mat) <- terra::ext(c(0, 1, 0, 1))
+  terra::ext(blue_mat) <- terra::ext(c(0, 1, 0, 1))
+  terra::ext(nir_mat) <- terra::ext(c(0, 1, 0, 1))
+  
+  # Combine corrected bands into a single raster object
   raster_mat <- terra::rast(red_mat, green_mat, blue_mat, nir_mat)
+  
+  # Prepare output
   if(manual.mask.test == T){
     out <- list(raster_mat, raster_band, red_rsq, green_rsq, blue_rsq, nir_rsq, moss_poly)
     names(out) <- c("raster_mat", "raster_band", "red_rsq", "green_rsq", "blue_rsq", "nir_rsq", "moss_poly")
