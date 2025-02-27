@@ -1,14 +1,14 @@
-# Index calculations
-# function returns a list of rasters for required index
-# ARGUMENTS:
-# r: raster stack with RGB+NIR channels
-# index: character vector with the required index 
-# options:
-# "NDVI", "SR", "MSAVI", "EVI", "CI", "BI", "NORR", "NORG", "NORB", 
+#' Calculate Various Remote Sensing Indices
+#'
+#' This function computes various spectral indices from raster data.
+#' @param raster.mat A matrix containing raster data.
+#' @param raster.band A raster stack containing the spectral bands.
+#' @param index. A vector of indices to be calculated. 
+#' It have to be one of this values "NDVI", "SR", "MSAVI", "EVI", "CI", "BI", "NORR", "NORG", "NORB", 
 # "EXR", "EXG", "EXB", "EXGR", "CIVE", "VEG", "HUE", "SAT", "VAL"
-# index_order <- c("NDVI", "SR", "MSAVI", "EVI", "CI", "BI", "NORR", "NORG", "NORB",
-# "EXR", "EXG", "EXB", "EXGR", "CIVE", "VEG", "HUE", "SAT", "VAL")
+#' @return A list of raster layers corresponding to the requested indices.
 
+#' @keywords internal  # Mark the function as internal
 
 index.calc.fun <- function(raster.mat, # calibration_results[[1]]
                            raster.band, # calibration_results[[2]]
@@ -18,46 +18,40 @@ index.calc.fun <- function(raster.mat, # calibration_results[[1]]
     # 1.1 Function rgb.spectral.normalization
     if(length(grep(paste(c("NORR", "NORG", "NORB", "EXR", "EXG", "EXB", 
                            "EXGR", "CIVE","VEG"), collapse = "|"), unique(index.))) > 0){
-      # charge set.rgb.normalisation function
+      # charge rgb.normalisation function
       rgb.spectral.normalization <- function(raster.mat){
-        # red_norm_coord   <- raster::getValues(raster.mat[[1]]) / max(raster::getValues(raster.mat[[1]]))
-        # green_norm_coord <- raster::getValues(raster.mat[[2]]) / max(raster::getValues(raster.mat[[2]]))
-        # blue_norm_coord  <- raster::getValues(raster.mat[[3]]) / max(raster::getValues(raster.mat[[3]]))
-        # 
+        
+        # Normalize red, green, and blue bands by their max values
         red_norm_coord   <- terra::values(raster.mat[[1]]) / max(terra::values(raster.mat[[1]]))
         green_norm_coord <- terra::values(raster.mat[[2]]) / max(terra::values(raster.mat[[2]]))
         blue_norm_coord  <- terra::values(raster.mat[[3]]) / max(terra::values(raster.mat[[3]]))
-        # 
+        
+        # Create a new raster object
         rgb_norm <- terra::rast(raster.mat)
         sum_rgb_nc <- red_norm_coord + green_norm_coord + blue_norm_coord
         
-        # red_norm <- raster::setValues(rgb_norm, (red_norm_coord / sum_rgb_nc))
-        # green_norm <- raster::setValues(rgb_norm, (green_norm_coord / sum_rgb_nc))
-        # blue_norm <- raster::setValues(rgb_norm, (blue_norm_coord / sum_rgb_nc))
-        # rgb_norm <- raster::brick(red_norm, green_norm, blue_norm)
-        # 
-        # 
+        # Normalize the RGB channels
         red_norm <- terra::setValues(rgb_norm, (red_norm_coord / sum_rgb_nc))
         green_norm <- terra::setValues(rgb_norm, (green_norm_coord / sum_rgb_nc))
         blue_norm <- terra::setValues(rgb_norm, (blue_norm_coord / sum_rgb_nc))
         rgb_norm <- terra::rast(red_norm, green_norm, blue_norm)
-        return(rgb_norm)
-        }
+       
+         return(rgb_norm)
+      }
+      # Apply the normalization function
       rgb_norm <- rgb.spectral.normalization(raster.mat) # calculate rgb_norm raster
       rst <- terra::rast(rgb_norm[[3]]) # set reference raster
     }
-    # 1.2 HSV image transformation (there is no need of color calibration)
+      
+      # 1.2 Convert RGB to HSV if needed
     if(length(grep(paste(c("HUE", "SAT", "VAL"), collapse = "|"), unique(index.))) > 0){
             hsv_brick <- raster.band
             hsv <- t(rgb2hsv(values(raster.band[[1]]), 
                              values(raster.band[[2]]), 
                              values(raster.band[[3]]), 
                              maxColorValue = 1))
-            # hsv_brick <- brick(lapply(c(1:3), function(i)
-            #     raster(matrix(hsv[,i],
-            #                     nrow = nrow(raster.band[[1]]),
-            #                     ncol = ncol(raster.band[[1]]),
-            #                     byrow = T))))
+            
+            # Convert to HSV raster
             hsv_brick <- terra::rast(lapply(c(1:3), function(i)
                             rast(matrix(hsv[,i],
                             nrow = nrow(raster.band[[1]]),
@@ -66,8 +60,7 @@ index.calc.fun <- function(raster.mat, # calibration_results[[1]]
             names(hsv_brick) <- c("h", "s", "v")
     }
     ## 2. INDEX CALCULATION  -------------------------------
-    # if there are included in the function argument "index." vector, 
-    # a raster index is calculated
+    # Compute indices if included in index. vector
     # else (an index is not included) index raster is set as NULL
     
     # NDVI 
@@ -203,18 +196,20 @@ index.calc.fun <- function(raster.mat, # calibration_results[[1]]
     }else{
       VAL <- NULL
     }
+    
     ## 3. RESULTS: list, name and return results -------------------------------
     # List all rasters, and NULL vectors respectively.
     # Return raster results
     list_raster_results <- list(NDVI, SR, MSAVI, EVI, CI, BSCI ,BI, NORR, NORG, 
                                 NORB, EXR, EXG, EXB, EXGR, CIVE, VEG, HUE, SAT, VAL)
-    # set index order
+    # Define the index order
     index_order <- c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI", "NORR", 
                      "NORG", "NORB", "EXR", "EXG", "EXB", "EXGR", "CIVE", "VEG", 
                      "HUE", "SAT", "VAL")
-    # Name list raster results
+    # Assign names to the result list
     names(list_raster_results) <- index_order
-    # Remove NULL index from the list
+    # Remove NULL values from the list
     list_raster_results <- plyr::compact(list_raster_results)
+    # Return the list of calculated indices
     return(list_raster_results)
   }
