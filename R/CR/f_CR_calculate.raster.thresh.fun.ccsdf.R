@@ -1,20 +1,51 @@
+#' Calculate Raster Thresholds
+#'
+#' This function calculates threshold values for various raster indices using 
+#' an automatic thresholding method.
+#' It can process a list of raster results and apply a given thresholding method
+#' to each raster index.
+#'
+#' @param list.raster.results A list containing raster objects for different 
+#' indices.
+#' @param calculate.thresh A logical value. 
+#' If TRUE, the function will calculate threshold values. 
+#' If FALSE, it will use the provided threshold vector.
+#' @param threshold.vector A numeric vector containing the threshold values for 
+#' each raster index (used only when calculate.thresh is FALSE).
+#' @param threshold.method The thresholding method to use for automatic
+#' threshold calculation.
+#'
+#' @return A list containing two elements:
+#' - A list of raster index cut values, where each element is a 
+#' binary raster.
+#' - A vector of threshold values used for the corresponding raster indices.
+#'
+#' @keywords internal
 
-# list.raster.results = list_raster_results
-# threshold.method = threshold.method
-
-calculate.raster.thresh.fun <- function(list.raster.results,  
-                                        calculate.thresh,  
-                                        threshold.vector,
-                                        threshold.method){
+calculate.raster.thresh.fun <- 
+      function(list.raster.results,
+               calculate.thresh,
+               threshold.vector,
+               threshold.method){
+      
+# Define index order for the raster data
 index. <- names(list.raster.results)
-index_order <- c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI", "NORR", "NORG", 
-             "NORB", "EXR", "EXG", "EXB", "EXGR","CIVE", "VEG", "HUE", "SAT" , "VAL")
+
+index_order <- 
+      c("NDVI", "SR", "MSAVI", "EVI", "CI", "BSCI", "BI", 
+        "NORR", "NORG", "NORB", 
+        "EXR", "EXG", "EXB", "EXGR","CIVE", "VEG", 
+        "HUE", "SAT" , "VAL")
+
+# Initialize t_values based on whether we are calculating threshold values
 if(calculate.thresh == T){
     t_values <- as.list(rep(NA, length(index_order)))
 }else{
     t_values <- rep(NA, length(index_order))
     t_values[index_order %in% index.] <- threshold.vector
-    }
+}
+
+# Initialize raster_index_cut list to store thresholded raster data
 raster_index_cut <- as.list(rep(NA, length(index_order)))
 
   # NDVI autothreshold ---------------------------------------------------------
@@ -22,19 +53,20 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
             ri <- list.raster.results[index_order[1]]
             if(calculate.thresh == T){
                   t_values[[1]] <-
-                    autothreshold.value(
-                                        raster = ri,
-                                        max.index = 1,
-                                        min.index = -1,
-                                        method = threshold.method)
-             }
+                        autothreshold.value(
+                              raster = ri,
+                              max.index = 1,
+                              min.index = -1,
+                              method = threshold.method)
+                  }
             if(is.na(t_values[[1]]) == T){
-              raster_index_cut[[1]] <- terra::values(ri[[1]],  NA)
-              message(paste("Can't calculate", index.[1], "autothreshold by", threshold.method, "method."))
-              }else{
-                raster_index_cut[[1]] <- ri[[1]] >= t_values[[1]]
-              }
-    }
+                  raster_index_cut[[1]] <- terra::values(ri[[1]],  NA)
+                  message(paste("Can't calculate", index.[1], "autothreshold by",
+                                threshold.method, "method."))
+                  }else{
+                        raster_index_cut[[1]] <- ri[[1]] >= t_values[[1]]
+                  }
+            }
   # SR autothreshold -----------------------------------------------------------
   if(any(index. == index_order[2]) == TRUE){
      ri <- list.raster.results[index_order[2]]
@@ -49,7 +81,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
           }
           if(is.na(t_values[[2]]) == T){
                   raster_index_cut[[2]] <- terra::values(ri[[1]], NA)
-                  message(paste("Can't calculate", index.[2], "autothreshold by", threshold.method, "method."))
+                  message(paste("Can't calculate", index.[2], "autothreshold by", 
+                                threshold.method, "method."))
           }else{
           raster_index_cut[[2]] <- ri[[1]] >= t_values[[2]]
           }
@@ -67,7 +100,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
           }
           if(is.na(t_values[[3]]) == T){
             raster_index_cut[[3]] <- terra::values(ri[[1]], NA)
-            message(paste("Can't calculate", index.[3], "autothreshold by", threshold.method, "method."))
+            message(paste("Can't calculate", index.[3], "autothreshold by", 
+                          threshold.method, "method."))
           }else{
           raster_index_cut[[3]] <- ri[[1]] >= t_values[[3]]
           }
@@ -86,7 +120,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     if(is.na(t_values[[4]]) == T){
       # raster_index_cut[[4]] <- NA
       raster_index_cut[[4]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate",index.[4], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate",index.[4], "autothreshold by", 
+                    threshold.method, "method."))
     }else{raster_index_cut[[4]] <- ri[[1]] >= t_values[[4]]
     }
   }
@@ -103,7 +138,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[5]]) == T){
       raster_index_cut[[5]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[5], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[5], "autothreshold by", 
+                    threshold.method, "method."))
     }else{
     raster_index_cut[[5]] <- ri[[1]] <= t_values[[5]]
     }
@@ -121,7 +157,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[6]]) == T){
       raster_index_cut[[6]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[6], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[6], "autothreshold by", 
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[6]] <- ri[[1]] >= t_values[[6]]}
   }
@@ -138,7 +175,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[7]]) == T){
        raster_index_cut[[7]] <- terra::values(ri[[1]], NA)
-       message(paste("Can't calculate", index.[7], "autothreshold by", threshold.method, "method."))
+       message(paste("Can't calculate", index.[7], "autothreshold by", 
+                     threshold.method, "method."))
     }else{
       raster_index_cut[[7]] <- ri[[1]] <= t_values[[7]]
     }
@@ -156,7 +194,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[8]]) == T){
       raster_index_cut[[8]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[8], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[8], "autothreshold by",
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[8]] <- ri[[1]] >= t_values[[8]]
     }
@@ -174,7 +213,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[9]]) == T){
       raster_index_cut[[9]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[9], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[9], "autothreshold by", 
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[9]] <- ri[[1]] <= t_values[[9]]
     }
@@ -193,7 +233,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     if(is.na(t_values[[10]]) == T){
       # raster_index_cut[[10]] <- NA
       raster_index_cut[[10]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[10], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[10], "autothreshold by",
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[10]] <- ri[[1]] <= t_values[[10]]
     }
@@ -211,7 +252,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[11]]) == T){
       raster_index_cut[[11]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[11], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[11], "autothreshold by",
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[11]] <- ri[[1]] >= t_values[[11]]
     }
@@ -229,7 +271,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[12]]) == T){
       raster_index_cut[[12]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[12], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[12], "autothreshold by", 
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[12]] <- ri[[1]] <= t_values[[12]]
     }
@@ -247,7 +290,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[13]]) == T){
       raster_index_cut[[13]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[13], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[13], "autothreshold by", 
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[13]] <- ri[[1]] <= t_values[[13]]
     }
@@ -265,7 +309,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[14]]) == T){
       raster_index_cut[[14]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[14], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[14], "autothreshold by", 
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[14]] <- ri[[1]] <= t_values[[14]]
     }
@@ -283,7 +328,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[15]]) == T){
       raster_index_cut[[15]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[15], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[15], "autothreshold by", 
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[15]] <- ri[[1]] >= t_values[[15]]
     }
@@ -301,7 +347,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[16]]) == T){
       raster_index_cut[[16]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[16], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[16], "autothreshold by", 
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[16]] <- ri[[1]] <= t_values[[16]]
     }
@@ -319,7 +366,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[17]]) == T){
       raster_index_cut[[17]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[17], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[17], "autothreshold by", 
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[17]] <- ri[[1]] <= t_values[[17]]
     }
@@ -337,7 +385,8 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[18]]) == T){
       raster_index_cut[[18]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[18], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[18], "autothreshold by", 
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[18]] <- ri[[1]] >= t_values[[18]]
     }
@@ -355,19 +404,27 @@ raster_index_cut <- as.list(rep(NA, length(index_order)))
     }
     if(is.na(t_values[[19]]) == T){
       raster_index_cut[[19]] <- terra::values(ri[[1]], NA)
-      message(paste("Can't calculate", index.[19], "autothreshold by", threshold.method, "method."))
+      message(paste("Can't calculate", index.[19], "autothreshold by", 
+                    threshold.method, "method."))
     }else{
       raster_index_cut[[19]] <- ri[[1]] <= t_values[[19]]
     }
   }
  
  # Filter values that are not NA ----
-t_values <- t_values[index_order %in% index.]
-names(t_values) <- index_order[index_order %in% index.]
- # Filter rasters that are not NULL ----
-raster_index_cut <- raster_index_cut[index_order %in% index.]
-names(raster_index_cut) <- paste0(index_order[index_order %in% index.], "_thresh_mask")
+t_values <-
+      t_values[index_order %in% index.]
+names(t_values) <- 
+      index_order[index_order %in% index.]
 
-out <- list(raster_index_cut, t_values)
+ # Filter rasters that are not NULL ----
+raster_index_cut <-
+      raster_index_cut[index_order %in% index.]
+names(raster_index_cut) <-
+      paste0(index_order[index_order %in% index.], "_thresh_mask")
+
+out <- 
+      list(raster_index_cut, t_values)
+
 return(out)
 }
