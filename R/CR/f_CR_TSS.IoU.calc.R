@@ -1,6 +1,7 @@
-#' TSS and IoU Calculator
+#'  @title TSS and IoU Calculator
 #'
-#' Computes the True Skill Statistics (TSS) and Intersection over Union (IoU).
+#' @description Computes the True Skill Statistics (TSS) and Intersection over 
+#' Union (IoU).
 #'
 #' - True Skill Statistics (TSS) is derived from sensitivity and specificity, 
 #'   calculated using presence and absence records, and is used for assessing 
